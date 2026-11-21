@@ -9,6 +9,8 @@ export * from './ChildFilterBar';
 export * from './DateField';
 export * from './EmptyState';
 export * from './Markdown';
+export * from './PageSwitcher';
+export * from './PreviewControls';
 export * from './Screen';
 export * from './SegmentedControl';
 export * from './Select';

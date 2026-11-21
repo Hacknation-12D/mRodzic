@@ -9,10 +9,11 @@ import { Uniwind, useUniwind } from 'uniwind';
 import { useAppBootstrap } from '@/core/bootstrap/useAppBootstrap';
 import { getToday } from '@/core/clock/clock';
 import { env } from '@/core/config/env';
+import { useProfileStore } from '@/core/profile/profile.store';
 import { useSettingsStore } from '@/core/settings/settings.store';
 import { pl } from '@/shared/i18n/pl';
 import { darkColors, lightColors } from '@/shared/theme';
-import { ThemeSwitch } from '@/shared/ui';
+import { PreviewControls } from '@/shared/ui';
 import { buildPersona } from '@/dev/personas';
 
 void SplashScreen.preventAutoHideAsync();
@@ -22,6 +23,7 @@ const initialProfile = () => (env.seedPersona ? buildPersona(env.seedPersona, ge
 /** Root providers, persisted-store hydration, and content sync. */
 export default function RootLayout() {
   const ready = useAppBootstrap({ initialProfile });
+  const hasProfile = useProfileStore((s) => s.profile !== null);
   const { theme } = useUniwind();
   const scheme = theme === 'dark' ? 'dark' : 'light';
   const c = scheme === 'dark' ? darkColors : lightColors;
@@ -57,7 +59,7 @@ export default function RootLayout() {
           <Stack.Screen name="dev" options={{ title: pl.dev.title }} />
           <Stack.Screen name="+not-found" options={{ title: pl.common.notFoundTitle }} />
         </Stack>
-        <ThemeSwitch isDark={scheme === 'dark'} onToggle={toggleTheme} />
+        <PreviewControls hasProfile={hasProfile} isDark={scheme === 'dark'} onToggleTheme={toggleTheme} />
       </View>
     </ThemeProvider>
   );
