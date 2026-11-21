@@ -12,16 +12,35 @@ type PageOption = { href: string; label: string; icon: IconName };
 
 const appPages: PageOption[] = [
   { href: '/', label: pl.pageSwitcher.home, icon: 'home-outline' },
-  { href: '/assistant', label: pl.pageSwitcher.assistant, icon: 'chatbubbles-outline' },
-  { href: '/documents', label: pl.pageSwitcher.documents, icon: 'document-text-outline' },
+  {
+    href: '/assistant',
+    label: pl.pageSwitcher.assistant,
+    icon: 'chatbubbles-outline',
+  },
+  {
+    href: '/documents',
+    label: pl.pageSwitcher.documents,
+    icon: 'document-text-outline',
+  },
 ];
 
 const onboardingPages: PageOption[] = [
   { href: '/onboarding', label: pl.pageSwitcher.login, icon: 'log-in-outline' },
-  { href: '/onboarding/me', label: pl.pageSwitcher.me, icon: 'person-outline' },
-  { href: '/onboarding/partner', label: pl.pageSwitcher.partner, icon: 'people-outline' },
-  { href: '/onboarding/children', label: pl.pageSwitcher.children, icon: 'happy-outline' },
-  { href: '/onboarding/household', label: pl.pageSwitcher.household, icon: 'home-outline' },
+  {
+    href: '/onboarding/partner',
+    label: pl.pageSwitcher.partner,
+    icon: 'people-outline',
+  },
+  {
+    href: '/onboarding/children',
+    label: pl.pageSwitcher.children,
+    icon: 'happy-outline',
+  },
+  {
+    href: '/onboarding/household',
+    label: pl.pageSwitcher.household,
+    icon: 'home-outline',
+  },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -37,7 +56,16 @@ export function PageSwitcher({ hasProfile }: Props) {
   const sections = [
     {
       title: pl.pageSwitcher.app,
-      pages: hasProfile ? [...appPages, { href: '/profile', label: pl.pageSwitcher.profile, icon: 'person-circle-outline' as IconName }] : appPages,
+      pages: hasProfile
+        ? [
+            ...appPages,
+            {
+              href: '/profile',
+              label: pl.pageSwitcher.profile,
+              icon: 'person-circle-outline' as IconName,
+            },
+          ]
+        : appPages,
     },
     { title: pl.pageSwitcher.onboarding, pages: onboardingPages },
   ];
@@ -68,7 +96,10 @@ export function PageSwitcher({ hasProfile }: Props) {
                       accessibilityState={{ selected: active }}
                       style={({ pressed }) => [
                         styles.option,
-                        { backgroundColor: active ? colors.primarySoft : 'transparent', opacity: pressed ? 0.78 : 1 },
+                        {
+                          backgroundColor: active ? colors.primarySoft : 'transparent',
+                          opacity: pressed ? 0.78 : 1,
+                        },
                       ]}>
                       <Ionicons name={page.icon} size={18} color={active ? colors.primary : colors.baseContentMuted} />
                       <AppText variant="body" tone={active ? 'primary' : 'default'} className="flex-1">
@@ -92,7 +123,11 @@ export function PageSwitcher({ hasProfile }: Props) {
         accessibilityState={{ expanded: open }}
         style={({ pressed }) => [
           styles.trigger,
-          { backgroundColor: colors.base100, borderColor: colors.base300, opacity: pressed ? 0.82 : 1 },
+          {
+            backgroundColor: colors.base100,
+            borderColor: colors.base300,
+            opacity: pressed ? 0.82 : 1,
+          },
         ]}>
         <Ionicons name="apps-outline" size={18} color={colors.primary} />
         <AppText variant="small" className="font-semibold">

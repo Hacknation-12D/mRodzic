@@ -35,10 +35,15 @@ export function ChildForm({ index, value, onChange, onAddTwin, errors, canAddTwi
       <ToggleRow
         label={pl.childForm.multiple}
         value={isMultiple}
-        onChange={(on) => onChange({ multipleBirthGroupId: on ? (value.multipleBirthGroupId ?? createId('twins_')) : undefined })}
+        onChange={(on) =>
+          onChange({
+            multipleBirthGroupId: on ? (value.multipleBirthGroupId ?? createId('twins_')) : undefined,
+          })
+        }
       />
-      {isMultiple && canAddTwin ? <Button label={pl.onboarding.children.addTwin} icon="people-outline" variant="secondary" onPress={onAddTwin} /> : null}
+      {isMultiple && canAddTwin ? (
+        <Button label={pl.onboarding.children.addTwin} icon="people-outline" variant="secondary" onPress={onAddTwin} />
+      ) : null}
     </View>
   );
 }
-

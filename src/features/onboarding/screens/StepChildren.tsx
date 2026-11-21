@@ -5,11 +5,11 @@ import { useToday } from '@/core/clock/useToday';
 import { goToOnboardingStep } from '@/core/navigation/routes';
 import { childFormErrors, hasErrors } from '@/core/profile/childValidation';
 import { pl } from '@/shared/i18n/pl';
-import { AppText, Button, Screen } from '@/shared/ui';
+import { AppText, Button, Screen, Stepper } from '@/shared/ui';
 
 import { ChildForm } from '../components/ChildForm';
 import { StepProgress } from '../components/StepProgress';
-import { MAX_CHILDREN, useOnboardingDraft } from '../onboardingDraft.store';
+import { MAX_CHILDREN, onboardingStepsTotal, useOnboardingDraft } from '../onboardingDraft.store';
 
 /** Kreator „Dziecko 1 z N”. */
 export function StepChildren() {
@@ -19,6 +19,9 @@ export function StepChildren() {
   const setIndex = useOnboardingDraft((s) => s.setCurrentChild);
   const updateChild = useOnboardingDraft((s) => s.updateChild);
   const addTwin = useOnboardingDraft((s) => s.addTwin);
+  const total = useOnboardingDraft(onboardingStepsTotal);
+  const childrenCount = useOnboardingDraft((s) => s.childrenCount);
+  const setChildrenCount = useOnboardingDraft((s) => s.setChildrenCount);
   const [showErrors, setShowErrors] = useState(false);
 
   const child = children[index];
@@ -35,7 +38,15 @@ export function StepChildren() {
 
   return (
     <Screen keyboard>
-      <StepProgress step={3} total={4} title={pl.onboarding.children.title} />
+      <StepProgress step={2} total={total} title={pl.onboarding.children.title} />
+      <Stepper
+        label={pl.onboarding.me.childrenCount}
+        hint={pl.onboarding.me.childrenCountHint}
+        value={childrenCount}
+        min={1}
+        max={MAX_CHILDREN}
+        onChange={setChildrenCount}
+      />
       <AppText variant="heading" accessibilityRole="header">
         {pl.onboarding.children.childOf(index + 1, children.length)}
       </AppText>
@@ -61,14 +72,8 @@ export function StepChildren() {
             className="flex-1"
           />
         ) : null}
-        <Button
-          label={isLast ? pl.common.next : pl.onboarding.children.nextChild}
-          icon="arrow-forward"
-          onPress={next}
-          className="flex-1"
-        />
+        <Button label={isLast ? pl.common.next : pl.onboarding.children.nextChild} icon="arrow-forward" onPress={next} className="flex-1" />
       </View>
     </Screen>
   );
 }
-
