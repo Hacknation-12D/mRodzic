@@ -43,7 +43,7 @@ export const pl = {
     error: 'Coś poszło nie tak',
     notFoundTitle: 'Nie znaleziono',
     notFoundBody: 'Ta strona nie istnieje.',
-    goHome: 'Wróć do kalendarza',
+    goHome: 'Wróć do strony głównej',
     dateHint: 'DD.MM.RRRR',
     invalidDate: 'Wpisz datę w formacie DD.MM.RRRR',
     required: 'To pole jest wymagane',
@@ -51,11 +51,26 @@ export const pl = {
   plural: { days, weeks, months, years, persons },
 
   tabs: {
-    calendar: 'Kalendarz',
+    home: 'Główna',
     assistant: 'Asystent',
     documents: 'Dokumenty',
     profile: 'Profil',
     openProfile: 'Otwórz profil',
+  },
+
+  home: {
+    greeting: (name: string | undefined) => (name ? `Witaj, ${name}!` : 'Witaj!'),
+    subtitle: 'Ważne sprawy Twojej rodziny w jednym miejscu.',
+    childrenTitle: 'Twoje dzieci',
+    childrenEmptyTitle: 'Nie dodano jeszcze dzieci',
+    childrenEmptyBody: 'Dodaj dziecko do profilu, aby zobaczyć je tutaj.',
+    profileNeededTitle: 'Uzupełnij profil rodziny',
+    profileNeededBody: 'Dodaj podstawowe informacje, aby rozpocząć korzystanie z aplikacji.',
+    createProfile: 'Uzupełnij profil',
+    addChild: 'Dodaj dziecko',
+    openChildHint: 'Otwórz informacje o dziecku.',
+    openAssistant: 'Porozmawiaj z asystentem',
+    openDocuments: 'Otwórz dokumenty',
   },
 
   gender: { female: 'Kobieta', male: 'Mężczyzna', undisclosed: 'Wolę nie podawać' },
