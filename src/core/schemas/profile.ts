@@ -20,7 +20,43 @@ export const ChildStatusSchema = z.enum(['expected', 'born']);
 /** Kto wypłaca zasiłki: ZUS (pracodawca ≤ 20 ubezpieczonych) albo sam pracodawca (> 20). */
 export const BenefitPayerSchema = z.enum(['zus', 'employer']);
 
-/** Dane o pracy rodzica (z PUE/eZUS) – bez nazwy i NIP-u pracodawcy. */
+const IsoPeriod = { from: IsoDateSchema, to: IsoDateSchema };
+
+/** Konto ubezpieczonego w ZUS (PUE/eZUS): ubezpieczenia, okresy, płatnik, zaległości, historia świadczeń i urlopów. */
+export const ZusRecordSchema = z.object({
+  sickness: z.object({
+    insured: z.boolean(),
+    kind: z.enum(['mandatory', 'voluntary']),
+    since: IsoDateSchema,
+    /** Brak = ubezpieczenie trwa. */
+    until: IsoDateSchema.optional(),
+    /** Kod tytułu ubezpieczenia, np. „0110 11 0”. */
+    titleCode: z.string(),
+  }),
+  /** Przerwy w ubezpieczeniu. */
+  gaps: z.array(z.object({ ...IsoPeriod, reason: z.enum(['registered_unemployed', 'between_jobs', 'unpaid_leave', 'other']) })),
+  /** Okresy zatrudnienia (ostatni bez `to` = trwa). */
+  periods: z.array(z.object({ kind: EmploymentSchema, from: IsoDateSchema, to: IsoDateSchema.optional(), fixedTerm: z.boolean() })),
+  /** Podstawa wymiaru składek na ubezpieczenia społeczne (brutto, miesięcznie). */
+  contributionBase: z.number().min(0),
+  payer: z.object({
+    name: z.string().min(1),
+    nip: z.string().regex(/^\d{10}$/),
+    regon: z.string().regex(/^\d{9}$/),
+    city: z.string(),
+    /** Czy płatnik sam wypłaca zasiłki (false = wypłaca ZUS). */
+    paysBenefits: z.boolean(),
+  }),
+  arrears: z.object({ amount: z.number().min(0), checkedAt: IsoDateSchema }),
+  /** Wcześniejsze okresy pobierania świadczeń. */
+  benefitHistory: z.array(
+    z.object({ ...IsoPeriod, kind: z.enum(['sickness', 'care', 'maternity', 'parental', 'pregnancy_sickness']), days: z.number().int().min(1) }),
+  ),
+  /** Wykorzystane okresy urlopów. */
+  leaveHistory: z.array(z.object({ ...IsoPeriod, kind: z.enum(['vacation', 'on_demand', 'unpaid', 'occasional']), days: z.number().int().min(1) })),
+});
+
+/** Dane o pracy rodzica (z PUE/eZUS). */
 export const WorkSchema = z.object({
   employedSince: IsoDateSchema,
   /** Wymiar etatu, np. 1 albo 0.5. */
@@ -37,6 +73,7 @@ export const WorkSchema = z.object({
   /** Trwający (lub zaplanowany) urlop macierzyński – widoczny w ZUS. */
   maternityLeave: z.object({ startDate: IsoDateSchema, endDate: IsoDateSchema, weeks: z.number().int().min(1) }).optional(),
   parentalLeave: z.object({ weeksTotal: z.number().int().min(1), weeksUsed: z.number().int().min(0) }).optional(),
+  zus: ZusRecordSchema.optional(),
 });
 
 export const ParentSchema = z.object({

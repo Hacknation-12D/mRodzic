@@ -21,15 +21,29 @@ describe('mockMObywatelService (symulacja)', () => {
 
   it('PUE: etat u małego pracodawcy, ZUS wypłaca zasiłek, urlopy w całości', () => {
     const now = new Date(2026, 10, 21);
-    const { work, employer } = mockPue(mockChildren(now), now);
+    const { work } = mockPue(mockChildren(now), now);
     expect(work.benefitPayer).toBe('zus');
     expect(work.employerInsuredCount).toBeLessThanOrEqual(20);
     expect(work.monthlyGross).toBe(6800);
     expect(work.vacation).toEqual({ entitlementDays: 26, usedDays: 0 });
     expect(work.parentalLeave).toEqual({ weeksTotal: 41, weeksUsed: 0 });
-    expect(employer.name).toBe('Pracownia Graficzna Nowak Sp. z o.o.');
-    expect(employer.nip).toMatch(/^\d{10}$/);
+    expect(work.zus?.payer.name).toBe('Pracownia Graficzna Nowak Sp. z o.o.');
+    expect(work.zus?.payer.nip).toMatch(/^\d{10}$/);
+    expect(work.zus?.payer.paysBenefits).toBe(false);
   });
+
+  it('PUE: konto ZUS – chorobowe obowiązkowe, przerwy, brak zaległości, historia', () => {
+    const now = new Date(2026, 10, 21);
+    const zus = mockPue(mockChildren(now), now).work.zus!;
+    expect(zus.sickness).toMatchObject({ insured: true, kind: 'mandatory', since: '2014-10-01' });
+    expect(zus.sickness.until).toBeUndefined();
+    expect(zus.gaps).toHaveLength(2);
+    // okresy zatrudnienia nie nachodzą na przerwy; ostatni trwa
+    expect(zus.periods.at(-1)?.to).toBeUndefined();
+    expect(zus.arrears).toEqual({ amount: 0, checkedAt: '2026-11-21' });
+    expect(zus.benefitHistory.map((b) => b.kind)).toEqual(['sickness', 'care']);
+    expect(zus.leaveHistory.reduce((a, l) => a + l.days, 0)).toBe(24);
+    expect(zus.leaveHistory.every((l) => !l.from.startsWith('2026'))).toBe(true);  });
 
   it('PUE: macierzyński 20 tyg. od urodzenia starszego dziecka, zarobki z 12 miesięcy przed', () => {
     const now = new Date(2026, 10, 21);

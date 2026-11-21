@@ -68,7 +68,7 @@ export function StepLogin() {
     const w = pue.work;
     const avg = averageGross(w);
     pueRows.push(
-      [t.pueEmployer, pue.employer.name],
+      ...(w.zus ? ([[t.pueEmployer, w.zus.payer.name]] as [string, string][]) : []),
       [t.pueStatus, t.pueStatusValue],
       [t.pueEmployedSince, isoToPolishDate(w.employedSince)],
       [t.pueInsuredCount, String(w.employerInsuredCount)],

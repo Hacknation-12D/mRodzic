@@ -18,6 +18,7 @@ import type {
   TipDefSchema,
   TodoDefSchema,
   WorkSchema,
+  ZusRecordSchema,
 } from '../schemas';
 import type { RuleResult } from '../schemas/rules';
 
@@ -28,6 +29,7 @@ export type Gender = z.infer<typeof GenderSchema>;
 export type Employment = z.infer<typeof EmploymentSchema>;
 export type ChildColorKey = z.infer<typeof ChildColorKeySchema>;
 export type Work = z.infer<typeof WorkSchema>;
+export type ZusRecord = z.infer<typeof ZusRecordSchema>;
 export type Parent = z.infer<typeof ParentSchema>;
 export type Child = z.infer<typeof ChildSchema>;
 export type Household = z.infer<typeof HouseholdSchema>;

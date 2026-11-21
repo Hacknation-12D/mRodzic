@@ -2,7 +2,7 @@ import { addDays, addMonths, format, startOfMonth, subDays } from 'date-fns';
 
 import { calculateMaternityLeave, PARENTAL_LEAVE_WEEKS } from '@/core/benefits';
 import { benefitPayerFor } from '@/core/profile/work';
-import type { Child, Gender, Work } from '@/core/types';
+import type { Child, Gender, Work, ZusRecord } from '@/core/types';
 import { toISODate } from '@/shared/lib/date';
 
 /**
@@ -34,12 +34,8 @@ export type MObywatelChild = {
   vaccinations: { name: string; dueDate: string }[];
 };
 
-/**
- * Dane z (symulowanego) PUE/eZUS: pracodawca (tylko do wyświetlenia – nie zapisujemy)
- * oraz informacje o pracy, zarobkach i urlopach (zapisywane w profilu).
- */
+/** Dane z (symulowanego) PUE/eZUS: praca, zarobki, urlopy oraz konto ubezpieczonego w ZUS – zapisywane w profilu. */
 export type PueData = {
-  employer: { name: string; nip: string };
   work: Work;
 };
 
@@ -110,7 +106,7 @@ export function mockNip(seed: number): string {
   }
 }
 
-export const MOCK_EMPLOYER = { name: 'Pracownia Graficzna Nowak Sp. z o.o.', nip: mockNip(527104318) };
+export const MOCK_EMPLOYER = { name: 'Pracownia Graficzna Nowak Sp. z o.o.', nip: mockNip(527104318), regon: '147236985', city: 'Warszawa' };
 const MOCK_INSURED_COUNT = 8;
 const MOCK_MONTHLY_GROSS = 6800;
 /** ≈ 6800 zł brutto po składkach (13,71%), zdrowotnej (9%) i zaliczce PIT (12%, KUP 250, kwota zmniejszająca 300). */
@@ -130,8 +126,31 @@ export function mockPue(children: MObywatelChild[], now: Date = new Date()): Pue
     const month = addMonths(firstMonth, i - 12);
     return { month: format(month, 'yyyy-MM'), gross: month.getFullYear() >= 2026 ? MOCK_MONTHLY_GROSS : 6400 };
   });
+  const zus: ZusRecord = {
+    sickness: { insured: true, kind: 'mandatory', since: '2014-10-01', titleCode: '0110 11 0' },
+    gaps: [
+      { from: '2017-02-01', to: '2017-04-30', reason: 'registered_unemployed' },
+      { from: '2019-08-16', to: '2019-08-31', reason: 'between_jobs' },
+    ],
+    periods: [
+      { kind: 'employment_contract', from: '2014-10-01', to: '2017-01-31', fixedTerm: true },
+      { kind: 'employment_contract', from: '2017-05-01', to: '2019-08-15', fixedTerm: false },
+      { kind: 'employment_contract', from: '2019-09-01', fixedTerm: false },
+    ],
+    contributionBase: MOCK_MONTHLY_GROSS,
+    payer: { ...MOCK_EMPLOYER, paysBenefits: benefitPayerFor(MOCK_INSURED_COUNT) === 'employer' },
+    arrears: { amount: 0, checkedAt: toISODate(now) },
+    benefitHistory: [
+      { from: '2023-02-06', to: '2023-02-17', kind: 'sickness', days: 12 },
+      { from: '2024-03-11', to: '2024-03-13', kind: 'care', days: 3 },
+    ],
+    leaveHistory: [
+      { from: '2024-08-05', to: '2024-08-16', kind: 'vacation', days: 10 },
+      { from: '2025-07-14', to: '2025-07-25', kind: 'vacation', days: 10 },
+      { from: '2025-12-24', to: '2025-12-31', kind: 'vacation', days: 4 },
+    ],
+  };
   return {
-    employer: MOCK_EMPLOYER,
     work: {
       employedSince: '2019-09-01',
       fte: 1,
@@ -143,6 +162,7 @@ export function mockPue(children: MObywatelChild[], now: Date = new Date()): Pue
       vacation: { entitlementDays: 26, usedDays: 0 },
       maternityLeave: leave.startDate && leave.endDate ? { startDate: leave.startDate, endDate: leave.endDate, weeks: leave.weeks } : undefined,
       parentalLeave: { weeksTotal: PARENTAL_LEAVE_WEEKS.single, weeksUsed: 0 },
+      zus,
     },
   };
 }

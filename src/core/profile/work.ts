@@ -42,3 +42,28 @@ export function maternityLeaveProgress(
   const daysLeft = Math.max(0, differenceInCalendarDays(end, day));
   return { totalDays, elapsedDays, daysLeft, status: differenceInCalendarDays(day, end) > 0 ? 'finished' : 'ongoing' };
 }
+
+/** Stawki składek pracownika (% podstawy): emerytalna 9,76, rentowa 1,5, chorobowa 2,45; zdrowotna 9% po odliczeniu społecznych. */
+export const CONTRIBUTION_RATES = { pension: 0.0976, disability: 0.015, sickness: 0.0245, health: 0.09 } as const;
+
+export type ContributionBreakdown = { pension: number; disability: number; sickness: number; health: number; healthBase: number };
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
+export function contributionBreakdown(base: number): ContributionBreakdown {
+  const pension = round2(base * CONTRIBUTION_RATES.pension);
+  const disability = round2(base * CONTRIBUTION_RATES.disability);
+  const sickness = round2(base * CONTRIBUTION_RATES.sickness);
+  const healthBase = round2(base - pension - disability - sickness);
+  return { pension, disability, sickness, health: round2(healthBase * CONTRIBUTION_RATES.health), healthBase };
+}
+
+/** „527•••••18” – NIP domyślnie zamaskowany. */
+export function maskNip(nip: string): string {
+  return nip.length === 10 ? `${nip.slice(0, 3)}••••• ${nip.slice(8)}` : nip;
+}
+
+/** Łączna liczba dni z listy okresów (np. wykorzystane świadczenia / urlopy) w danym roku. */
+export function daysInYear(items: { from: string; days: number }[], year: number): number {
+  return items.filter((i) => i.from.startsWith(`${year}-`)).reduce((acc, i) => acc + i.days, 0);
+}

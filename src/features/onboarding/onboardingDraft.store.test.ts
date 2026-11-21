@@ -33,16 +33,17 @@ describe('onboardingDraft: dane z mObywatela', () => {
     expect(useOnboardingDraft.getState().me.employment).toBe('self_employed');
   });
 
-  it('dane z PUE trafiają do profilu, ale bez nazwy i NIP-u pracodawcy', () => {
+  it('dane z PUE trafiają do profilu (z płatnikiem), ale bez nazwiska i daty urodzenia', () => {
     const children = mockChildren();
     useOnboardingDraft.getState().applyMObywatelData({ identity: MOCK_IDENTITY, children, pue: mockPue(children) });
     const profile = buildProfileFromDraft(useOnboardingDraft.getState(), new Date().toISOString());
     expect(profile.me.employment).toBe('employment_contract');
     expect(profile.me.work?.benefitPayer).toBe('zus');
     expect(profile.me.work?.maternityLeave?.weeks).toBe(20);
+    expect(profile.me.work?.zus?.payer.nip).toBe(MOCK_EMPLOYER.nip);
     const json = JSON.stringify(profile);
-    expect(json).not.toContain(MOCK_EMPLOYER.name);
-    expect(json).not.toContain(MOCK_EMPLOYER.nip);
+    expect(json).not.toContain(MOCK_IDENTITY.lastName);
+    expect(json).not.toContain(MOCK_IDENTITY.birthDate);
   });
 
   it('dochód na osobę wylicza się z PUE (netto / liczba osób), a przy partnerze zostaje nieznany', () => {
