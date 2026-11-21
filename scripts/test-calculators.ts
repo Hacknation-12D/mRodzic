@@ -8,10 +8,14 @@
  *   npm run calc -- list
  *   npm run calc -- <id> '<json>'
  *   npm run calc -- <id> @plik.json
+ *   npm run calc -- maternityLeave --demo P05
  */
 import { readFileSync } from 'node:fs';
 import { createInterface, type Interface } from 'node:readline/promises';
 import { inspect } from 'node:util';
+import { config } from 'dotenv';
+
+import { getDemoSnapshot } from '../src/core/demo/demoApi';
 
 import {
   BenefitInputError,
@@ -830,7 +834,26 @@ function printResult(calc: Calculator<unknown, unknown>, input: unknown) {
   }
 }
 
-function runNonInteractive(args: string[]) {
+async function demoMaternityLeaveInput(profileId: string | undefined) {
+  // Te scenariusze opisują poród i początek podstawowego urlopu; P08 wymaga osobnych zasad.
+  if (!profileId || !['P01', 'P05', 'P10'].includes(profileId)) {
+    throw new Error('Podaj profil z podstawowym urlopem po porodzie: P01, P05 lub P10.');
+  }
+  config({ quiet: true });
+  const baseUrl = process.env.EXPO_PUBLIC_DEMO_API_URL?.trim() || 'http://127.0.0.1:8765';
+  const profile = await getDemoSnapshot(profileId, AbortSignal.timeout(10000), baseUrl);
+  const startDate = profile.me.work?.maternityLeave?.startDate;
+  if (!startDate) throw new Error('W profilu brakuje daty początku urlopu macierzyńskiego.');
+  const newborns = profile.children.filter((child) => child.status === 'born' && child.birthDate === startDate);
+  if (!newborns.length || (newborns.length > 1 && !newborns.every(
+    (child) => child.multipleBirthGroupId && child.multipleBirthGroupId === newborns[0].multipleBirthGroupId,
+  ))) {
+    throw new Error('Profil nie określa jednoznacznie liczby dzieci z tego porodu.');
+  }
+  return { startDate, childrenCount: newborns.length };
+}
+
+async function runNonInteractive(args: string[]) {
   const [id, payload] = args;
   if (id === 'list') {
     CALCULATORS.forEach((c) => console.log(`${c.id.padEnd(30)} ${c.title}`));
@@ -844,6 +867,13 @@ function runNonInteractive(args: string[]) {
   if (!payload) {
     console.error(`Podaj dane wejściowe: npm run calc -- ${id} '<json>'  lub  @plik.json`);
     process.exit(1);
+  }
+  if (payload === '--demo') {
+    if (id !== 'maternityLeave') throw new Error('Tryb SQLite jest dostępny dla kalkulatora maternityLeave.');
+    const input = await demoMaternityLeaveInput(args[2]);
+    console.log(`SYMULACJA – DANE FIKCYJNE (${args[2]})`);
+    printResult(calc, input);
+    return;
   }
   const json = payload.startsWith('@') ? readFileSync(payload.slice(1), 'utf8') : payload;
   printResult(calc, JSON.parse(json));
@@ -886,5 +916,11 @@ async function runInteractive() {
 }
 
 const cliArgs = process.argv.slice(2);
-if (cliArgs.length > 0) runNonInteractive(cliArgs);
-else void runInteractive();
+if (cliArgs.length > 0) {
+  void runNonInteractive(cliArgs).catch((e: unknown) => {
+    console.error(e instanceof Error ? e.message : String(e));
+    process.exitCode = 1;
+  });
+} else {
+  void runInteractive();
+}

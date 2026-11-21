@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Uniwind, useUniwind } from 'uniwind';
 
 import { useAppBootstrap } from '@/core/bootstrap/useAppBootstrap';
@@ -13,7 +14,7 @@ import { useProfileStore } from '@/core/profile/profile.store';
 import { useSettingsStore } from '@/core/settings/settings.store';
 import { pl } from '@/shared/i18n/pl';
 import { darkColors, lightColors } from '@/shared/theme';
-import { PreviewControls } from '@/shared/ui';
+import { AppText, PreviewControls } from '@/shared/ui';
 import { buildPersona } from '@/dev/personas';
 
 void SplashScreen.preventAutoHideAsync();
@@ -24,6 +25,7 @@ const initialProfile = () => (env.seedPersona ? buildPersona(env.seedPersona, ge
 export default function RootLayout() {
   const ready = useAppBootstrap({ initialProfile });
   const hasProfile = useProfileStore((s) => s.profile !== null);
+  const showDemoBanner = useProfileStore((s) => Boolean(env.demoApiUrl || s.demoProfileId));
   const { theme } = useUniwind();
   const scheme = theme === 'dark' ? 'dark' : 'light';
   const themeOverride = useSettingsStore((s) => s.themeOverride);
@@ -63,6 +65,13 @@ export default function RootLayout() {
         </Stack>
         <PreviewControls hasProfile={hasProfile} isDark={scheme === 'dark'} onToggleTheme={toggleTheme} />
       </View>
+      {showDemoBanner && (
+        <SafeAreaView edges={['bottom']} style={{ backgroundColor: c.warningSoft }}>
+          <AppText variant="caption" tone="warning" className="px-4 py-1 text-center">
+            {pl.demo.simulationBanner}
+          </AppText>
+        </SafeAreaView>
+      )}
     </ThemeProvider>
   );
 }

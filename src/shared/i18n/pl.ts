@@ -21,6 +21,19 @@ const persons = (n: number) => `${n} ${plural(n, 'osoba', 'osoby', 'osób')}`;
 
 export const pl = {
   appName: 'Rodzic',
+  demo: {
+    simulationBanner: 'SYMULACJA – DANE FIKCYJNE',
+    loginTitle: 'Logowanie demonstracyjne',
+    profile: 'Wybierz profil',
+    random: 'Losowy profil DEMO',
+    sensitiveLabel: (label: string) => `${label} (temat wrażliwy)`,
+    listError: 'Nie udało się pobrać listy profili demonstracyjnych.',
+    loginError: 'Nie udało się pobrać wybranego profilu. Spróbuj ponownie.',
+    signIn: 'Zaloguj przez mObywatel (demo)',
+    confirmTitle: 'Czy otworzyć ten profil?',
+    replaceProfile: 'Otwarcie profilu demonstracyjnego zastąpi profil zapisany na tym urządzeniu.',
+    openProfile: 'Otwórz profil',
+  },
   common: {
     save: 'Zapisz',
     cancel: 'Anuluj',

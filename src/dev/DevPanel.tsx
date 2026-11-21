@@ -59,12 +59,14 @@ export function DevPanel() {
         </View>
       </Card>
 
-      <Card>
-        <AppText variant="subheading">{pl.dev.persona}</AppText>
-        {PERSONA_IDS.map((id) => (
-          <Button key={id} variant="secondary" label={pl.dev.personas[id]} onPress={() => loadPersona(id)} />
-        ))}
-      </Card>
+      {!env.demoApiUrl && (
+        <Card>
+          <AppText variant="subheading">{pl.dev.persona}</AppText>
+          {PERSONA_IDS.map((id) => (
+            <Button key={id} variant="secondary" label={pl.dev.personas[id]} onPress={() => loadPersona(id)} />
+          ))}
+        </Card>
+      )}
 
       <Card>
         <AppText variant="subheading">{pl.dev.assistantMode}</AppText>

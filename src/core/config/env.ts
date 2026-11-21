@@ -17,6 +17,7 @@ const supabaseUrl = clean(process.env.EXPO_PUBLIC_SUPABASE_URL);
 const supabaseAnonKey = clean(process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY);
 const assistantModeRaw = clean(process.env.EXPO_PUBLIC_ASSISTANT_MODE);
 const seedPersonaRaw = clean(process.env.EXPO_PUBLIC_SEED_PERSONA);
+const demoApiUrl = clean(process.env.EXPO_PUBLIC_DEMO_API_URL)?.replace(/\/+$/, '');
 
 const PERSONAS: readonly PersonaId[] = ['ania', 'magda', 'kasia'];
 
@@ -25,5 +26,6 @@ export const env = {
   supabaseAnonKey,
   isSupabaseConfigured: Boolean(supabaseUrl && supabaseAnonKey),
   assistantMode: (assistantModeRaw === 'remote' ? 'remote' : 'mock') as AssistantMode,
-  seedPersona: PERSONAS.find((p) => p === seedPersonaRaw),
+  demoApiUrl,
+  seedPersona: demoApiUrl ? undefined : PERSONAS.find((p) => p === seedPersonaRaw),
 } as const;

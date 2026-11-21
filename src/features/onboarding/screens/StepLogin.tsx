@@ -3,6 +3,7 @@ import { differenceInCalendarDays } from 'date-fns';
 import { useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 
+import { env } from '@/core/config/env';
 import { goToOnboardingStep } from '@/core/navigation/routes';
 import { averageGross, maternityLeaveProgress, vacationDaysLeft } from '@/core/profile/work';
 import { pl } from '@/shared/i18n/pl';
@@ -12,6 +13,7 @@ import { Alert, AppText, Button, Card, Screen, Sheet } from '@/shared/ui';
 
 import { mockMObywatelService, type MObywatelData } from '../mobywatel/mObywatelService';
 import { useOnboardingDraft } from '../onboardingDraft.store';
+import { SQLiteDemoLogin } from './SQLiteDemoLogin';
 
 type Phase = 'idle' | 'signing' | 'confirm' | 'error';
 
@@ -19,6 +21,10 @@ const t = pl.onboarding.login;
 
 /** Krok 0: (symulowane) logowanie przez mObywatel → pobranie danych rodzica → „czy się zgadza?”. */
 export function StepLogin() {
+  return env.demoApiUrl ? <SQLiteDemoLogin /> : <MockLogin />;
+}
+
+function MockLogin() {
   const c = useThemeColors();
   const apply = useOnboardingDraft((s) => s.applyMObywatelData);
   const [phase, setPhase] = useState<Phase>('idle');
