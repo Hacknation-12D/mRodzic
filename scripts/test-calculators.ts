@@ -16,6 +16,8 @@ import { inspect } from 'node:util';
 import { config } from 'dotenv';
 
 import { getDemoSnapshot } from '../src/core/demo/demoApi';
+import { registerLocalDemoProfiles } from '../src/core/demo/localDemoProfiles';
+import demoProfiles from '../src/dev/dummyData/mrodzic_compat_profiles_v1.json';
 
 import {
   BenefitInputError,
@@ -840,7 +842,8 @@ async function demoMaternityLeaveInput(profileId: string | undefined) {
     throw new Error('Podaj profil z podstawowym urlopem po porodzie: P01, P05 lub P10.');
   }
   config({ quiet: true });
-  const baseUrl = process.env.EXPO_PUBLIC_DEMO_API_URL?.trim() || 'http://127.0.0.1:8765';
+  registerLocalDemoProfiles(demoProfiles);
+  const baseUrl = process.env.EXPO_PUBLIC_DEMO_API_URL?.trim() || undefined;
   const profile = await getDemoSnapshot(profileId, AbortSignal.timeout(10000), baseUrl);
   const startDate = profile.me.work?.maternityLeave?.startDate;
   if (!startDate) throw new Error('W profilu brakuje daty początku urlopu macierzyńskiego.');

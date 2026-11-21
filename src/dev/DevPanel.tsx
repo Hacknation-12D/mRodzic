@@ -2,11 +2,12 @@ import { addMonths, addWeeks, format } from 'date-fns';
 import { useState } from 'react';
 import { View } from 'react-native';
 
-import { getToday, useClockStore } from '@/core/clock/clock';
+import { useClockStore } from '@/core/clock/clock';
 import { useToday } from '@/core/clock/useToday';
 import { env } from '@/core/config/env';
 import { useContentStore } from '@/core/content/content.store';
 import { syncContent } from '@/core/content/contentSync';
+import { localDemoProfiles, pickLocalDemoProfile } from '@/core/demo/localDemoProfiles';
 import { useDocumentStatusStore } from '@/core/documents/documentStatus.store';
 import { useProfileStore } from '@/core/profile/profile.store';
 import { useAssistantMode, useSettingsStore } from '@/core/settings/settings.store';
@@ -14,8 +15,6 @@ import { resetAllData } from '@/core/storage/resetAll';
 import { pl } from '@/shared/i18n/pl';
 import { formatLongDate, formatTime } from '@/shared/lib/date';
 import { Alert, AppText, Button, Card, DateField, Screen, SegmentedControl } from '@/shared/ui';
-
-import { buildPersona, PERSONA_IDS, type PersonaId } from './personas';
 
 /** Ukryty panel deweloperski: „dzisiaj”, persona, tryb asystenta, synchronizacja treści, reset. */
 export function DevPanel() {
@@ -31,10 +30,10 @@ export function DevPanel() {
 
   const shift = (fn: (d: Date) => Date) => setOverride(format(fn(today), 'yyyy-MM-dd'));
 
-  const loadPersona = (id: PersonaId) => {
-    useDocumentStatusStore.getState().clearAll();
-    useProfileStore.getState().setProfile(buildPersona(id, getToday()));
-    setMessage(pl.dev.personaLoaded(pl.dev.personas[id]));
+  const loadDemoProfile = (profileId?: string) => {
+    const picked = pickLocalDemoProfile(profileId);
+    useProfileStore.getState().setDemoProfile(picked.profileId, picked.profile);
+    setMessage(pl.dev.personaLoaded(picked.label));
   };
 
   return (
@@ -59,14 +58,18 @@ export function DevPanel() {
         </View>
       </Card>
 
-      {!env.demoApiUrl && (
-        <Card>
-          <AppText variant="subheading">{pl.dev.persona}</AppText>
-          {PERSONA_IDS.map((id) => (
-            <Button key={id} variant="secondary" label={pl.dev.personas[id]} onPress={() => loadPersona(id)} />
-          ))}
-        </Card>
-      )}
+      <Card>
+        <AppText variant="subheading">{pl.dev.persona}</AppText>
+        <Button label={pl.demo.random} icon="shuffle" onPress={() => loadDemoProfile()} />
+        {localDemoProfiles().map((p) => (
+          <Button
+            key={p.profileId}
+            variant="secondary"
+            label={p.sensitive ? pl.demo.sensitiveLabel(p.label) : p.label}
+            onPress={() => loadDemoProfile(p.profileId)}
+          />
+        ))}
+      </Card>
 
       <Card>
         <AppText variant="subheading">{pl.dev.assistantMode}</AppText>

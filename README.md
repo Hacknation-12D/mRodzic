@@ -44,7 +44,7 @@ Skopiuj `.env.example` do `.env` (plik jest w `.gitignore`).
 | `EXPO_PUBLIC_SUPABASE_URL` | aplikacja | URL projektu Supabase |
 | `EXPO_PUBLIC_SUPABASE_ANON_KEY` | aplikacja | klucz **anon** (publiczny; RLS ogranicza dostęp) |
 | `EXPO_PUBLIC_ASSISTANT_MODE` | aplikacja | `mock` (domyślnie) albo `remote` |
-| `EXPO_PUBLIC_SEED_PERSONA` | aplikacja | `ania` / `magda` / `kasia` – wczytuje personę przy pierwszym starcie (pomija onboarding) |
+| `EXPO_PUBLIC_DEMO_API_URL` | aplikacja | opcjonalny adres API SQLite (README_INTEGRACJA.md); pusty = logowanie na wbudowanym `src/dev/dummyData/mrodzic_compat_profiles_v1.json` |
 | `SUPABASE_URL` | skrypty | URL projektu (dla `content:import/export`) |
 | `SUPABASE_SERVICE_ROLE_KEY` | skrypty | klucz **service role** – tylko lokalnie/CI, **nigdy w aplikacji** |
 
@@ -222,8 +222,8 @@ error  '@/features/documents' import is restricted from being used by a pattern.
 
 ## Praca nad jednym widokiem
 
-- `EXPO_PUBLIC_SEED_PERSONA=kasia npx expo start` – pomija onboarding i wczytuje personę.
-- **DevPanel** (Profil → „Panel deweloperski” w trybie dev albo 3× stuknięcie w numer wersji): zmiana daty „dzisiaj” (±tydzień/miesiąc, konkretna data), persona, tryb asystenta mock/remote, źródło i wersja treści, „Synchronizuj teraz”, czyszczenie statusów/danych.
+- Logowanie („Zaloguj przez mObywatel (demo)”) domyślnie losuje jeden z 9 profili DEMO (P08 – scenariusz wrażliwy – tylko z wyboru ręcznego).
+- **DevPanel** (Profil → „Panel deweloperski” w trybie dev albo 3× stuknięcie w numer wersji): zmiana daty „dzisiaj” (±tydzień/miesiąc, konkretna data), profil DEMO (losowy lub konkretny), tryb asystenta mock/remote, źródło i wersja treści, „Synchronizuj teraz”, czyszczenie statusów/danych.
 - Persony (daty liczone względem „dzisiaj”):
   - `ania` – Anna (umowa o pracę) + Tomek (JDG), Zosia 3 miesiące, dochód nieznany,
   - `magda` – samotna mama (zlecenie), bliźnięta-wcześniaki 5 tygodni, 1500 zł/os.,
