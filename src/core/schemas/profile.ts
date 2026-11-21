@@ -20,6 +20,14 @@ export const ChildStatusSchema = z.enum(['expected', 'born']);
 export const ParentSchema = z.object({
   id: z.string().min(1),
   firstName: z.string().trim().min(1).max(60),
+  lastName: z.string().trim().min(1).max(80).optional(),
+  birthDate: IsoDateSchema.refine((value) => Number.isFinite(parseISO(value).getTime())).optional(),
+  street: z.string().trim().min(1).max(100).optional(),
+  houseNumber: z.string().trim().min(1).max(15).optional(),
+  apartmentNumber: z.string().trim().min(1).max(15).optional(),
+  city: z.string().trim().min(1).max(80).optional(),
+  postalCode: z.string().regex(/^\d{2}-\d{3}$/).optional(),
+  pesel: z.string().regex(/^\d{11}$/).optional(),
   gender: GenderSchema,
   employment: EmploymentSchema.optional(),
 });

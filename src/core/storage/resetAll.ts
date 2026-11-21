@@ -5,6 +5,7 @@ import { useDocumentStatusStore } from '../documents/documentStatus.store';
 import { useChildFilterStore } from '../filters/childFilter.store';
 import { useProfileStore } from '../profile/profile.store';
 import { useSettingsStore } from '../settings/settings.store';
+import { clearFamilySession } from '../supabase/client';
 import { STORAGE_PREFIX } from './storage';
 
 type Listener = () => void;
@@ -18,6 +19,7 @@ export function onResetAll(listener: Listener): () => void {
 
 /** Usuwa profil, statusy, ustawienia i wszystkie dane aplikacji z AsyncStorage. */
 export async function resetAllData(options: { keepDevSettings?: boolean } = {}): Promise<void> {
+  clearFamilySession();
   useProfileStore.getState().resetAll();
   useDocumentStatusStore.getState().clearAll();
   useChildFilterStore.getState().setFilter('all');

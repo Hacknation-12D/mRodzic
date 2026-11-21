@@ -30,7 +30,7 @@ export function LinksList({ links }: { links: DocumentLink[] }) {
       {other.map((l) => (
         <Button
           key={l.url + l.label}
-          label={l.label}
+          label={l.pdfFile === 'ZAM.pdf' ? 'Otwórz pusty wzór ZAM (PDF)' : l.label}
           variant="ghost"
           icon={l.pdfFile ? 'document-outline' : l.kind === 'guide' ? 'book-outline' : 'information-circle-outline'}
           onPress={() => void openDocumentLink(l)}

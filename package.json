@@ -5,6 +5,7 @@
   "dependencies": {
     "@expo/ui": "~58.0.29",
     "@expo/vector-icons": "^15.0.2",
+    "@pdf-lib/fontkit": "^1.1.1",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@supabase/supabase-js": "^2.119.2",
     "date-fns": "^4.4.0",
@@ -21,6 +22,7 @@
     "expo-symbols": "~58.0.5",
     "expo-system-ui": "~58.0.7",
     "expo-web-browser": "~58.1.0",
+    "pdf-lib": "^1.17.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-native": "0.88.1",
@@ -59,6 +61,7 @@
     "test:watch": "vitest",
     "content:validate": "tsx scripts/validate-content.ts",
     "content:seed-sql": "tsx scripts/generate-supabase-seed.ts",
+    "db:seed-test-users": "tsx scripts/seed-test-users.ts",
     "content:import": "tsx scripts/import-content.ts",
     "content:export": "tsx scripts/export-seed.ts",
     "check": "npm run typecheck && npm run lint && npm test && npm run content:validate"

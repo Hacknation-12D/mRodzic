@@ -11,15 +11,16 @@ import { env } from '@/core/config/env';
 import { useProfileStore } from '@/core/profile/profile.store';
 import { pl } from '@/shared/i18n/pl';
 import { darkColors, lightColors } from '@/shared/theme';
-import { buildPersona } from '@/dev/personas';
+import type { Profile } from '@/core/types';
+import { prepareDemoProfile } from '@/dev/personas';
 
 void SplashScreen.preventAutoHideAsync();
 
-const initialProfile = () => (env.seedPersona ? buildPersona(env.seedPersona, getToday()) : null);
+const prepareProfile = (profile: Profile | null) => prepareDemoProfile(profile, env.seedPersona, getToday());
 
 /** Providery, hydratacja store'ów, sync treści, przekierowanie do onboardingu (Stack.Protected). */
 export default function RootLayout() {
-  const ready = useAppBootstrap({ initialProfile });
+  const ready = useAppBootstrap({ prepareProfile });
   const hasProfile = useProfileStore((s) => s.profile !== null);
   const scheme = useColorScheme();
   const c = scheme === 'dark' ? darkColors : lightColors;

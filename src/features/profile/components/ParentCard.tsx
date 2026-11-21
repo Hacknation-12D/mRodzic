@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 
+import { parentIdentityErrors } from '@/core/profile/parentIdentity';
+import { ParentSchema } from '@/core/schemas/profile';
 import type { Parent } from '@/core/types';
 import { pl } from '@/shared/i18n/pl';
 import { createId } from '@/shared/lib/id';
@@ -13,9 +15,10 @@ type Props = {
   onRemove?: () => void;
   addLabel?: string;
   emptyLabel?: string;
+  showIdentity?: boolean;
 };
 
-export function ParentCard({ title, parent, onSave, onRemove, addLabel, emptyLabel }: Props) {
+export function ParentCard({ title, parent, onSave, onRemove, addLabel, emptyLabel, showIdentity }: Props) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<ParentFieldsValue>(parent ?? { firstName: '', gender: 'male' });
   const [showErrors, setShowErrors] = useState(false);
@@ -26,8 +29,9 @@ export function ParentCard({ title, parent, onSave, onRemove, addLabel, emptyLab
     setEditing(true);
   };
   const save = () => {
-    if (!draft.firstName.trim()) return setShowErrors(true);
-    onSave({ id: parent?.id ?? createId('parent_'), ...draft, firstName: draft.firstName.trim() });
+    const parsed = ParentSchema.safeParse({ ...draft, id: parent?.id ?? createId('parent_') });
+    if (!parsed.success || Object.keys(parentIdentityErrors(draft)).length > 0) return setShowErrors(true);
+    onSave(parsed.data);
     setEditing(false);
   };
 
@@ -38,7 +42,7 @@ export function ParentCard({ title, parent, onSave, onRemove, addLabel, emptyLab
       </AppText>
       {editing ? (
         <View className="gap-3">
-          <ParentFields value={draft} onChange={setDraft} nameError={showErrors && !draft.firstName.trim() ? pl.common.required : undefined} />
+          <ParentFields value={draft} onChange={setDraft} nameError={showErrors && !draft.firstName.trim() ? pl.common.required : undefined} showIdentity={showIdentity} identityErrors={showErrors ? parentIdentityErrors(draft) : undefined} />
           <View className="flex-row gap-2">
             <Button label={pl.common.cancel} variant="ghost" onPress={() => setEditing(false)} className="flex-1" />
             <Button label={pl.common.save} onPress={save} className="flex-1" />
@@ -46,7 +50,7 @@ export function ParentCard({ title, parent, onSave, onRemove, addLabel, emptyLab
         </View>
       ) : parent ? (
         <>
-          <AppText variant="bodyStrong">{parent.firstName}</AppText>
+          <AppText variant="bodyStrong">{[parent.firstName, parent.lastName].filter(Boolean).join(' ')}</AppText>
           <AppText tone="muted">
             {pl.gender[parent.gender]}
             {parent.employment ? ` · ${pl.employment[parent.employment]}` : ''}

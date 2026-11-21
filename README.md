@@ -4,10 +4,10 @@ Aplikacja mobilna pomagająca przyszłym i świeżo upieczonym rodzicom w Polsce
 
 - **Kalendarz** – siatka miesiąca z kropkami terminów w kolorach dzieci, „W tym miesiącu warto”, 3 poradniki dopasowane do etapu.
 - **Asystent** – czat (mock offline albo OpenAI przez Supabase Edge Function) ze źródłami + formularz „Zapytaj człowieka”.
-- **Dokumenty** – zakładki „Przysługuje” i „Nie przysługuje” z wstępną oceną według reguł aplikacji. Sekcja „Uzupełnij dane” pokazuje sprawy z nieustalonym wynikiem. W szczegółach można uzupełnić brakujące dane profilu i otworzyć materiały ZUS.
+- **Dokumenty** – zakładki „Przysługuje” i „Nie przysługuje” z wstępną oceną według reguł aplikacji. Sekcja „Uzupełnij dane” pokazuje sprawy z nieustalonym wynikiem. W szczegółach można otworzyć materiały ZUS oraz wypełnić i pobrać formularz ZAM w wersji webowej.
 - **Profil / onboarding** – logowanie przez mObywatel (symulacja: pobiera imię, płeć i miejscowość rodzica i pyta „Czy te dane się zgadzają?”), rodzic, partner (opcjonalnie), dzieci (kreator „Dziecko 1 z N”, „Dodaj bliźniaka”), gospodarstwo; akcja „Urodziło się!”.
 
-Działa **bez internetu i bez konfiguracji** (wbudowany seed treści + asystent mock). Profil zostaje wyłącznie na telefonie.
+Działa **bez internetu i bez konfiguracji** (wbudowany seed treści + asystent mock). Profil zapisuje się na urządzeniu. Po skonfigurowaniu Supabase użytkownik może dodatkowo zapisać dane rodziny na swoim koncie.
 
 ---
 
@@ -85,13 +85,29 @@ Brak dowolnej zmiennej nie powoduje błędu: bez Supabase → seed + mock, `remo
 
 ### Dane przykładowe w SQL Editorze
 
-W nowym projekcie Supabase uruchom w **SQL Editorze** najpierw `supabase/migrations/0001_init.sql`, a następnie `supabase/seed.sql`. Seed zasila katalog dokumentów, poradniki, zadania i podpowiedzi. Dotychczasowe rekordy o tym samym ID zachowują swoje wartości. W już zasilonej bazie do publikacji zmian w katalogu służy `npm run content:import -- --from content/seed --format json`.
+W nowym projekcie Supabase uruchom w **SQL Editorze** migracje z katalogu `supabase/migrations` w kolejności numerów, a następnie `supabase/seed.sql`. Seed zasila katalog dokumentów, poradniki, zadania i podpowiedzi. Dotychczasowe rekordy o tym samym ID zachowują swoje wartości. W już zasilonej bazie do publikacji zmian w katalogu służy `npm run content:import -- --from content/seed --format json`.
+
+### Konto rodzinne w Supabase
+
+Migracja `0002_family_profiles.sql` tworzy prywatne tabele `family_parents` i `family_children`. RLS wiąże rekordy z identyfikatorem konta Supabase Auth. Zapisywanie rodzica i aktualnej listy dzieci odbywa się w jednej transakcji.
+
+Migracja `0003_child_last_name.sql` dodaje `family_children.last_name`, uzupełnia ją w dotychczasowych rekordach i synchronizuje nazwisko dziecka z nazwiskiem rodzica. Edytor ZAM wczytuje imię i nazwisko dziecka.
+
+W Supabase Auth włącz logowanie przez e-mail i w szablonie „Magic Link” umieść kod `{{ .Token }}`. Po skonfigurowaniu `EXPO_PUBLIC_SUPABASE_URL` i `EXPO_PUBLIC_SUPABASE_ANON_KEY` aplikacja pokaże sekcję **Konto rodzinne** w profilu. Zaloguj się kodem i wybierz **Zapisz profil na koncie**. Ponowne zapisanie aktualizuje profil i listę dzieci. W tej samej sekcji można usunąć kopię z konta.
 
 Do testowania profilu rodziny użyj person z DevPanelu, niezależnie od danych katalogowych w Supabase. Na przykład wyczyść dochód na osobę w profilu rodziny z noworodkiem i otwórz „Becikowe”. Zapisanie brakującej kwoty przeliczy wynik w szczegółach i na liście.
 
 ### Formularze i instrukcje ZUS
 
-Katalog `public/pdfs` zawiera oryginalne pliki ZUS. ZAM obsługuje zasiłek za okres urlopu macierzyńskiego, rodzicielskiego, ojcowskiego i uzupełniającego urlopu macierzyńskiego. ZCNA dotyczy zgłoszenia członka rodziny do ubezpieczenia zdrowotnego. AWP, AWZ i AWD to instrukcje złożenia elektronicznych wniosków programu Aktywny Rodzic. Dla 800+ szczegóły zawierają link do kreatora SW-R w pomocy eZUS. Pola w aplikacji służą do oceny warunków zapisanych w profilu. Wypełnienie i złożenie urzędowego wniosku odbywa się we właściwym kanale wskazanym w szczegółach.
+Katalog `public/pdfs` zawiera oryginalne pliki ZUS. ZAM obsługuje zasiłek za okres urlopu macierzyńskiego, rodzicielskiego, ojcowskiego i uzupełniającego urlopu macierzyńskiego. ZCNA dotyczy zgłoszenia członka rodziny do ubezpieczenia zdrowotnego. AWP, AWZ i AWD to instrukcje złożenia elektronicznych wniosków programu Aktywny Rodzic. Dla 800+ szczegóły zawierają link do kreatora SW-R w pomocy eZUS.
+
+W wersji webowej wybierz **Otwórz formularz ZAM** w szczegółach odpowiedniego urlopu. Aplikacja wczytuje dane rodzica i dziecka z zapisanego konta rodzinnego. Uzupełnij i sprawdź dane w stałym formularzu. **Pobierz** zapisuje wypełniony urzędowy plik ZAM z osadzoną czcionką obsługującą polskie znaki. **Wyślij** otwiera eZUS, gdzie należy wybrać usługę „Złożenie dokumentu ZAM” i podpisać wniosek. Wpisane zmiany dotyczą bieżącego otwarcia formularza.
+
+### Konta testowe ZAM
+
+W Supabase Online użyj osobnego projektu testowego. W SQL Editorze zastosuj brakujące migracje w kolejności numerów. Ustaw w `.env` adres projektu, klucz publiczny i klucz serwerowy zgodnie z `.env.example`. Ustaw także `SUPABASE_TEST_PROJECT_REF` zgodny z adresem projektu, własne `SUPABASE_TEST_USERS_PASSWORD` (co najmniej 16 znaków) i `EXPO_PUBLIC_ENABLE_TEST_LOGIN=true`. Uruchom `npm run db:seed-test-users` i zrestartuj aplikację.
+
+W sekcji **Konto rodzinne** wybierz logowanie do konta testowego. Adresy to `anna.zam@example.test` i `michal.zam@example.test`. Pierwsze konto ma jedno dziecko, drugie pozwala sprawdzić wybór między dwojgiem dzieci. Przy testowaniu z wbudowanym katalogiem możesz ustawić `EXPO_PUBLIC_SEED_PERSONA=ania`, aby od razu przejść do dokumentów. Skrypt obsługuje również lokalny Supabase, gdzie domyślne hasło testowe to `ZamDemo-2026!`.
 
 ### Synchronizacja treści w aplikacji
 

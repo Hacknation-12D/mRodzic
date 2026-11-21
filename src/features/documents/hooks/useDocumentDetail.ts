@@ -28,7 +28,6 @@ export function useDocumentDetail(docId: string | undefined, childId: string | u
     child,
     profile,
     profileChild,
-    today,
     changeStatus: (status: DocumentStatus) => {
       if (instance) setStatus(instance.key, status, nowIso());
     },

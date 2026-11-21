@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 
 import { CHILD_COLOR_KEYS } from '@/core/profile/childColors';
-import type { Child, ChildColorKey, Employment, Gender, Profile } from '@/core/types';
+import type { Child, ChildColorKey, Gender, Parent, Profile } from '@/core/types';
 import { pl } from '@/shared/i18n/pl';
 import { createId } from '@/shared/lib/id';
 
 import type { MObywatelIdentity } from './mobywatel/mObywatelService';
 
-export type DraftParent = { firstName: string; gender: Gender; employment?: Employment };
+export type DraftParent = Omit<Parent, 'id'>;
 
 export type DraftChild = {
   key: string;
@@ -45,7 +45,7 @@ type State = {
   currentChild: number;
   household: DraftHousehold;
   setMe: (me: DraftParent) => void;
-  /** Uzupełnia dane rodzica i miejscowość z (symulowanego) mObywatela. Nazwisko i data urodzenia NIE trafiają do szkicu. */
+  /** Uzupełnia dane rodzica i miejscowość z symulacji mObywatela. */
   applyMObywatelIdentity: (identity: MObywatelIdentity) => void;
   setChildrenCount: (n: number) => void;
   setPartnerEnabled: (enabled: boolean) => void;
@@ -87,11 +87,14 @@ const initial = () => ({
 /** Szkic onboardingu – NIE persistowany. Zapisywany do profilu dopiero po kroku 4. */
 export const useOnboardingDraft = create<State>()((set) => ({
   ...initial(),
-  setMe: (me) => set({ me }),
+  setMe: (me) => set((state) => ({
+    me,
+    household: { ...state.household, city: me.city ?? state.household.city },
+  })),
   applyMObywatelIdentity: (identity) =>
     set((s) => ({
       identitySource: 'mobywatel',
-      me: { ...s.me, firstName: identity.firstName, gender: identity.gender },
+      me: { ...s.me, firstName: identity.firstName, lastName: s.me.lastName ?? identity.lastName, gender: identity.gender },
       household: { ...s.household, city: identity.city },
     })),
   setChildrenCount: (n) =>
@@ -158,9 +161,9 @@ export function buildProfileFromDraft(draft: State, nowIso: string): Profile {
   const income = parseIncome(draft.household.incomeText);
   return {
     schemaVersion: 1,
-    me: { id: createId('parent_'), firstName: draft.me.firstName.trim(), gender: draft.me.gender, employment: draft.me.employment },
+    me: { ...draft.me, id: createId('parent_'), firstName: draft.me.firstName.trim() },
     partner: draft.partnerEnabled
-      ? { id: createId('parent_'), firstName: draft.partner.firstName.trim(), gender: draft.partner.gender, employment: draft.partner.employment }
+      ? { ...draft.partner, id: createId('parent_'), firstName: draft.partner.firstName.trim() }
       : undefined,
     children,
     household: {

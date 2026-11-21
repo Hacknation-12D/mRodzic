@@ -7,7 +7,10 @@ const today = new Date('2026-11-21T12:00:00');
 
 const profile: Profile = {
   schemaVersion: 1,
-  me: { id: 'me', firstName: 'Anna', gender: 'female', employment: 'employment_contract' },
+  me: {
+    id: 'me', firstName: 'Anna', gender: 'female', employment: 'employment_contract',
+    lastName: 'Kowalska', birthDate: '1944-05-14', pesel: '44051401458', street: 'Przykładowa',
+  },
   partner: { id: 'p', firstName: 'Tomek', gender: 'male', employment: 'self_employed' },
   children: [
     { id: 'c1', name: 'Zosia', status: 'born', birthDate: '2026-08-21', colorKey: 'coral', premature: true },
@@ -28,7 +31,7 @@ describe('toAnonymousSummary', () => {
   });
 
   it('does not leak names, dates or location', () => {
-    for (const secret of ['Anna', 'Tomek', 'Zosia', 'Maluszek', 'Wrocław', '50-001', '2026', '2027', '08-21', '02-27']) {
+    for (const secret of ['Anna', 'Kowalska', '44051401458', 'Przykładowa', '1944', 'Tomek', 'Zosia', 'Maluszek', 'Wrocław', '50-001', '2026', '2027', '08-21', '02-27']) {
       expect(summary).not.toContain(secret);
     }
     expect(summary).not.toMatch(/\d{4}-\d{2}-\d{2}/);

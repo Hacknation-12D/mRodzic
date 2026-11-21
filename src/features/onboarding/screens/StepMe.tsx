@@ -30,7 +30,7 @@ export function StepMe() {
           {pl.onboarding.login.importedBody}
         </Alert>
       ) : null}
-      <ParentForm value={me} onChange={setMe} showErrors={showErrors} />
+      <ParentForm value={me} onChange={setMe} showErrors={showErrors} showIdentity />
       <Stepper
         label={pl.onboarding.me.childrenCount}
         hint={pl.onboarding.me.childrenCountHint}

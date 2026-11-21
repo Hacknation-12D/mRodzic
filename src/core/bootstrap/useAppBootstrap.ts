@@ -10,15 +10,15 @@ import type { Profile } from '../types';
 import { runStartupTasks } from './startupTasks';
 
 type Options = {
-  /** Profil persony do wczytania przy pierwszym starcie (EXPO_PUBLIC_SEED_PERSONA). */
-  initialProfile?: () => Profile | null;
+  /** Tworzy profil demo lub uzupełnia brakujące dane zapisanej persony. */
+  prepareProfile?: (profile: Profile | null) => Profile | null;
 };
 
 /**
  * Hydratacja store'ów z AsyncStorage, opcjonalne wczytanie persony,
  * uruchomienie synchronizacji treści i kolejki zgłoszeń.
  */
-export function useAppBootstrap({ initialProfile }: Options = {}): boolean {
+export function useAppBootstrap({ prepareProfile }: Options = {}): boolean {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -28,10 +28,9 @@ export function useAppBootstrap({ initialProfile }: Options = {}): boolean {
     waitForHydration([useProfileStore, useDocumentStatusStore, useChildFilterStore, useClockStore, useSettingsStore])
       .then(() => {
         if (cancelled) return;
-        if (!useProfileStore.getState().profile && initialProfile) {
-          const persona = initialProfile();
-          if (persona) useProfileStore.getState().setProfile(persona);
-        }
+        const { profile, setProfile } = useProfileStore.getState();
+        const prepared = prepareProfile?.(profile);
+        if (prepared) setProfile(prepared);
         stopTasks = runStartupTasks();
       })
       .catch((e) => console.warn('Bootstrap error', e))

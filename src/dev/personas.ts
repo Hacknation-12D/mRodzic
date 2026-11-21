@@ -10,6 +10,32 @@ export type PersonaId = 'ania' | 'magda' | 'kasia';
 export const PERSONA_IDS: PersonaId[] = ['ania', 'magda', 'kasia'];
 
 const iso = (d: Date) => format(d, 'yyyy-MM-dd');
+const annaIdentity = {
+  id: 'p_ania', lastName: 'Łącka', city: 'Łódź', birthDate: '1990-05-14',
+  pesel: '90051412349', street: 'Źródlana', houseNumber: '12A', apartmentNumber: '3', postalCode: '90-001',
+};
+
+export function prepareDemoProfile(profile: Profile | null, seed: PersonaId | undefined, today: Date): Profile | null {
+  if (!profile) return seed ? buildPersona(seed, today) : null;
+  const { me, household } = profile;
+  const city = me.city ?? household.city ?? annaIdentity.city;
+  if (me.id !== annaIdentity.id) {
+    // Starszy zapis scenariusza testowego z symulacji mObywatela ma losowe ID rodzica.
+    const hasDemoChild = profile.children.some((child) =>
+      ['paweł', 'pawel'].includes(child.name.trim().toLowerCase()) && child.birthDate === '2026-10-01',
+    );
+    if (me.firstName.trim().toLowerCase() !== 'anna' || city.trim().toLowerCase() !== 'warszawa' || !hasDemoChild
+      || (me.lastName && me.lastName.trim().toLowerCase() !== annaIdentity.lastName.toLowerCase())) return null;
+  }
+
+  const defaults = {
+    lastName: annaIdentity.lastName, city, birthDate: annaIdentity.birthDate, pesel: annaIdentity.pesel,
+    street: annaIdentity.street, houseNumber: annaIdentity.houseNumber, apartmentNumber: annaIdentity.apartmentNumber,
+    postalCode: household.postalCode || (city.trim().toLowerCase() === 'warszawa' ? '00-001' : annaIdentity.postalCode),
+  };
+  const missing = Object.entries(defaults).filter(([key]) => !me[key as keyof typeof defaults]);
+  return missing.length ? { ...profile, me: { ...me, ...Object.fromEntries(missing) } } : null;
+}
 
 function meta(today: Date) {
   const now = today.toISOString();
@@ -22,7 +48,7 @@ export function buildPersona(id: PersonaId, today: Date): Profile {
       // Anna (umowa o pracę) + Tomek (JDG), Zosia urodzona 3 miesiące temu, dochód nieznany.
       return {
         ...meta(today),
-        me: { id: 'p_ania', firstName: 'Anna', gender: 'female', employment: 'employment_contract' },
+        me: { ...annaIdentity, firstName: 'Anna', gender: 'female', employment: 'employment_contract' },
         partner: { id: 'p_tomek', firstName: 'Tomek', gender: 'male', employment: 'self_employed' },
         children: [
           { id: 'c_zosia', name: 'Zosia', status: 'born', birthDate: iso(subMonths(today, 3)), sex: 'female', premature: false, colorKey: 'coral' },

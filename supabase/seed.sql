@@ -133,6 +133,18 @@ from jsonb_populate_recordset(null::public.content_documents, '[
         "label": "Informacje na gov.pl",
         "url": "https://www.gov.pl/web/rodzina",
         "kind": "info"
+      },
+      {
+        "label": "SR-2 – wniosek o becikowe (PDF)",
+        "url": "https://www.gov.pl/attachment/20ec64a0-3df1-49dc-9884-369596f3818e",
+        "kind": "guide",
+        "pdfFile": "SR-2.pdf"
+      },
+      {
+        "label": "SR-2Z – załącznik do wniosku o becikowe (PDF)",
+        "url": "https://www.gov.pl/attachment/9735eb79-f017-4773-b18e-cf48c0c54581",
+        "kind": "guide",
+        "pdfFile": "SR-2Z.pdf"
       }
     ],
     "checklist": [
@@ -195,6 +207,18 @@ from jsonb_populate_recordset(null::public.content_documents, '[
         "label": "Świadczenia rodzinne na gov.pl",
         "url": "https://www.gov.pl/web/rodzina",
         "kind": "info"
+      },
+      {
+        "label": "SR-1 – wniosek o zasiłek rodzinny i dodatki (PDF)",
+        "url": "https://www.gov.pl/attachment/49f70c4e-ca14-44a1-9c2f-35e0216e4a2d",
+        "kind": "guide",
+        "pdfFile": "SR-1.pdf"
+      },
+      {
+        "label": "SR-1Z – załącznik do wniosku o zasiłek rodzinny (PDF)",
+        "url": "https://www.gov.pl/attachment/81a43349-feab-4128-97b7-b5e487345926",
+        "kind": "guide",
+        "pdfFile": "SR-1Z.pdf"
       }
     ],
     "checklist": [
@@ -346,6 +370,12 @@ from jsonb_populate_recordset(null::public.content_documents, '[
         "label": "mObywatel",
         "url": "https://www.gov.pl/web/mobywatel",
         "kind": "guide"
+      },
+      {
+        "label": "KDR – wniosek o przyznanie karty lub wydanie duplikatu (PDF)",
+        "url": "https://www.gov.pl/attachment/805fc40b-75bf-412a-a840-e3377f7d22ef",
+        "kind": "guide",
+        "pdfFile": "KDR.pdf"
       }
     ],
     "checklist": [
@@ -399,8 +429,8 @@ from jsonb_populate_recordset(null::public.content_documents, '[
     ],
     "links": [
       {
-        "label": "Edukacja na gov.pl",
-        "url": "https://www.gov.pl/web/edukacja",
+        "label": "Zasady rekrutacji i formularze lokalne na Gov.pl",
+        "url": "https://www.gov.pl/web/gov/zapisz-dziecko-do-przedszkola",
         "kind": "info"
       }
     ],
@@ -473,6 +503,12 @@ from jsonb_populate_recordset(null::public.content_documents, '[
         "label": "SW-R – instrukcja kreatora w eZUS",
         "url": "https://www.zus.pl/portal/pomoc/kub0024.html",
         "kind": "guide"
+      },
+      {
+        "label": "Podręcznik mZUS – wnioski 800+ (PDF)",
+        "url": "https://www.zus.pl/documents/10182/10099173/mZUS%2B-%2BPodr%C4%99cznik%2Bu%C5%BCytkownika.pdf/b24a8c6d-86b5-b980-5742-1188c9fada8c",
+        "kind": "guide",
+        "pdfFile": "MZUS-INSTRUKCJA.pdf"
       }
     ],
     "checklist": [
@@ -566,6 +602,18 @@ from jsonb_populate_recordset(null::public.content_documents, '[
         "label": "Świadczenia rodzinne na gov.pl",
         "url": "https://www.gov.pl/web/rodzina",
         "kind": "info"
+      },
+      {
+        "label": "SR-7 – wniosek o świadczenie rodzicielskie (PDF)",
+        "url": "https://www.gov.pl/attachment/e0953398-43da-49f9-b8f5-a766bb93be81",
+        "kind": "guide",
+        "pdfFile": "SR-7.pdf"
+      },
+      {
+        "label": "SR-7Z – załącznik do wniosku (PDF)",
+        "url": "https://www.gov.pl/attachment/2fc5e99d-3654-4d1d-80b0-37289f5a9766",
+        "kind": "guide",
+        "pdfFile": "SR-7Z.pdf"
       }
     ],
     "checklist": [
@@ -943,6 +991,12 @@ from jsonb_populate_recordset(null::public.content_documents, '[
         "label": "Opieka w ciąży – NFZ",
         "url": "https://www.nfz.gov.pl",
         "kind": "guide"
+      },
+      {
+        "label": "Wzór zaświadczenia w załączniku do rozporządzenia (PDF)",
+        "url": "https://eli.gov.pl/api/acts/DU/2021/199/text.pdf",
+        "kind": "guide",
+        "pdfFile": "OPIEKA-MEDYCZNA.pdf"
       }
     ],
     "checklist": [
@@ -998,14 +1052,9 @@ from jsonb_populate_recordset(null::public.content_documents, '[
     ],
     "links": [
       {
-        "label": "Zgłoś w mObywatelu",
-        "url": "https://www.gov.pl/web/mobywatel",
+        "label": "Zgłoś urodzenie dziecka – instrukcja i usługa Gov.pl",
+        "url": "https://www.gov.pl/web/gov/zglos-urodzenie-dziecka",
         "kind": "apply"
-      },
-      {
-        "label": "Usługi dla rodziców na gov.pl",
-        "url": "https://www.gov.pl",
-        "kind": "info"
       }
     ],
     "checklist": [
