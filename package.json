@@ -60,6 +60,7 @@
     "content:validate": "tsx scripts/validate-content.ts",
     "content:import": "tsx scripts/import-content.ts",
     "content:export": "tsx scripts/export-seed.ts",
+    "calc": "tsx scripts/test-calculators.ts",
     "check": "npm run typecheck && npm run lint && npm test && npm run content:validate"
   },
   "private": true
