@@ -17,11 +17,34 @@ export const ChildColorKeySchema = z.enum(['coral', 'teal', 'violet', 'amber', '
 export const ChildSexSchema = z.enum(['female', 'male', 'unknown']);
 export const ChildStatusSchema = z.enum(['expected', 'born']);
 
+/** Kto wypłaca zasiłki: ZUS (pracodawca ≤ 20 ubezpieczonych) albo sam pracodawca (> 20). */
+export const BenefitPayerSchema = z.enum(['zus', 'employer']);
+
+/** Dane o pracy rodzica (z PUE/eZUS) – bez nazwy i NIP-u pracodawcy. */
+export const WorkSchema = z.object({
+  employedSince: IsoDateSchema,
+  /** Wymiar etatu, np. 1 albo 0.5. */
+  fte: z.number().min(0.1).max(1),
+  employerInsuredCount: z.number().int().min(1).max(100_000),
+  benefitPayer: BenefitPayerSchema,
+  /** Aktualne wynagrodzenie brutto miesięcznie. */
+  monthlyGross: z.number().min(0).max(1_000_000),
+  /** Wynagrodzenie netto miesięcznie – podstawa wyliczenia dochodu na osobę. */
+  monthlyNet: z.number().min(0).max(1_000_000).optional(),
+  /** Podstawa wymiaru składek (brutto) za kolejne miesiące, od najstarszego. */
+  earnings: z.array(z.object({ month: z.string().regex(/^\d{4}-\d{2}$/), gross: z.number().min(0) })).max(24),
+  vacation: z.object({ entitlementDays: z.number().int().min(0).max(60), usedDays: z.number().int().min(0).max(60) }),
+  /** Trwający (lub zaplanowany) urlop macierzyński – widoczny w ZUS. */
+  maternityLeave: z.object({ startDate: IsoDateSchema, endDate: IsoDateSchema, weeks: z.number().int().min(1) }).optional(),
+  parentalLeave: z.object({ weeksTotal: z.number().int().min(1), weeksUsed: z.number().int().min(0) }).optional(),
+});
+
 export const ParentSchema = z.object({
   id: z.string().min(1),
   firstName: z.string().trim().min(1).max(60),
   gender: GenderSchema,
   employment: EmploymentSchema.optional(),
+  work: WorkSchema.optional(),
 });
 
 const ChildBaseSchema = z.object({
@@ -34,6 +57,14 @@ const ChildBaseSchema = z.object({
   premature: z.boolean().optional(),
   multipleBirthGroupId: z.string().optional(),
   disability: z.boolean().optional(),
+  /** Ubezpieczenie dziecka – pobierane z mObywatela; brak = nieznane. */
+  insured: z.boolean().optional(),
+  /** PESEL dziecka (z mObywatela) – wyświetlany domyślnie zamaskowany. */
+  pesel: z.string().regex(/^\d{11}$/).optional(),
+  /** Akt urodzenia: numer i urząd stanu cywilnego. */
+  birthRegistry: z.object({ actNumber: z.string().min(1), office: z.string().min(1) }).optional(),
+  /** Nadchodzące szczepienia (z rejestru). */
+  vaccinations: z.array(z.object({ name: z.string().min(1), dueDate: IsoDateSchema })).optional(),
   colorKey: ChildColorKeySchema,
 });
 
