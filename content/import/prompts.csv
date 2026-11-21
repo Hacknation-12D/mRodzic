@@ -1,0 +1,3 @@
+id,text,timing,visibleWhen
+wniosek-800,Jak złożyć wniosek o 800+?,"{""showFrom"": -14, ""showTo"": 365}",
+torba-szpital,Co spakować do torby do szpitala?,"{""showFrom"": -70, ""showTo"": 0}",

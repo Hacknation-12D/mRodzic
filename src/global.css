@@ -1,9 +1,98 @@
-:root {
-  --font-display:
-    Spline Sans, Inter, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji,
-    Segoe UI Symbol, Noto Color Emoji;
-  --font-mono:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
-  --font-rounded: 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif;
-  --font-serif: Georgia, 'Times New Roman', serif;
+@import 'tailwindcss';
+@import 'uniwind';
+
+/*
+ * Motyw w konwencji DaisyUI 5: semantyczne tokeny (primary, secondary, accent, neutral,
+ * base-100/200/300, base-content, info/success/warning/error + *-content) oraz promienie
+ * rounded-box / rounded-field / rounded-selector.
+ *
+ * Czemu nie sam plugin `daisyui`? Jego komponenty (btn, card, badge…) to CSS z pseudo-elementami
+ * i color-mix, którego React Native nie wykona. Dlatego klasy komponentów odwzorowujemy w
+ * src/shared/ui na tych samych tokenach, a ten plik jest jedynym źródłem kolorów.
+ * Wartości muszą się zgadzać z src/shared/theme/palette.ts (pilnuje tego test).
+ *
+ * Dodatkowe tokeny spoza DaisyUI: *-soft (wariant „badge-soft”), base-content-muted, overlay.
+ */
+
+@theme {
+  --radius-selector: 9999px;
+  --radius-field: 0.625rem;
+  --radius-box: 1rem;
+  --color-base-content-muted: #5e564c;
+  --color-neutral-soft: #ece7e0;
+  --color-primary-soft: #dceae4;
+  --color-primary-soft-content: #2f5d50;
+  --color-info-soft: #dce7f7;
+  --color-success-soft: #d6f0dd;
+  --color-warning-soft: #fce8c8;
+  --color-error-soft: #f9dedc;
+  --color-overlay: rgba(0, 0, 0, 0.4);
+}
+
+@layer theme {
+  :root {
+    @variant light {
+      --color-base-100: #ffffff;
+      --color-base-200: #f7f4ef;
+      --color-base-300: #ddd5cb;
+      --color-base-content: #1f1b16;
+      --color-base-content-muted: #5e564c;
+      --color-primary: #2f5d50;
+      --color-primary-content: #ffffff;
+      --color-primary-soft: #dceae4;
+      --color-primary-soft-content: #2f5d50;
+      --color-secondary: #dceae4;
+      --color-secondary-content: #2f5d50;
+      --color-accent: #1e4e8c;
+      --color-accent-content: #ffffff;
+      --color-neutral: #3b3732;
+      --color-neutral-content: #f2ede6;
+      --color-neutral-soft: #ece7e0;
+      --color-info: #1e4e8c;
+      --color-info-content: #ffffff;
+      --color-info-soft: #dce7f7;
+      --color-success: #1e6b3a;
+      --color-success-content: #ffffff;
+      --color-success-soft: #d6f0dd;
+      --color-warning: #8a5300;
+      --color-warning-content: #ffffff;
+      --color-warning-soft: #fce8c8;
+      --color-error: #b3261e;
+      --color-error-content: #ffffff;
+      --color-error-soft: #f9dedc;
+      --color-overlay: rgba(0, 0, 0, 0.4);
+    }
+
+    @variant dark {
+      --color-base-100: #1f1d1a;
+      --color-base-200: #141311;
+      --color-base-300: #3b3732;
+      --color-base-content: #f2ede6;
+      --color-base-content-muted: #b5ada2;
+      --color-primary: #8fc9b4;
+      --color-primary-content: #0e1f19;
+      --color-primary-soft: #23392f;
+      --color-primary-soft-content: #8fc9b4;
+      --color-secondary: #23392f;
+      --color-secondary-content: #8fc9b4;
+      --color-accent: #a9c7f5;
+      --color-accent-content: #0e1f19;
+      --color-neutral: #e7e0d6;
+      --color-neutral-content: #1f1b16;
+      --color-neutral-soft: #2e2b27;
+      --color-info: #a9c7f5;
+      --color-info-content: #0e1f19;
+      --color-info-soft: #1e2e45;
+      --color-success: #9ad8ab;
+      --color-success-content: #0e1f19;
+      --color-success-soft: #1d3a26;
+      --color-warning: #f5c27a;
+      --color-warning-content: #1f1b16;
+      --color-warning-soft: #43321a;
+      --color-error: #f2b8b5;
+      --color-error-content: #1f1b16;
+      --color-error-soft: #4a1f1c;
+      --color-overlay: rgba(0, 0, 0, 0.6);
+    }
+  }
 }

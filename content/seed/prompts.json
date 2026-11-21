@@ -1,0 +1,32 @@
+[
+  { "id": "aktywny-rodzic-co-to", "text": "Co to jest program Aktywny rodzic?", "timing": { "showFrom": 240, "showTo": 1095 } },
+  { "id": "becikowe-czy-mi-przysluguje", "text": "Czy przysługuje mi becikowe?", "timing": { "showFrom": -60, "showTo": 365 } },
+  { "id": "bilanse-zdrowia", "text": "Jakie są bilanse zdrowia dziecka?", "timing": { "showFrom": 0, "showTo": 2190 } },
+  {
+    "id": "kdr-dokumenty",
+    "text": "Jakie dokumenty są potrzebne do Karty Dużej Rodziny?",
+    "timing": { "showFrom": -200 },
+    "visibleWhen": { "fact": "household.childrenCount", "op": "gte", "value": 3 }
+  },
+  {
+    "id": "kosiniakowe-co-to",
+    "text": "Czym jest świadczenie rodzicielskie (kosiniakowe)?",
+    "timing": { "showFrom": -60, "showTo": 365 },
+    "visibleWhen": { "fact": "anyParent.employment", "op": "in", "value": ["unemployed", "student", "civil_contract", "other"] }
+  },
+  { "id": "macierzynski-vs-rodzicielski", "text": "Czym różni się urlop macierzyński od rodzicielskiego?", "timing": { "showFrom": -140, "showTo": 180 } },
+  { "id": "ojcowski-kiedy", "text": "Kiedy wziąć urlop ojcowski?", "timing": { "showFrom": -30, "showTo": 365 } },
+  { "id": "przedszkole-rekrutacja", "text": "Kiedy jest rekrutacja do przedszkola?", "timing": { "showFrom": 820, "showTo": 2190 } },
+  { "id": "rodzicielski-podzial", "text": "Jak podzielić urlop rodzicielski z partnerem?", "timing": { "showFrom": -84, "showTo": 300 } },
+  { "id": "swiadczenia-w-ciazy", "text": "Jakie świadczenia i formalności czekają mnie w ciąży?", "timing": { "showFrom": -280, "showTo": -1 } },
+  { "id": "torba-szpital", "text": "Co spakować do torby do szpitala?", "timing": { "showFrom": -70, "showTo": 0 } },
+  {
+    "id": "wczesniak-urlop",
+    "text": "Czy przysługuje mi dodatkowy urlop dla rodziców wcześniaka?",
+    "timing": { "showFrom": 0, "showTo": 180 },
+    "visibleWhen": { "fact": "child.premature", "op": "eq", "value": true }
+  },
+  { "id": "wniosek-800", "text": "Jak złożyć wniosek o 800+?", "timing": { "showFrom": -14, "showTo": 365 } },
+  { "id": "zglosic-urodzenie", "text": "Jak zgłosić urodzenie dziecka w mObywatelu?", "timing": { "showFrom": -30, "showTo": 60 } },
+  { "id": "zlobek-przygotowanie", "text": "Jak przygotować dziecko do żłobka?", "timing": { "showFrom": 240, "showTo": 1095 } }
+]

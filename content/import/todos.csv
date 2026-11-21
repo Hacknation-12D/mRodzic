@@ -1,0 +1,3 @@
+id,title,descriptionMd,timing,visibleWhen,category,relatedDocumentId,source,priority
+wybor-pediatry,Wybierz pediatrę (lekarza POZ) dla dziecka,Złóż deklarację wyboru lekarza POZ dla dziecka – po porodzie będzie potrzebny na pierwsze wizyty i bilanse.,"{""showFrom"": -56, ""showTo"": 30}",,health,,"{""name"": ""NFZ"", ""url"": ""https://www.nfz.gov.pl"", ""asOf"": ""2026-11""}",5
+profil-zaufany,Załóż Profil Zaufany i mObywatela,Z Profilem Zaufanym zgłosisz urodzenie i złożysz wnioski online – bez wizyt w urzędzie.,"{""showFrom"": -140, ""showTo"": 7}",,registry,zgloszenie-urodzenia,"{""name"": ""gov.pl – mObywatel"", ""url"": ""https://www.gov.pl/web/mobywatel"", ""asOf"": ""2026-11""}",4

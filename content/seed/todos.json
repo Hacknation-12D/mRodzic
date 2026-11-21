@@ -1,0 +1,139 @@
+[
+  {
+    "id": "deklaracja-polozna-poz",
+    "title": "Wybierz położną POZ",
+    "descriptionMd": "Złóż deklarację wyboru położnej podstawowej opieki zdrowotnej – będzie odwiedzać Was w domu po porodzie.",
+    "timing": { "showFrom": -98, "showTo": -7 },
+    "category": "health",
+    "source": { "name": "NFZ", "url": "https://www.nfz.gov.pl", "asOf": "2026-11" },
+    "priority": 4
+  },
+  {
+    "id": "dni-otwarte-przedszkole",
+    "title": "Odwiedź przedszkola w dni otwarte",
+    "descriptionMd": "Przed rekrutacją zobacz kilka przedszkoli w okolicy i wybierz swoje preferencje.",
+    "timing": { "showFrom": 820, "showTo": 1300 },
+    "category": "education",
+    "relatedDocumentId": "rekrutacja-przedszkole",
+    "priority": 3
+  },
+  {
+    "id": "edukacja-przedporodowa",
+    "title": "Zapisz się na edukację przedporodową",
+    "descriptionMd": "Zajęcia w szkole rodzenia lub u położnej POZ przygotowują do porodu, karmienia i opieki nad noworodkiem. TODO: uzupełnić po weryfikacji – zasady finansowania przez NFZ.",
+    "timing": { "showFrom": -150, "showTo": -21 },
+    "category": "health",
+    "source": { "name": "NFZ", "url": "https://www.nfz.gov.pl", "asOf": "2026-11" },
+    "priority": 4
+  },
+  {
+    "id": "fotelik-samochodowy",
+    "title": "Kup i zamontuj fotelik samochodowy",
+    "descriptionMd": "Fotelik będzie potrzebny już przy wyjściu ze szpitala. Przećwicz montaż przed porodem.",
+    "timing": { "showFrom": -84, "showTo": -7 },
+    "category": "home",
+    "priority": 3
+  },
+  {
+    "id": "ksiazeczka-zdrowia",
+    "title": "Pilnuj książeczki zdrowia dziecka",
+    "descriptionMd": "Książeczkę zdrowia dostaniesz w szpitalu. Zabieraj ją na każdą wizytę u pediatry i na szczepienia.",
+    "timing": { "showFrom": 0, "showTo": 30 },
+    "category": "health",
+    "priority": 2
+  },
+  {
+    "id": "plan-porodu-todo",
+    "title": "Spisz plan porodu",
+    "descriptionMd": "Zapisz swoje preferencje i omów je z lekarzem lub położną.",
+    "timing": { "showFrom": -84, "showTo": -14 },
+    "category": "health",
+    "priority": 3
+  },
+  {
+    "id": "podzial-urlopu",
+    "title": "Ustalcie podział urlopu rodzicielskiego",
+    "descriptionMd": "Wniosek o cały urlop w ciągu 21 dni od porodu daje 81,5% podstawy za cały okres. Ustalcie podział przed porodem.",
+    "timing": { "showFrom": -56, "showTo": 14 },
+    "visibleWhen": { "fact": "anyParent.employment", "op": "in", "value": ["employment_contract", "self_employed", "civil_contract"] },
+    "category": "work",
+    "relatedDocumentId": "urlop-rodzicielski",
+    "priority": 5
+  },
+  {
+    "id": "poinformuj-pracodawce",
+    "title": "Poinformuj pracodawcę o ciąży",
+    "descriptionMd": "Przedstaw pracodawcy zaświadczenie lekarskie o ciąży – od tego momentu przysługuje Ci szczególna ochrona. TODO: uzupełnić po weryfikacji – zakres ochrony i obowiązki pracodawcy.",
+    "timing": { "showFrom": -238, "showTo": -140 },
+    "visibleWhen": {
+      "all": [
+        { "fact": "me.gender", "op": "eq", "value": "female" },
+        { "fact": "me.employment", "op": "eq", "value": "employment_contract" }
+      ]
+    },
+    "category": "work",
+    "priority": 3
+  },
+  {
+    "id": "profil-zaufany",
+    "title": "Załóż Profil Zaufany i mObywatela",
+    "descriptionMd": "Z Profilem Zaufanym zgłosisz urodzenie i złożysz wnioski online – bez wizyt w urzędzie.",
+    "timing": { "showFrom": -140, "showTo": 7 },
+    "category": "registry",
+    "relatedDocumentId": "zgloszenie-urodzenia",
+    "source": { "name": "gov.pl – mObywatel", "url": "https://www.gov.pl/web/mobywatel", "asOf": "2026-11" },
+    "priority": 4
+  },
+  {
+    "id": "przeglad-budzetu",
+    "title": "Zrób przegląd budżetu i świadczeń",
+    "descriptionMd": "Sprawdź, które świadczenia już wpływają, a o które jeszcze możesz wnioskować. Uzupełnij dochód w profilu, żeby aplikacja oceniła kryteria.",
+    "timing": { "showFrom": 30, "showTo": 120 },
+    "category": "other",
+    "priority": 2
+  },
+  {
+    "id": "szczepienia-pso",
+    "title": "Szczepienia według Programu Szczepień Ochronnych",
+    "descriptionMd": "Terminy szczepień ustala pediatra zgodnie z aktualnym Programem Szczepień Ochronnych (PSO), publikowanym co roku przez Głównego Inspektora Sanitarnego. Sprawdź kalendarz w oficjalnym źródle i w książeczce zdrowia.",
+    "timing": { "showFrom": 0, "showTo": 730 },
+    "category": "health",
+    "source": { "name": "GIS – Program Szczepień Ochronnych", "url": "https://www.gov.pl/web/gis", "asOf": "2026-11" },
+    "priority": 5
+  },
+  {
+    "id": "wybor-pediatry",
+    "title": "Wybierz pediatrę (lekarza POZ) dla dziecka",
+    "descriptionMd": "Złóż deklarację wyboru lekarza POZ dla dziecka – po porodzie będzie potrzebny na pierwsze wizyty i bilanse.",
+    "timing": { "showFrom": -56, "showTo": 30 },
+    "category": "health",
+    "source": { "name": "NFZ", "url": "https://www.nfz.gov.pl", "asOf": "2026-11" },
+    "priority": 5
+  },
+  {
+    "id": "wyprawka",
+    "title": "Przygotuj wyprawkę",
+    "descriptionMd": "Ubranka, pieluchy, miejsce do spania, wanienka. Nie kupuj wszystkiego na zapas – wiele rzeczy można pożyczyć.",
+    "timing": { "showFrom": -112, "showTo": -14 },
+    "category": "home",
+    "priority": 2
+  },
+  {
+    "id": "zapisy-do-zlobka",
+    "title": "Zapisz dziecko do żłobka",
+    "descriptionMd": "W wielu miastach zapisy do żłobków publicznych trwają cały rok, a kolejki są długie. Zapisz dziecko z wyprzedzeniem i sprawdź wariant „Aktywnie w żłobku”.",
+    "timing": { "showFrom": 90, "showTo": 540 },
+    "category": "education",
+    "relatedDocumentId": "aktywny-rodzic",
+    "priority": 4
+  },
+  {
+    "id": "dokument-podrozny",
+    "title": "Dokument dla dziecka przed podróżą",
+    "descriptionMd": "Jeśli planujecie wyjazd za granicę, dziecko potrzebuje własnego dokumentu podróży. Wniosek złóż z wyprzedzeniem. TODO: uzupełnić po weryfikacji – czas oczekiwania.",
+    "timing": { "showFrom": 30, "showTo": 1095 },
+    "category": "registry",
+    "source": { "name": "gov.pl", "url": "https://www.gov.pl", "asOf": "2026-11" },
+    "priority": 1
+  }
+]

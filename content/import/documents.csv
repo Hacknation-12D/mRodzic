@@ -1,0 +1,31 @@
+id,scope,category,title,summary,bodyMd,timing,visibleWhen,requirements,links,checklist,assistantPrompts,amountLabel,tags,source,needsReview,priority
+becikowe,child,benefit,Becikowe,"Jednorazowa zapomoga z tytułu urodzenia dziecka – 1000 zł na dziecko, przy spełnieniu kryterium dochodowego.","## Co to jest
+Jednorazowa zapomoga z tytułu urodzenia się dziecka (tzw. becikowe) – **1000 zł** na każde dziecko.
+
+## Kto może dostać
+- dochód netto na osobę w rodzinie nie przekracza **1922 zł**,
+- matka pozostawała pod opieką medyczną **najpóźniej od 10. tygodnia ciąży do porodu** (potrzebne zaświadczenie od lekarza lub położnej).
+
+## Termin
+Wniosek trzeba złożyć **w ciągu 12 miesięcy od urodzenia dziecka**.
+
+## Jak złożyć
+W urzędzie gminy / ośrodku pomocy społecznej właściwym dla miejsca zamieszkania albo elektronicznie (np. przez portal Emp@tia).
+
+## Dokumenty
+Zaświadczenie o opiece medycznej w ciąży, dokumenty potwierdzające dochód rodziny. TODO: uzupełnić po weryfikacji – pełna lista dokumentów i rok bazowy dochodu.","{""showFrom"": -60, ""deadline"": 365, ""deadlineNote"": ""12 miesięcy od urodzenia dziecka""}",,"[{""id"": ""dziecko-urodzone"", ""label"": ""Dziecko jest już na świecie"", ""who"": ""child"", ""rule"": {""fact"": ""child.status"", ""op"": ""eq"", ""value"": ""born""}}, {""id"": ""kryterium-dochodowe"", ""label"": ""Dochód netto na osobę do 1922 zł"", ""who"": ""household"", ""rule"": {""fact"": ""household.incomePerPersonNet"", ""op"": ""lte"", ""value"": 1922}}]","[{""label"": ""Złóż wniosek przez Emp@tię"", ""url"": ""https://empatia.mrips.gov.pl"", ""kind"": ""apply""}, {""label"": ""Informacje na gov.pl"", ""url"": ""https://www.gov.pl/web/rodzina"", ""kind"": ""info""}]","[""Zaświadczenie o opiece medycznej od 10. tygodnia ciąży"", ""Akt urodzenia / PESEL dziecka"", ""Dokumenty o dochodach rodziny""]","[""Czy przysługuje mi becikowe przy moim dochodzie?"", ""Skąd wziąć zaświadczenie o opiece od 10. tygodnia ciąży?"", ""Do kiedy mogę złożyć wniosek o becikowe?""]",1000 zł jednorazowo,"[""becikowe"", ""zapomoga"", ""urodzenie"", ""gmina"", ""kryterium dochodowe""]","{""name"": ""gov.pl – jednorazowa zapomoga z tytułu urodzenia dziecka"", ""url"": ""https://www.gov.pl/web/rodzina"", ""asOf"": ""2026-11""}",true,4
+rodzina-800-plus,child,benefit,Rodzina 800+,"800 zł miesięcznie na każde dziecko, bez kryterium dochodowego. Wniosek w ciągu 3 miesięcy od urodzenia daje wyrównanie od miesiąca urodzenia.","## Co to jest
+Świadczenie wychowawcze **800 zł miesięcznie** na każde dziecko do ukończenia 18 lat. **Bez kryterium dochodowego.**
+
+## Termin
+Jeśli złożysz wniosek **w ciągu 3 miesięcy od urodzenia dziecka**, dostaniesz świadczenie z wyrównaniem **od miesiąca urodzenia**. Później – od miesiąca złożenia wniosku.
+
+## Jak złożyć
+Wyłącznie elektronicznie do ZUS:
+- PUE ZUS (eZUS),
+- aplikacja mObywatel,
+- bankowość elektroniczna,
+- portal Emp@tia.
+
+## Co przygotować
+PESEL dziecka (nadawany przy rejestracji urodzenia) i numer rachunku bankowego.","{""showFrom"": -14, ""deadline"": 90, ""deadlineNote"": ""żeby dostać wyrównanie od miesiąca urodzenia""}",,"[{""id"": ""dziecko-urodzone"", ""label"": ""Dziecko jest już na świecie i ma PESEL"", ""who"": ""child"", ""rule"": {""fact"": ""child.status"", ""op"": ""eq"", ""value"": ""born""}}]","[{""label"": ""Złóż wniosek w PUE ZUS"", ""url"": ""https://www.zus.pl"", ""kind"": ""apply""}, {""label"": ""Złóż wniosek w mObywatelu"", ""url"": ""https://www.gov.pl/web/mobywatel"", ""kind"": ""apply""}, {""label"": ""Emp@tia – informacje"", ""url"": ""https://empatia.mrips.gov.pl"", ""kind"": ""info""}]","[""PESEL dziecka"", ""Numer rachunku bankowego"", ""Dostęp do PUE ZUS / mObywatela / banku""]","[""Jak złożyć wniosek o 800+ dla noworodka?"", ""Co jeśli złożę wniosek o 800+ po 3 miesiącach?"", ""Gdzie sprawdzę status wniosku o 800+?""]",800 zł/mies.,"[""800"", ""800+"", ""800 plus"", ""swiadczenie wychowawcze"", ""zus"", ""rodzina""]","{""name"": ""ZUS – Rodzina 800+"", ""url"": ""https://www.zus.pl"", ""asOf"": ""2026-11""}",true,5

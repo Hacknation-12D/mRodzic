@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-21T00:00:00.000Z",
+  "notes": [
+    "Wszystkie pola timing liczone są w DNIACH względem porodu danego dziecka (birthDate, a gdy go brak – dueDate).",
+    "Ujemne = ciąża, 0 = dzień porodu, dodatnie = wiek dziecka.",
+    "Przelicznik: tydzień ciąży T → offset = (T − 40) × 7. Przykłady: 10. tydz. = -210, 28. tydz. = -84, 36. tydz. = -28.",
+    "Wiek dziecka: 1 miesiąc ≈ 30 dni, 12 miesięcy ≈ 365 dni, 3 lata ≈ 1095 dni.",
+    "showTo pominięte: bez końca (gdy brak deadline) albo do deadline + 30 dni (żeby widać było „po terminie”).",
+    "priority: 1–5, wyższa liczba = ważniejsze (sortowanie przy tym samym terminie).",
+    "Wszystkie kwoty i terminy: stan na 2026-11, needsReview = true do czasu weryfikacji merytorycznej.",
+    "Linki prowadzą na strony główne instytucji – głębokie adresy do uzupełnienia po weryfikacji."
+  ]
+}

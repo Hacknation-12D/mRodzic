@@ -1,0 +1,497 @@
+[
+  {
+    "id": "aktywny-rodzic",
+    "scope": "child",
+    "category": "benefit",
+    "title": "Aktywny rodzic",
+    "summary": "Program wsparcia rodziców małych dzieci w trzech wariantach: aktywni rodzice w pracy, aktywnie w żłobku i aktywnie w domu.",
+    "bodyMd": "## Co to jest\nProgram „Aktywny rodzic” to trzy świadczenia – rodzina wybiera jedno z nich dla danego dziecka:\n\n- **Aktywni rodzice w pracy** (tzw. „babciowe”) – **1500 zł/mies.**, a przy dziecku z niepełnosprawnością **1900 zł/mies.** Dla rodziców, którzy pracują i odprowadzają składki.\n- **Aktywnie w żłobku** – dofinansowanie opłaty za żłobek, klub dziecięcy lub dziennego opiekuna.\n- **Aktywnie w domu** – dla rodziców, którzy opiekują się dzieckiem w domu.\n\n## Kto może złożyć wniosek\nRodzic dziecka w wieku żłobkowym. TODO: uzupełnić po weryfikacji – dokładny przedział wieku dziecka, kwoty wariantów „w żłobku” i „w domu” oraz warunki dotyczące wysokości dochodu z pracy.\n\n## Jak złożyć\nWniosek składa się elektronicznie do ZUS – przez PUE ZUS, mObywatela, bankowość elektroniczną albo portal Emp@tia.\n\n## Ważne\nW danym miesiącu na jedno dziecko przysługuje tylko jeden wariant. Wybór wariantu warto przemyśleć przed zapisem do żłobka.",
+    "timing": { "showFrom": 300, "showTo": 1095 },
+    "requirements": [
+      {
+        "id": "dziecko-urodzone",
+        "label": "Dziecko jest już na świecie",
+        "who": "child",
+        "rule": { "fact": "child.status", "op": "eq", "value": "born" }
+      }
+    ],
+    "links": [
+      { "label": "Złóż wniosek w ZUS (PUE ZUS)", "url": "https://www.zus.pl", "kind": "apply" },
+      { "label": "Program na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" }
+    ],
+    "checklist": [
+      "Numer PESEL dziecka i rodziców",
+      "Dostęp do PUE ZUS, mObywatela lub bankowości elektronicznej",
+      "Dla wariantu „w żłobku”: dane placówki i umowa"
+    ],
+    "assistantPrompts": [
+      "Który wariant programu Aktywny rodzic wybrać?",
+      "Czy przy umowie zlecenie dostanę babciowe?",
+      "Jak złożyć wniosek o Aktywnego rodzica w ZUS?"
+    ],
+    "amountLabel": "1500 zł/mies. (1900 zł przy niepełnosprawności) – wariant „w pracy”",
+    "tags": ["babciowe", "zlobek", "zus", "aktywni rodzice", "aktywny rodzic", "swiadczenie"],
+    "source": { "name": "ZUS / gov.pl – program Aktywny rodzic", "url": "https://www.zus.pl", "asOf": "2026-11" },
+    "needsReview": true,
+    "priority": 4
+  },
+  {
+    "id": "becikowe",
+    "scope": "child",
+    "category": "benefit",
+    "title": "Becikowe",
+    "summary": "Jednorazowa zapomoga z tytułu urodzenia dziecka – 1000 zł na dziecko, przy spełnieniu kryterium dochodowego.",
+    "bodyMd": "## Co to jest\nJednorazowa zapomoga z tytułu urodzenia się dziecka (tzw. becikowe) – **1000 zł** na każde dziecko.\n\n## Kto może dostać\n- dochód netto na osobę w rodzinie nie przekracza **1922 zł**,\n- matka pozostawała pod opieką medyczną **najpóźniej od 10. tygodnia ciąży do porodu** (potrzebne zaświadczenie od lekarza lub położnej).\n\n## Termin\nWniosek trzeba złożyć **w ciągu 12 miesięcy od urodzenia dziecka**.\n\n## Jak złożyć\nW urzędzie gminy / ośrodku pomocy społecznej właściwym dla miejsca zamieszkania albo elektronicznie (np. przez portal Emp@tia).\n\n## Dokumenty\nZaświadczenie o opiece medycznej w ciąży, dokumenty potwierdzające dochód rodziny. TODO: uzupełnić po weryfikacji – pełna lista dokumentów i rok bazowy dochodu.",
+    "timing": {
+      "showFrom": -60,
+      "deadline": 365,
+      "deadlineNote": "12 miesięcy od urodzenia dziecka"
+    },
+    "requirements": [
+      {
+        "id": "dziecko-urodzone",
+        "label": "Dziecko jest już na świecie",
+        "who": "child",
+        "rule": { "fact": "child.status", "op": "eq", "value": "born" }
+      },
+      {
+        "id": "kryterium-dochodowe",
+        "label": "Dochód netto na osobę do 1922 zł",
+        "who": "household",
+        "rule": { "fact": "household.incomePerPersonNet", "op": "lte", "value": 1922 }
+      }
+    ],
+    "links": [
+      { "label": "Złóż wniosek przez Emp@tię", "url": "https://empatia.mrips.gov.pl", "kind": "apply" },
+      { "label": "Informacje na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" }
+    ],
+    "checklist": [
+      "Zaświadczenie o opiece medycznej od 10. tygodnia ciąży",
+      "Akt urodzenia / PESEL dziecka",
+      "Dokumenty o dochodach rodziny"
+    ],
+    "assistantPrompts": [
+      "Czy przysługuje mi becikowe przy moim dochodzie?",
+      "Skąd wziąć zaświadczenie o opiece od 10. tygodnia ciąży?",
+      "Do kiedy mogę złożyć wniosek o becikowe?"
+    ],
+    "amountLabel": "1000 zł jednorazowo",
+    "tags": ["becikowe", "zapomoga", "urodzenie", "gmina", "kryterium dochodowe"],
+    "source": { "name": "gov.pl – jednorazowa zapomoga z tytułu urodzenia dziecka", "url": "https://www.gov.pl/web/rodzina", "asOf": "2026-11" },
+    "needsReview": true,
+    "priority": 4
+  },
+  {
+    "id": "dodatek-z-tytulu-urodzenia",
+    "scope": "child",
+    "category": "benefit",
+    "title": "Dodatek z tytułu urodzenia dziecka",
+    "summary": "Jednorazowy dodatek do zasiłku rodzinnego – dla rodzin, które mają prawo do zasiłku rodzinnego.",
+    "bodyMd": "## Co to jest\nDodatek z tytułu urodzenia dziecka to jednorazowe świadczenie wypłacane **razem z zasiłkiem rodzinnym**. To coś innego niż becikowe – przy spełnieniu warunków można dostać oba.\n\n## Kto może dostać\nRodzina, która ma prawo do zasiłku rodzinnego (kryterium dochodowe). TODO: uzupełnić po weryfikacji – aktualna kwota dodatku, próg dochodowy zasiłku rodzinnego i termin złożenia wniosku.\n\n## Jak złożyć\nW urzędzie gminy / ośrodku pomocy społecznej albo elektronicznie przez Emp@tię.",
+    "timing": { "showFrom": 0, "showTo": 365 },
+    "requirements": [
+      {
+        "id": "dziecko-urodzone",
+        "label": "Dziecko jest już na świecie",
+        "who": "child",
+        "rule": { "fact": "child.status", "op": "eq", "value": "born" }
+      }
+    ],
+    "links": [
+      { "label": "Złóż wniosek przez Emp@tię", "url": "https://empatia.mrips.gov.pl", "kind": "apply" },
+      { "label": "Świadczenia rodzinne na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" }
+    ],
+    "checklist": ["Wniosek o zasiłek rodzinny (lub decyzja o jego przyznaniu)", "Akt urodzenia / PESEL dziecka"],
+    "assistantPrompts": [
+      "Czym różni się dodatek z tytułu urodzenia od becikowego?",
+      "Czy mam prawo do zasiłku rodzinnego?"
+    ],
+    "tags": ["dodatek", "zasilek rodzinny", "urodzenie", "gmina"],
+    "source": { "name": "gov.pl – świadczenia rodzinne", "url": "https://www.gov.pl/web/rodzina", "asOf": "2026-11" },
+    "needsReview": true,
+    "priority": 2
+  },
+  {
+    "id": "dodatkowy-urlop-wczesniak",
+    "scope": "child",
+    "category": "work",
+    "title": "Dodatkowy urlop macierzyński dla rodziców wcześniaka",
+    "summary": "Dodatkowy urlop macierzyński dla rodziców wcześniaków i dzieci hospitalizowanych po porodzie – do 8 lub do 15 tygodni.",
+    "bodyMd": "## Co to jest\nOd **19.03.2025** rodzice dzieci urodzonych przedwcześnie oraz dzieci wymagających hospitalizacji po porodzie mogą skorzystać z **dodatkowego urlopu macierzyńskiego – do 8 albo do 15 tygodni**, w zależności od sytuacji dziecka.\n\n## Kto może skorzystać\nRodzic uprawniony do urlopu macierzyńskiego / zasiłku macierzyńskiego. TODO: uzupełnić po weryfikacji – dokładne warunki (tydzień urodzenia, masa urodzeniowa, długość hospitalizacji) dla wariantu 8 i 15 tygodni.\n\n## Jak złożyć\nWniosek składa się do pracodawcy (osoby na etacie) lub do ZUS (np. prowadzący działalność). Potrzebne będą dokumenty ze szpitala.",
+    "timing": { "showFrom": 0, "showTo": 180 },
+    "visibleWhen": { "fact": "child.premature", "op": "eq", "value": true },
+    "requirements": [
+      {
+        "id": "wczesniak",
+        "label": "Dziecko urodzone przedwcześnie lub hospitalizowane",
+        "who": "child",
+        "rule": { "fact": "child.premature", "op": "eq", "value": true }
+      },
+      {
+        "id": "ubezpieczenie-chorobowe",
+        "label": "Rodzic z ubezpieczeniem chorobowym (etat; JDG / zlecenie – dobrowolne)",
+        "who": "anyParent",
+        "rule": { "fact": "anyParent.employment", "op": "in", "value": ["employment_contract", "self_employed", "civil_contract"] }
+      }
+    ],
+    "links": [
+      { "label": "Informacje w ZUS", "url": "https://www.zus.pl", "kind": "info" },
+      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" }
+    ],
+    "checklist": ["Karta informacyjna / zaświadczenie ze szpitala", "Wniosek do pracodawcy lub ZUS"],
+    "assistantPrompts": [
+      "Czy przysługuje mi dodatkowy urlop dla rodziców wcześniaka?",
+      "Ile tygodni dodatkowego urlopu dostanę?"
+    ],
+    "amountLabel": "do 8 lub 15 tygodni urlopu",
+    "tags": ["wczesniak", "urlop", "macierzynski", "hospitalizacja", "szpital"],
+    "source": { "name": "ZUS – dodatkowy urlop macierzyński (od 19.03.2025)", "url": "https://www.zus.pl", "asOf": "2026-11" },
+    "needsReview": true,
+    "priority": 5
+  },
+  {
+    "id": "karta-duzej-rodziny",
+    "scope": "household",
+    "category": "benefit",
+    "title": "Karta Dużej Rodziny",
+    "summary": "Karta zniżek dla rodzin z co najmniej trojgiem dzieci – w wersji plastikowej i w mObywatelu.",
+    "bodyMd": "## Co to jest\nKarta Dużej Rodziny (KDR) daje zniżki i ulgi u partnerów programu – instytucji publicznych i firm. Karta ma wersję tradycyjną i elektroniczną (w aplikacji mObywatel).\n\n## Kto może dostać\nRodzina wielodzietna – rodzic (lub małżonek rodzica) mający na utrzymaniu **co najmniej troje dzieci**. Kartę dostaje każdy członek rodziny. TODO: uzupełnić po weryfikacji – limity wieku dzieci (nauka, niepełnosprawność) i zasady dla rodziców.\n\n## Jak złożyć\nW urzędzie gminy właściwym dla miejsca zamieszkania albo elektronicznie (Emp@tia / gov.pl).",
+    "timing": { "showFrom": -200 },
+    "visibleWhen": { "fact": "household.childrenCount", "op": "gte", "value": 3 },
+    "requirements": [
+      {
+        "id": "troje-dzieci",
+        "label": "Co najmniej troje dzieci (już urodzonych)",
+        "who": "household",
+        "rule": { "fact": "household.childrenUnder18Count", "op": "gte", "value": 3 }
+      }
+    ],
+    "links": [
+      { "label": "Złóż wniosek przez Emp@tię", "url": "https://empatia.mrips.gov.pl", "kind": "apply" },
+      { "label": "Karta Dużej Rodziny na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" },
+      { "label": "mObywatel", "url": "https://www.gov.pl/web/mobywatel", "kind": "guide" }
+    ],
+    "checklist": ["Numery PESEL członków rodziny", "Dokument tożsamości", "Zdjęcia do kart tradycyjnych (jeśli chcesz plastikowe)"],
+    "assistantPrompts": [
+      "Jakie dokumenty są potrzebne do Karty Dużej Rodziny?",
+      "Czy mogę złożyć wniosek o KDR przed porodem trzeciego dziecka?"
+    ],
+    "tags": ["kdr", "karta duzej rodziny", "wielodzietna", "znizki", "troje dzieci"],
+    "source": { "name": "gov.pl – Karta Dużej Rodziny", "url": "https://www.gov.pl/web/rodzina", "asOf": "2026-11" },
+    "needsReview": true,
+    "priority": 3
+  },
+  {
+    "id": "rekrutacja-przedszkole",
+    "scope": "child",
+    "category": "education",
+    "title": "Rekrutacja do przedszkola",
+    "summary": "Zapisy do publicznego przedszkola odbywają się zwykle raz w roku, wiosną – terminy ustala gmina.",
+    "bodyMd": "## Co to jest\nRekrutacja do publicznych przedszkoli i oddziałów przedszkolnych. Prowadzi ją gmina – często przez internetowy system zapisów.\n\n## Kiedy\nZwykle wiosną, na rok szkolny zaczynający się we wrześniu. **Terminy ustala gmina** – sprawdź stronę urzędu lub wydziału edukacji. TODO: uzupełnić po weryfikacji – od jakiego wieku dziecko ma prawo do miejsca w przedszkolu.\n\n## Jak się przygotować\n- sprawdź listę przedszkoli w okolicy i dni otwarte,\n- przygotuj dokumenty potwierdzające kryteria (np. wielodzietność, zatrudnienie rodziców),\n- zapisz się w terminie – po rekrutacji zostaje zwykle tylko postępowanie uzupełniające.",
+    "timing": { "showFrom": 820, "showTo": 2190 },
+    "requirements": [
+      {
+        "id": "dziecko-urodzone",
+        "label": "Dziecko jest już na świecie",
+        "who": "child",
+        "rule": { "fact": "child.status", "op": "eq", "value": "born" }
+      }
+    ],
+    "links": [
+      { "label": "Edukacja na gov.pl", "url": "https://www.gov.pl/web/edukacja", "kind": "info" }
+    ],
+    "checklist": ["Lista wybranych przedszkoli (zwykle kilka preferencji)", "Oświadczenia o spełnianiu kryteriów", "Numer PESEL dziecka"],
+    "assistantPrompts": [
+      "Kiedy jest rekrutacja do przedszkola w mojej gminie?",
+      "Jakie kryteria liczą się przy zapisach do przedszkola?"
+    ],
+    "tags": ["przedszkole", "rekrutacja", "zapisy", "edukacja"],
+    "source": { "name": "gov.pl – edukacja przedszkolna", "url": "https://www.gov.pl/web/edukacja", "asOf": "2026-11" },
+    "needsReview": true,
+    "priority": 3
+  },
+  {
+    "id": "rodzina-800-plus",
+    "scope": "child",
+    "category": "benefit",
+    "title": "Rodzina 800+",
+    "summary": "800 zł miesięcznie na każde dziecko, bez kryterium dochodowego. Wniosek w ciągu 3 miesięcy od urodzenia daje wyrównanie od miesiąca urodzenia.",
+    "bodyMd": "## Co to jest\nŚwiadczenie wychowawcze **800 zł miesięcznie** na każde dziecko do ukończenia 18 lat. **Bez kryterium dochodowego.**\n\n## Termin\nJeśli złożysz wniosek **w ciągu 3 miesięcy od urodzenia dziecka**, dostaniesz świadczenie z wyrównaniem **od miesiąca urodzenia**. Później – od miesiąca złożenia wniosku.\n\n## Jak złożyć\nWyłącznie elektronicznie do ZUS:\n- PUE ZUS (eZUS),\n- aplikacja mObywatel,\n- bankowość elektroniczna,\n- portal Emp@tia.\n\n## Co przygotować\nPESEL dziecka (nadawany przy rejestracji urodzenia) i numer rachunku bankowego.",
+    "timing": {
+      "showFrom": -14,
+      "deadline": 90,
+      "deadlineNote": "żeby dostać wyrównanie od miesiąca urodzenia"
+    },
+    "requirements": [
+      {
+        "id": "dziecko-urodzone",
+        "label": "Dziecko jest już na świecie i ma PESEL",
+        "who": "child",
+        "rule": { "fact": "child.status", "op": "eq", "value": "born" }
+      }
+    ],
+    "links": [
+      { "label": "Złóż wniosek w PUE ZUS", "url": "https://www.zus.pl", "kind": "apply" },
+      { "label": "Złóż wniosek w mObywatelu", "url": "https://www.gov.pl/web/mobywatel", "kind": "apply" },
+      { "label": "Emp@tia – informacje", "url": "https://empatia.mrips.gov.pl", "kind": "info" }
+    ],
+    "checklist": ["PESEL dziecka", "Numer rachunku bankowego", "Dostęp do PUE ZUS / mObywatela / banku"],
+    "assistantPrompts": [
+      "Jak złożyć wniosek o 800+ dla noworodka?",
+      "Co jeśli złożę wniosek o 800+ po 3 miesiącach?",
+      "Gdzie sprawdzę status wniosku o 800+?"
+    ],
+    "amountLabel": "800 zł/mies.",
+    "tags": ["800", "800+", "800 plus", "swiadczenie wychowawcze", "zus", "rodzina"],
+    "source": { "name": "ZUS – Rodzina 800+", "url": "https://www.zus.pl", "asOf": "2026-11" },
+    "needsReview": true,
+    "priority": 5
+  },
+  {
+    "id": "swiadczenie-rodzicielskie",
+    "scope": "child",
+    "category": "benefit",
+    "title": "Świadczenie rodzicielskie („kosiniakowe”)",
+    "summary": "1000 zł netto miesięcznie dla rodziców, którzy nie mają prawa do zasiłku macierzyńskiego – np. bez pracy, studentów, przy umowie o dzieło.",
+    "bodyMd": "## Co to jest\nŚwiadczenie rodzicielskie (tzw. kosiniakowe) – **1000 zł netto miesięcznie** dla rodziców, którzy **nie mają prawa do zasiłku macierzyńskiego**.\n\n## Kto może dostać\nNp. osoby bezrobotne, studenci, osoby pracujące na umowie o dzieło lub na zleceniu bez ubezpieczenia chorobowego. Bez kryterium dochodowego. TODO: uzupełnić po weryfikacji – okres wypłaty (w tym przy ciąży mnogiej) i termin złożenia wniosku z wyrównaniem.\n\n## Jak złożyć\nW urzędzie gminy / ośrodku pomocy społecznej albo elektronicznie przez Emp@tię.",
+    "timing": { "showFrom": -30, "showTo": 365 },
+    "visibleWhen": {
+      "any": [
+        { "fact": "anyParent.employment", "op": "in", "value": ["unemployed", "student", "civil_contract", "other"] },
+        { "fact": "anyParent.employment", "op": "notExists" }
+      ]
+    },
+    "requirements": [
+      {
+        "id": "brak-zasilku-macierzynskiego",
+        "label": "Brak prawa do zasiłku macierzyńskiego (np. bez pracy, student/ka)",
+        "who": "me",
+        "rule": { "fact": "me.employment", "op": "in", "value": ["unemployed", "student"] }
+      },
+      {
+        "id": "dziecko-urodzone",
+        "label": "Dziecko jest już na świecie",
+        "who": "child",
+        "rule": { "fact": "child.status", "op": "eq", "value": "born" }
+      }
+    ],
+    "links": [
+      { "label": "Złóż wniosek przez Emp@tię", "url": "https://empatia.mrips.gov.pl", "kind": "apply" },
+      { "label": "Świadczenia rodzinne na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" }
+    ],
+    "checklist": ["Akt urodzenia / PESEL dziecka", "Dokument tożsamości", "Numer rachunku bankowego"],
+    "assistantPrompts": [
+      "Czy przy umowie zlecenie dostanę świadczenie rodzicielskie?",
+      "Czym różni się kosiniakowe od zasiłku macierzyńskiego?"
+    ],
+    "amountLabel": "1000 zł netto/mies.",
+    "tags": ["kosiniakowe", "swiadczenie rodzicielskie", "bez pracy", "student", "umowa o dzielo"],
+    "source": { "name": "gov.pl – świadczenie rodzicielskie", "url": "https://www.gov.pl/web/rodzina", "asOf": "2026-11" },
+    "needsReview": true,
+    "priority": 4
+  },
+  {
+    "id": "ubezpieczenie-zdrowotne-dziecka",
+    "scope": "child",
+    "category": "health",
+    "title": "Zgłoszenie dziecka do ubezpieczenia zdrowotnego",
+    "summary": "Dziecko trzeba zgłosić do ubezpieczenia zdrowotnego rodzica – przez pracodawcę, w ZUS lub KRUS.",
+    "bodyMd": "## Co to jest\nZgłoszenie dziecka jako członka rodziny do ubezpieczenia zdrowotnego rodzica (NFZ). Dzięki temu dziecko ma potwierdzone prawo do świadczeń.\n\n## Kto zgłasza\n- **pracownik** – przekazuje dane dziecka pracodawcy, który zgłasza je w ZUS,\n- **przedsiębiorca (JDG)** – zgłasza dziecko samodzielnie (np. przez PUE ZUS),\n- inne sytuacje – płatnik składek rodzica (np. urząd pracy).\n\nTODO: uzupełnić po weryfikacji – termin na zgłoszenie i formularz ZUS.\n\n## Wskazówka\nPo nadaniu PESEL zrób to od razu – unikniesz problemów przy pierwszych wizytach u pediatry.",
+    "timing": { "showFrom": 0, "showTo": 90 },
+    "requirements": [
+      {
+        "id": "dziecko-urodzone",
+        "label": "Dziecko jest już na świecie i ma PESEL",
+        "who": "child",
+        "rule": { "fact": "child.status", "op": "eq", "value": "born" }
+      },
+      {
+        "id": "rodzic-ubezpieczony",
+        "label": "Co najmniej jeden rodzic jest ubezpieczony (praca, JDG, zlecenie)",
+        "who": "anyParent",
+        "rule": { "fact": "anyParent.employment", "op": "in", "value": ["employment_contract", "self_employed", "civil_contract"] }
+      }
+    ],
+    "links": [
+      { "label": "PUE ZUS", "url": "https://www.zus.pl", "kind": "apply" },
+      { "label": "Ubezpieczenie zdrowotne – NFZ", "url": "https://www.nfz.gov.pl", "kind": "info" }
+    ],
+    "checklist": ["PESEL dziecka", "Dane rodzica ubezpieczonego"],
+    "assistantPrompts": ["Jak zgłosić dziecko do ubezpieczenia, jeśli prowadzę JDG?", "Kto zgłasza dziecko do NFZ, gdy oboje pracujemy?"],
+    "tags": ["ubezpieczenie", "nfz", "zus", "zdrowie", "zgloszenie"],
+    "source": { "name": "NFZ / ZUS – zgłoszenie członka rodziny", "url": "https://www.nfz.gov.pl", "asOf": "2026-11" },
+    "needsReview": true,
+    "priority": 4
+  },
+  {
+    "id": "urlop-macierzynski",
+    "scope": "child",
+    "category": "work",
+    "title": "Urlop i zasiłek macierzyński",
+    "summary": "20 tygodni urlopu macierzyńskiego przy urodzeniu jednego dziecka, dłużej przy ciąży mnogiej. Zasiłek wypłaca ZUS lub pracodawca.",
+    "bodyMd": "## Co to jest\nUrlop macierzyński trwa **20 tygodni** przy urodzeniu jednego dziecka – **dłużej przy ciąży mnogiej**. W tym czasie przysługuje zasiłek macierzyński.\n\n## Kto może skorzystać\nOsoby z ubezpieczeniem chorobowym: pracownicy na etacie oraz – jeśli opłacają dobrowolne ubezpieczenie chorobowe – prowadzący działalność i zleceniobiorcy. Osoby bez tego ubezpieczenia mogą mieć prawo do świadczenia rodzicielskiego.\n\n## Jak złożyć\n- **etat** – wniosek do pracodawcy,\n- **JDG / zlecenie** – wniosek do ZUS (np. przez PUE ZUS).\n\nZłożenie w ciągu 21 dni od porodu wniosku o cały urlop macierzyński i rodzicielski daje zasiłek 81,5% podstawy za cały okres – zobacz dokument „Urlop rodzicielski”.\n\nTODO: uzupełnić po weryfikacji – długość urlopu przy ciąży mnogiej i możliwość rozpoczęcia przed porodem.",
+    "timing": { "showFrom": -84, "showTo": 140 },
+    "visibleWhen": {
+      "any": [
+        { "fact": "me.gender", "op": "eq", "value": "female" },
+        { "fact": "partner.gender", "op": "eq", "value": "female" }
+      ]
+    },
+    "requirements": [
+      {
+        "id": "ubezpieczenie-chorobowe",
+        "label": "Matka ma ubezpieczenie chorobowe (etat; JDG / zlecenie – dobrowolne)",
+        "who": "anyParent",
+        "rule": { "fact": "anyParent.employment", "op": "in", "value": ["employment_contract", "self_employed", "civil_contract"] }
+      }
+    ],
+    "links": [
+      { "label": "Zasiłek macierzyński – ZUS", "url": "https://www.zus.pl", "kind": "info" },
+      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" }
+    ],
+    "checklist": ["Akt urodzenia dziecka (odpis)", "Wniosek o urlop do pracodawcy / ZUS", "Zaświadczenie lekarskie (jeśli urlop od daty przed porodem)"],
+    "assistantPrompts": [
+      "Ile trwa urlop macierzyński przy bliźniakach?",
+      "Czy przy JDG należy mi się zasiłek macierzyński?",
+      "Czym różni się urlop macierzyński od rodzicielskiego?"
+    ],
+    "amountLabel": "20 tygodni (1 dziecko)",
+    "tags": ["macierzynski", "urlop", "zasilek", "zus", "praca", "etat"],
+    "source": { "name": "ZUS – zasiłek macierzyński", "url": "https://www.zus.pl", "asOf": "2026-11" },
+    "needsReview": true,
+    "priority": 4
+  },
+  {
+    "id": "urlop-ojcowski",
+    "scope": "child",
+    "category": "work",
+    "title": "Urlop ojcowski",
+    "summary": "2 tygodnie urlopu dla ojca – do wykorzystania do ukończenia przez dziecko 12 miesięcy.",
+    "bodyMd": "## Co to jest\nUrlop ojcowski to **2 tygodnie** urlopu dla ojca dziecka. Można go wykorzystać **do ukończenia przez dziecko 12 miesięcy** – jednorazowo albo w dwóch częściach po tygodniu.\n\n## Kto może skorzystać\nOjciec z ubezpieczeniem chorobowym (etat; JDG / zlecenie przy dobrowolnym ubezpieczeniu). Za czas urlopu przysługuje zasiłek macierzyński.\n\n## Jak złożyć\n- **etat** – wniosek do pracodawcy (TODO: uzupełnić po weryfikacji – z jakim wyprzedzeniem),\n- **JDG / zlecenie** – wniosek do ZUS.",
+    "timing": {
+      "showFrom": -30,
+      "deadline": 365,
+      "deadlineNote": "do ukończenia przez dziecko 12 miesięcy"
+    },
+    "visibleWhen": {
+      "any": [
+        { "fact": "me.gender", "op": "eq", "value": "male" },
+        { "fact": "partner.gender", "op": "eq", "value": "male" }
+      ]
+    },
+    "requirements": [
+      {
+        "id": "ubezpieczenie-chorobowe",
+        "label": "Ojciec ma ubezpieczenie chorobowe (etat; JDG / zlecenie – dobrowolne)",
+        "who": "anyParent",
+        "rule": { "fact": "anyParent.employment", "op": "in", "value": ["employment_contract", "self_employed", "civil_contract"] }
+      }
+    ],
+    "links": [
+      { "label": "Zasiłek za urlop ojcowski – ZUS", "url": "https://www.zus.pl", "kind": "info" },
+      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" }
+    ],
+    "checklist": ["Akt urodzenia dziecka (odpis)", "Wniosek o urlop ojcowski"],
+    "assistantPrompts": ["Kiedy najlepiej wziąć urlop ojcowski?", "Czy urlop ojcowski można podzielić na części?"],
+    "amountLabel": "2 tygodnie",
+    "tags": ["ojcowski", "urlop", "tata", "ojciec", "praca", "zus"],
+    "source": { "name": "ZUS / gov.pl – urlop ojcowski", "url": "https://www.zus.pl", "asOf": "2026-11" },
+    "needsReview": true,
+    "priority": 3
+  },
+  {
+    "id": "urlop-rodzicielski",
+    "scope": "child",
+    "category": "work",
+    "title": "Wniosek o urlop rodzicielski (wariant 81,5%)",
+    "summary": "41 tygodni urlopu rodzicielskiego (43 przy ciąży mnogiej). Wniosek o całość w ciągu 21 dni od porodu daje 81,5% podstawy za cały okres.",
+    "bodyMd": "## Co to jest\nUrlop rodzicielski trwa **41 tygodni** (**43 tygodnie** przy ciąży mnogiej). Każdy z rodziców ma **9 tygodni nieprzenoszalnych** – nie można ich oddać drugiemu rodzicowi.\n\n## Wariant 81,5%\nJeśli **w ciągu 21 dni od porodu** złożysz wniosek o **cały** urlop macierzyński i rodzicielski, zasiłek wynosi **81,5% podstawy za cały okres**.\n\n## Jak złożyć\n- **etat** – wniosek do pracodawcy,\n- **JDG / zlecenie** – wniosek do ZUS.\n\n## Wskazówka\nUstalcie z partnerem podział urlopu jeszcze przed porodem – 21 dni mija szybko. TODO: uzupełnić po weryfikacji – wysokość zasiłku w wariancie bez wniosku w 21 dni.",
+    "timing": {
+      "showFrom": -56,
+      "deadline": 21,
+      "deadlineNote": "wniosek o cały urlop w ciągu 21 dni od porodu → 81,5% podstawy za cały okres"
+    },
+    "requirements": [
+      {
+        "id": "ubezpieczenie-chorobowe",
+        "label": "Rodzic z ubezpieczeniem chorobowym (etat; JDG / zlecenie – dobrowolne)",
+        "who": "anyParent",
+        "rule": { "fact": "anyParent.employment", "op": "in", "value": ["employment_contract", "self_employed", "civil_contract"] }
+      }
+    ],
+    "links": [
+      { "label": "Zasiłek macierzyński – ZUS", "url": "https://www.zus.pl", "kind": "info" },
+      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" }
+    ],
+    "checklist": ["Odpis aktu urodzenia", "Ustalony podział urlopu między rodzicami", "Wniosek do pracodawcy / ZUS"],
+    "assistantPrompts": [
+      "Jak podzielić urlop rodzicielski z partnerem?",
+      "Co daje złożenie wniosku w 21 dni od porodu?",
+      "Ile tygodni urlopu rodzicielskiego mamy przy bliźniakach?"
+    ],
+    "amountLabel": "81,5% podstawy (wniosek w 21 dni)",
+    "tags": ["rodzicielski", "urlop", "81,5", "21 dni", "zasilek", "zus", "praca"],
+    "source": { "name": "ZUS – zasiłek macierzyński za urlop rodzicielski", "url": "https://www.zus.pl", "asOf": "2026-11" },
+    "needsReview": true,
+    "priority": 5
+  },
+  {
+    "id": "zaswiadczenie-opieka-medyczna",
+    "scope": "child",
+    "category": "health",
+    "title": "Zaświadczenie o opiece medycznej od 10. tygodnia ciąży",
+    "summary": "Zaświadczenie od lekarza lub położnej, że byłaś pod opieką medyczną najpóźniej od 10. tygodnia ciąży – warunek becikowego.",
+    "bodyMd": "## Po co\nTo zaświadczenie jest **warunkiem becikowego** – potwierdza, że matka pozostawała pod opieką medyczną **najpóźniej od 10. tygodnia ciąży do porodu**.\n\n## Jak zdobyć\n- zgłoś się do lekarza lub położnej **przed końcem 10. tygodnia ciąży**,\n- poproś o zaświadczenie na wizycie pod koniec ciąży (albo po porodzie) – wystawia je lekarz lub położna prowadząca.\n\nTODO: uzupełnić po weryfikacji – wzór zaświadczenia i wyjątki.",
+    "timing": {
+      "showFrom": -238,
+      "showTo": 60,
+      "deadlineNote": "pierwsza wizyta najpóźniej w 10. tygodniu ciąży"
+    },
+    "requirements": [],
+    "links": [
+      { "label": "Becikowe – informacje na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" },
+      { "label": "Opieka w ciąży – NFZ", "url": "https://www.nfz.gov.pl", "kind": "guide" }
+    ],
+    "checklist": ["Karta ciąży / dokumentacja wizyt", "Dane lekarza lub położnej prowadzącej"],
+    "assistantPrompts": ["Skąd wziąć zaświadczenie o opiece od 10. tygodnia ciąży?", "Co jeśli pierwsza wizyta była po 10. tygodniu?"],
+    "tags": ["zaswiadczenie", "10 tydzien", "becikowe", "ciaza", "lekarz", "polozna"],
+    "source": { "name": "gov.pl – warunki jednorazowej zapomogi", "url": "https://www.gov.pl/web/rodzina", "asOf": "2026-11" },
+    "needsReview": true,
+    "priority": 3
+  },
+  {
+    "id": "zgloszenie-urodzenia",
+    "scope": "child",
+    "category": "registry",
+    "title": "Zgłoszenie urodzenia i nadanie PESEL",
+    "summary": "Urodzenie trzeba zgłosić w ciągu 21 dni od sporządzenia karty urodzenia – w urzędzie stanu cywilnego albo w mObywatelu. Dziecko dostaje PESEL.",
+    "bodyMd": "## Co to jest\nRejestracja urodzenia w urzędzie stanu cywilnego (USC). Po rejestracji dziecko dostaje **akt urodzenia i numer PESEL** – bez nich nie złożysz większości wniosków (np. 800+).\n\n## Termin\n**21 dni od sporządzenia karty urodzenia** (szpital przekazuje ją do USC zwykle kilka dni po porodzie).\n\n## Jak zgłosić\n- **online** – w aplikacji mObywatel lub na gov.pl (potrzebny Profil Zaufany lub e-dowód),\n- **osobiście** – w dowolnym urzędzie stanu cywilnego.\n\nPrzy zgłoszeniu wybierasz imię (imiona) dziecka i możesz od razu zameldować dziecko.",
+    "timing": {
+      "showFrom": -14,
+      "showTo": 60,
+      "deadline": 21,
+      "deadlineNote": "21 dni od sporządzenia karty urodzenia (termin orientacyjny liczony od porodu)"
+    },
+    "requirements": [
+      {
+        "id": "dziecko-urodzone",
+        "label": "Dziecko jest już na świecie",
+        "who": "child",
+        "rule": { "fact": "child.status", "op": "eq", "value": "born" }
+      }
+    ],
+    "links": [
+      { "label": "Zgłoś w mObywatelu", "url": "https://www.gov.pl/web/mobywatel", "kind": "apply" },
+      { "label": "Usługi dla rodziców na gov.pl", "url": "https://www.gov.pl", "kind": "info" }
+    ],
+    "checklist": ["Profil Zaufany / mObywatel", "Dowody osobiste rodziców", "Wybrane imię (imiona) dziecka"],
+    "assistantPrompts": [
+      "Jak zgłosić urodzenie dziecka w mObywatelu?",
+      "Co jeśli nie zdążę zgłosić urodzenia w 21 dni?"
+    ],
+    "tags": ["pesel", "usc", "urodzenie", "akt urodzenia", "mobywatel", "rejestracja", "zgloszenie"],
+    "source": { "name": "gov.pl – zgłoszenie urodzenia dziecka", "url": "https://www.gov.pl", "asOf": "2026-11" },
+    "needsReview": true,
+    "priority": 5
+  }
+]

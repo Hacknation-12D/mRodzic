@@ -1,0 +1,149 @@
+[
+  {
+    "id": "adaptacja-w-zlobku",
+    "title": "Adaptacja w żłobku krok po kroku",
+    "summaryMd": "Pierwsze dni w żłobku warto rozłożyć w czasie: krótkie pobyty, ten sam rytuał pożegnania i ulubiona przytulanka z domu.",
+    "bodyMd": "## Jak przygotować adaptację\n- zacznij od krótkich pobytów, najlepiej razem z dzieckiem,\n- wydłużaj czas stopniowo, w miarę jak dziecko się oswaja,\n- żegnaj się krótko i zawsze tak samo – i nie wychodź „po cichu”,\n- daj dziecku rzecz z domu (przytulankę, kocyk),\n- zaplanuj adaptację przed powrotem do pracy – zostaw sobie zapas czasu.\n\nPłacz przy rozstaniu w pierwszych tygodniach jest normalny. Pytaj opiekunów, jak dziecko radzi sobie po Twoim wyjściu.",
+    "timing": { "showFrom": 300, "showTo": 1095 },
+    "tags": ["zlobek", "adaptacja", "powrot do pracy"],
+    "priority": 4
+  },
+  {
+    "id": "baby-blues",
+    "title": "Baby blues czy depresja poporodowa?",
+    "summaryMd": "Smutek i płaczliwość w pierwszych dniach po porodzie są częste. Jeśli trwają dłużej lub się nasilają – porozmawiaj z lekarzem lub położną.",
+    "bodyMd": "## Na co zwrócić uwagę\nGorszy nastrój, zmęczenie i płaczliwość w pierwszych dniach po porodzie zdarzają się bardzo często.\n\n**Skontaktuj się z lekarzem, położną lub psychologiem**, jeśli:\n- smutek, lęk lub poczucie beznadziei nie mijają albo się nasilają,\n- trudno Ci zajmować się sobą lub dzieckiem,\n- pojawiają się myśli o zrobieniu krzywdy sobie lub dziecku – wtedy szukaj pomocy natychmiast (numer alarmowy 112).\n\nTo dotyczy także drugiego rodzica. Proszenie o pomoc to troska o dziecko.",
+    "timing": { "showFrom": 0, "showTo": 365 },
+    "tags": ["zdrowie psychiczne", "depresja poporodowa", "wsparcie"],
+    "source": { "name": "NFZ – zdrowie psychiczne", "url": "https://www.nfz.gov.pl", "asOf": "2026-11" },
+    "priority": 5
+  },
+  {
+    "id": "bezpieczenstwo-w-domu",
+    "title": "Dom bezpieczny dla raczkującego dziecka",
+    "summaryMd": "Gdy dziecko zaczyna się przemieszczać, zabezpiecz gniazdka, szuflady, schody i rogi mebli. Leki i chemię trzymaj wysoko i pod zamknięciem.",
+    "bodyMd": "## Lista kontrolna\n- zaślepki do gniazdek i zabezpieczenia szuflad,\n- bramki przy schodach,\n- meble przymocowane do ściany,\n- leki, chemia i małe przedmioty poza zasięgiem,\n- kable i sznurki od rolet schowane,\n- nigdy nie zostawiaj dziecka samego w wannie.\n\nPrzejdź po domu na czworakach – zobaczysz zagrożenia z perspektywy dziecka.",
+    "timing": { "showFrom": 150, "showTo": 720 },
+    "tags": ["bezpieczenstwo", "dom", "raczkowanie"],
+    "priority": 3
+  },
+  {
+    "id": "bilanse-zdrowia",
+    "title": "Bilanse zdrowia u pediatry",
+    "summaryMd": "Bilanse to bezpłatne wizyty kontrolne w kluczowych momentach rozwoju dziecka. Zapisuj terminy i zabieraj książeczkę zdrowia.",
+    "bodyMd": "## Co to jest bilans\nBilans zdrowia to wizyta kontrolna u lekarza POZ, na której ocenia się rozwój dziecka – wzrost, wagę, rozwój ruchowy, wzrok, słuch i mowę.\n\n## Jak się przygotować\n- zabierz książeczkę zdrowia dziecka,\n- zapisz pytania i obserwacje (sen, jedzenie, rozwój),\n- umów wizytę z wyprzedzeniem.\n\nTODO: uzupełnić po weryfikacji – harmonogram bilansów wg aktualnych przepisów.",
+    "timing": { "showFrom": 21, "showTo": 2190 },
+    "tags": ["bilans", "pediatra", "zdrowie", "poz"],
+    "source": { "name": "NFZ – opieka nad dzieckiem w POZ", "url": "https://www.nfz.gov.pl", "asOf": "2026-11" },
+    "priority": 3
+  },
+  {
+    "id": "czytanie-i-mowa",
+    "title": "Mowa rozwija się w rozmowie",
+    "summaryMd": "Mów do dziecka, opisuj, co robicie, czytaj krótkie książeczki i śpiewaj. Ekrany nie zastąpią rozmowy z dorosłym.",
+    "bodyMd": "## Proste nawyki\n- komentuj codzienne czynności („Teraz zakładamy skarpetki”),\n- odpowiadaj na gaworzenie i gesty,\n- codziennie oglądajcie razem książeczkę,\n- śpiewajcie piosenki z pokazywaniem,\n- ograniczaj ekrany u najmłodszych dzieci.\n\nJeśli niepokoi Cię rozwój mowy, porozmawiaj o tym na bilansie z pediatrą.",
+    "timing": { "showFrom": 120, "showTo": 1460 },
+    "tags": ["mowa", "czytanie", "rozwoj"],
+    "priority": 2
+  },
+  {
+    "id": "karmienie-poczatki",
+    "title": "Karmienie w pierwszych tygodniach",
+    "summaryMd": "Początki karmienia bywają trudne. Nie zostawaj z tym sama – pomocy udziela położna i doradczynie laktacyjne.",
+    "bodyMd": "## Dobre praktyki\n- karm na żądanie i obserwuj sygnały głodu,\n- zadbaj o wygodną pozycję – dla siebie i dziecka,\n- zapisuj karmienia i pieluchy w pierwszych dniach, jeśli to Cię uspokaja,\n- jeśli karmienie boli albo dziecko słabo przybiera na wadze – skontaktuj się z położną lub lekarzem.\n\nKarmienie mlekiem modyfikowanym to też dobra decyzja, jeśli taka jest potrzeba Twojej rodziny.",
+    "timing": { "showFrom": -14, "showTo": 90 },
+    "tags": ["karmienie", "laktacja", "noworodek"],
+    "priority": 4
+  },
+  {
+    "id": "kolki-i-placz",
+    "title": "Gdy dziecko dużo płacze",
+    "summaryMd": "Płacz to główny sposób komunikacji niemowlęcia. Jeśli tracisz cierpliwość – połóż dziecko bezpiecznie w łóżeczku i zrób przerwę.",
+    "bodyMd": "## Co może pomóc\n- sprawdź podstawy: głód, pielucha, temperatura,\n- noszenie, kołysanie, szum,\n- spokojne, przyciemnione otoczenie.\n\n## Ważne\n**Nigdy nie potrząsaj dzieckiem.** Jeśli czujesz złość lub bezradność – połóż dziecko bezpiecznie w łóżeczku, wyjdź na chwilę z pokoju i poproś kogoś o pomoc.\n\nJeśli płacz jest inny niż zwykle, towarzyszy mu gorączka, wymioty lub apatia – skontaktuj się z lekarzem.",
+    "timing": { "showFrom": 7, "showTo": 150 },
+    "tags": ["placz", "kolki", "niemowle"],
+    "priority": 4
+  },
+  {
+    "id": "pierwsza-wizyta-w-ciazy",
+    "title": "Pierwsze tygodnie ciąży",
+    "summaryMd": "Umów pierwszą wizytę u lekarza lub położnej jak najwcześniej – opieka medyczna najpóźniej od 10. tygodnia ciąży to także warunek becikowego.",
+    "bodyMd": "## Od czego zacząć\n- umów wizytę u ginekologa lub położnej,\n- załóż kartę ciąży i zbieraj w niej wyniki badań,\n- zapytaj o badania i suplementację zalecane na Twoim etapie,\n- zapisz datę pierwszej wizyty – przyda się do zaświadczenia o opiece od 10. tygodnia.",
+    "timing": { "showFrom": -266, "showTo": -182 },
+    "tags": ["ciaza", "pierwsza wizyta", "10 tydzien", "becikowe"],
+    "priority": 5
+  },
+  {
+    "id": "pierwsze-dni-w-domu",
+    "title": "Pierwsze dni w domu",
+    "summaryMd": "Po powrocie ze szpitala skup się na odpoczynku, karmieniu i bliskości. Formalności rozłóż w czasie – ale pamiętaj o 21 dniach na zgłoszenie urodzenia.",
+    "bodyMd": "## Priorytety\n1. Odpoczynek i jedzenie – przyjmij każdą pomoc.\n2. Karmienie i sen dziecka.\n3. Formalności: zgłoszenie urodzenia (21 dni od sporządzenia karty urodzenia), potem 800+ i ubezpieczenie dziecka.\n\nZajrzyj do zakładki **Dokumenty** – terminy są tam ułożone po kolei.",
+    "timing": { "showFrom": 0, "showTo": 21 },
+    "tags": ["noworodek", "dom", "formalnosci"],
+    "priority": 5
+  },
+  {
+    "id": "plan-porodu",
+    "title": "Plan porodu i wybór szpitala",
+    "summaryMd": "Zastanów się, gdzie chcesz rodzić, i spisz swoje preferencje w planie porodu. Sprawdź, jak dojechać do szpitala o każdej porze.",
+    "bodyMd": "## Co przemyśleć\n- wybór szpitala (opinie, oddział neonatologiczny, możliwość porodu rodzinnego),\n- znieczulenie i metody łagodzenia bólu,\n- kontakt „skóra do skóry” i karmienie po porodzie,\n- kto będzie osobą towarzyszącą.\n\nPlan porodu omów z lekarzem lub położną. To zbiór preferencji, nie umowa – w razie potrzeby personel może zmienić plan.",
+    "timing": { "showFrom": -112, "showTo": -21 },
+    "tags": ["porod", "szpital", "plan porodu"],
+    "priority": 4
+  },
+  {
+    "id": "przygotowanie-do-przedszkola",
+    "title": "Przygotowanie do przedszkola",
+    "summaryMd": "Kilka miesięcy przed przedszkolem ćwiczcie samodzielność: jedzenie, mycie rąk, sygnalizowanie potrzeb, ubieranie się.",
+    "bodyMd": "## Co ćwiczyć\n- samodzielne jedzenie i picie z kubka,\n- mycie rąk i korzystanie z toalety (lub sygnalizowanie potrzeby),\n- zakładanie butów i kurtki,\n- zabawę z innymi dziećmi.\n\nOpowiadaj o przedszkolu pozytywnie, odwiedźcie je w dzień otwarty.",
+    "timing": { "showFrom": 820, "showTo": 1460 },
+    "tags": ["przedszkole", "samodzielnosc"],
+    "priority": 3
+  },
+  {
+    "id": "rozszerzanie-diety",
+    "title": "Rozszerzanie diety",
+    "summaryMd": "Moment i sposób rozszerzania diety omów z pediatrą. Nowe produkty wprowadzaj stopniowo i obserwuj reakcje dziecka.",
+    "bodyMd": "## Zasady ogólne\n- termin rozpoczęcia ustal z pediatrą – zależy od rozwoju dziecka,\n- wprowadzaj nowe produkty pojedynczo,\n- nie dodawaj soli i cukru,\n- uważaj na produkty, którymi łatwo się zadławić.\n\nTo informacje ogólne – zalecenia dla Twojego dziecka da lekarz.",
+    "timing": { "showFrom": 120, "showTo": 365 },
+    "tags": ["dieta", "jedzenie", "niemowle"],
+    "priority": 3
+  },
+  {
+    "id": "sen-niemowlecia",
+    "title": "Bezpieczny sen niemowlęcia",
+    "summaryMd": "Układaj dziecko do snu na plecach, na twardym materacu, bez poduszek, kołder i maskotek w łóżeczku.",
+    "bodyMd": "## Bezpieczny sen\n- zawsze na plecach,\n- twardy, płaski materac,\n- bez poduszki, kołdry, ochraniaczy i pluszaków w łóżeczku – zamiast kołdry śpiworek,\n- nie przegrzewaj pomieszczenia,\n- dym tytoniowy z daleka od dziecka.\n\nRytm snu noworodka jest nieregularny – to normalne. Śpij, kiedy dziecko śpi.",
+    "timing": { "showFrom": -28, "showTo": 365 },
+    "tags": ["sen", "bezpieczenstwo", "noworodek"],
+    "priority": 5
+  },
+  {
+    "id": "torba-do-szpitala",
+    "title": "Torba do szpitala",
+    "summaryMd": "Spakuj torbę kilka tygodni przed terminem: dokumenty, karta ciąży, rzeczy dla siebie i dla dziecka, fotelik do samochodu.",
+    "bodyMd": "## Lista\n**Dokumenty:** dowód osobisty, karta ciąży, wyniki badań, plan porodu.\n\n**Dla Ciebie:** koszula, szlafrok, klapki, podpaski poporodowe, wkładki laktacyjne, kosmetyki, ładowarka.\n\n**Dla dziecka:** ubranka na wyjście, czapeczka, pieluchy, kocyk, fotelik samochodowy.\n\nSprawdź w szpitalu, co zapewniają na miejscu.",
+    "timing": { "showFrom": -56, "showTo": 0 },
+    "tags": ["szpital", "porod", "torba", "wyprawka"],
+    "priority": 5
+  },
+  {
+    "id": "wizyty-patronazowe",
+    "title": "Wizyty patronażowe położnej",
+    "summaryMd": "Po powrocie do domu odwiedzi Was położna środowiskowa – sprawdzi dziecko, pomoże w karmieniu i pielęgnacji. Wybierz ją jeszcze w ciąży.",
+    "bodyMd": "## Jak to działa\nPołożna POZ odwiedza mamę i dziecko w domu w pierwszych tygodniach po porodzie. To dobry moment na pytania o karmienie, pępek, kąpiel i samopoczucie.\n\n## Co zrobić\n- złóż deklarację wyboru położnej POZ (najlepiej w ciąży),\n- po porodzie zgłoś jej powrót do domu.\n\nTODO: uzupełnić po weryfikacji – liczba wizyt i terminy wg NFZ.",
+    "timing": { "showFrom": -42, "showTo": 42 },
+    "tags": ["polozna", "patronaz", "noworodek", "poz"],
+    "source": { "name": "NFZ – opieka położnej POZ", "url": "https://www.nfz.gov.pl", "asOf": "2026-11" },
+    "priority": 4
+  },
+  {
+    "id": "wsparcie-w-iii-trymestrze",
+    "title": "III trymestr – zadbaj o siebie",
+    "summaryMd": "Zwolnij tempo, zaplanuj formalności z wyprzedzeniem i ustal z partnerem podział urlopów – po porodzie zostanie mniej czasu.",
+    "bodyMd": "## Do przemyślenia\n- kto zajmie się formalnościami po porodzie (zgłoszenie urodzenia, 800+, ubezpieczenie),\n- jak podzielicie urlop rodzicielski (wniosek w 21 dni od porodu daje 81,5%),\n- kto pomoże Wam w pierwszych tygodniach.\n\nW zakładce **Dokumenty** zobaczysz, co Cię czeka i kiedy.",
+    "timing": { "showFrom": -91, "showTo": -7 },
+    "tags": ["ciaza", "trzeci trymestr", "planowanie"],
+    "priority": 3
+  }
+]
