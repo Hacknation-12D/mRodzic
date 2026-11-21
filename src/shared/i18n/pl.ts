@@ -51,6 +51,7 @@ export const pl = {
   plural: { days, weeks, months, years, persons },
 
   tabs: {
+    home: 'Główna',
     calendar: 'Kalendarz',
     assistant: 'Asystent',
     documents: 'Dokumenty',

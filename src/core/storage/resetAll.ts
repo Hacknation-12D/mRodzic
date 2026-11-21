@@ -24,6 +24,7 @@ export async function resetAllData(options: { keepDevSettings?: boolean } = {}):
   if (!options.keepDevSettings) {
     useClockStore.getState().setOverrideDate(null);
     useSettingsStore.getState().setAssistantModeOverride(null);
+    useSettingsStore.getState().setThemeOverride(null);
   }
   listeners.forEach((l) => l());
   try {
