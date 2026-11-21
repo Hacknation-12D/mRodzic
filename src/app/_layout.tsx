@@ -20,17 +20,19 @@ void SplashScreen.preventAutoHideAsync();
 
 const initialProfile = () => (env.seedPersona ? buildPersona(env.seedPersona, getToday()) : null);
 
-/** Root providers, persisted-store hydration, and content sync. */
+/** Root providers, app bootstrap, persisted-store hydration, and global preview controls. */
 export default function RootLayout() {
   const ready = useAppBootstrap({ initialProfile });
   const hasProfile = useProfileStore((s) => s.profile !== null);
   const { theme } = useUniwind();
   const scheme = theme === 'dark' ? 'dark' : 'light';
+  const themeOverride = useSettingsStore((s) => s.themeOverride);
+  const setThemeOverride = useSettingsStore((s) => s.setThemeOverride);
   const c = scheme === 'dark' ? darkColors : lightColors;
   const base = scheme === 'dark' ? DarkTheme : DefaultTheme;
   const toggleTheme = () => {
     const nextTheme = scheme === 'dark' ? 'light' : 'dark';
-    useSettingsStore.getState().setThemeOverride(nextTheme);
+    setThemeOverride(nextTheme);
     Uniwind.setTheme(nextTheme);
   };
 
@@ -39,8 +41,8 @@ export default function RootLayout() {
   }, [ready]);
 
   useEffect(() => {
-    if (ready) Uniwind.setTheme(useSettingsStore.getState().themeOverride ?? 'system');
-  }, [ready]);
+    if (ready) Uniwind.setTheme(themeOverride ?? 'system');
+  }, [ready, themeOverride]);
 
   if (!ready) return null;
 

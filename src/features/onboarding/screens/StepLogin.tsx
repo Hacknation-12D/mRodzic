@@ -1,6 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRef, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 
 import { goToOnboardingStep } from '@/core/navigation/routes';
 import { pl } from '@/shared/i18n/pl';
@@ -66,25 +66,46 @@ export function StepLogin() {
 
   return (
     <Screen>
-      <View className="items-center gap-3 py-4">
-        <View className="size-16 items-center justify-center rounded-full bg-primary-soft">
-          <Ionicons name="shield-checkmark-outline" size={32} color={c.primary} />
+      <Card className="w-full gap-5 self-center p-5 md:max-w-4xl md:p-6">
+        <View className="gap-2">
+          <AppText variant="title" accessibilityRole="header">
+            {t.title}
+          </AppText>
+          <AppText tone="muted">{t.intro}</AppText>
         </View>
-        <AppText variant="title" accessibilityRole="header" className="text-center">
-          {t.title}
-        </AppText>
-        <AppText tone="muted" className="text-center">
-          {t.intro}
-        </AppText>
-      </View>
 
-      <Button label={t.signIn} icon="log-in-outline" onPress={() => void signIn()} loading={phase === 'signing'} />
-      <Button label={t.manual} variant="ghost" onPress={manual} />
+        <Pressable
+          onPress={() => void signIn()}
+          disabled={phase === 'signing'}
+          accessibilityRole="button"
+          accessibilityLabel={t.signIn}
+          accessibilityHint={t.scanHint}
+          accessibilityState={{ disabled: phase === 'signing', busy: phase === 'signing' }}
+          className="min-h-24 flex-row items-center gap-4 rounded-box border border-base-300 bg-base-200 p-4 active:opacity-80">
+          <View className="size-12 shrink-0 items-center justify-center rounded-field bg-primary-soft">
+            <Ionicons name="phone-portrait-outline" size={26} color={c.primary} />
+          </View>
+          <View className="min-w-0 flex-1 gap-1">
+            <View className="flex-row flex-wrap items-center gap-2">
+              <AppText variant="subheading">{t.appTitle}</AppText>
+              <View className="rounded-selector bg-primary-soft px-2 py-1">
+                <AppText variant="caption" tone="primary">
+                  {t.recommended}
+                </AppText>
+              </View>
+            </View>
+            <AppText tone="muted">{t.scanHint}</AppText>
+          </View>
+          <Ionicons name="chevron-forward" size={22} color={c.primary} />
+        </Pressable>
 
-      {phase === 'error' ? <Alert tone="error">{t.signInError}</Alert> : null}
-      <Alert tone="warning" title={t.simulationTitle} icon="flask-outline">
-        {t.simulationBody}
-      </Alert>
+        <Button label={t.manual} variant="ghost" onPress={manual} className="min-h-14" />
+
+        {phase === 'error' ? <Alert tone="error">{t.signInError}</Alert> : null}
+        <Alert tone="warning" title={t.simulationTitle} icon="flask-outline">
+          {t.simulationBody}
+        </Alert>
+      </Card>
 
       {/* Pasek ładowania i pytanie o zgodność danych – jako „modal” DaisyUI. */}
       <Sheet visible={phase === 'signing'} onClose={cancel} title={t.signingIn} footer={<Button label={pl.common.cancel} variant="ghost" onPress={cancel} />}>

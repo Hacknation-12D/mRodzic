@@ -9,7 +9,7 @@ type Props = {
   onToggle: () => void;
 };
 
-/** Floating, app-wide switch for previewing the light and dark themes. */
+/** Floating app-wide switch for previewing light and dark themes. */
 export function ThemeSwitch({ isDark, onToggle }: Props) {
   const colors = useThemeColors();
 
