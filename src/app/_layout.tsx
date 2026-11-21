@@ -9,26 +9,30 @@ import { Uniwind, useUniwind } from 'uniwind';
 import { useAppBootstrap } from '@/core/bootstrap/useAppBootstrap';
 import { getToday } from '@/core/clock/clock';
 import { env } from '@/core/config/env';
+import { useProfileStore } from '@/core/profile/profile.store';
 import { useSettingsStore } from '@/core/settings/settings.store';
 import { pl } from '@/shared/i18n/pl';
 import { darkColors, lightColors } from '@/shared/theme';
-import { ThemeSwitch } from '@/shared/ui';
+import { PreviewControls } from '@/shared/ui';
 import { buildPersona } from '@/dev/personas';
 
 void SplashScreen.preventAutoHideAsync();
 
 const initialProfile = () => (env.seedPersona ? buildPersona(env.seedPersona, getToday()) : null);
 
-/** Root providers, persisted-store hydration, and content sync. */
+/** Root providers, app bootstrap, persisted-store hydration, and global preview controls. */
 export default function RootLayout() {
   const ready = useAppBootstrap({ initialProfile });
+  const hasProfile = useProfileStore((s) => s.profile !== null);
   const { theme } = useUniwind();
   const scheme = theme === 'dark' ? 'dark' : 'light';
+  const themeOverride = useSettingsStore((s) => s.themeOverride);
+  const setThemeOverride = useSettingsStore((s) => s.setThemeOverride);
   const c = scheme === 'dark' ? darkColors : lightColors;
   const base = scheme === 'dark' ? DarkTheme : DefaultTheme;
   const toggleTheme = () => {
     const nextTheme = scheme === 'dark' ? 'light' : 'dark';
-    useSettingsStore.getState().setThemeOverride(nextTheme);
+    setThemeOverride(nextTheme);
     Uniwind.setTheme(nextTheme);
   };
 
@@ -37,8 +41,8 @@ export default function RootLayout() {
   }, [ready]);
 
   useEffect(() => {
-    if (ready) Uniwind.setTheme(useSettingsStore.getState().themeOverride ?? 'system');
-  }, [ready]);
+    if (ready) Uniwind.setTheme(themeOverride ?? 'system');
+  }, [ready, themeOverride]);
 
   if (!ready) return null;
 
@@ -57,7 +61,7 @@ export default function RootLayout() {
           <Stack.Screen name="dev" options={{ title: pl.dev.title }} />
           <Stack.Screen name="+not-found" options={{ title: pl.common.notFoundTitle }} />
         </Stack>
-        <ThemeSwitch isDark={scheme === 'dark'} onToggle={toggleTheme} />
+        <PreviewControls hasProfile={hasProfile} isDark={scheme === 'dark'} onToggleTheme={toggleTheme} />
       </View>
     </ThemeProvider>
   );
