@@ -26,10 +26,6 @@ export function goToDocuments() {
   router.navigate('/documents');
 }
 
-export function goToCalendar() {
-  router.navigate('/');
-}
-
 export function goToProfile() {
   router.push('/profile');
 }

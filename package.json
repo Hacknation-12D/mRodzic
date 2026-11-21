@@ -8,7 +8,7 @@
     "@react-native-async-storage/async-storage": "2.2.0",
     "@supabase/supabase-js": "^2.119.2",
     "date-fns": "^4.4.0",
-    "expo": "~58.0.26",
+    "expo": "^58.0.26",
     "expo-constants": "~58.0.16",
     "expo-device": "~58.0.5",
     "expo-font": "~58.0.12",
@@ -60,7 +60,11 @@
     "content:validate": "tsx scripts/validate-content.ts",
     "content:import": "tsx scripts/import-content.ts",
     "content:export": "tsx scripts/export-seed.ts",
+    "calc": "tsx scripts/test-calculators.ts",
     "check": "npm run typecheck && npm run lint && npm test && npm run content:validate"
   },
-  "private": true
+  "private": true,
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
 }

@@ -1,4 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Image } from 'expo-image';
 import { Tabs } from 'expo-router/js-tabs';
 import type { ComponentProps } from 'react';
 import { Pressable } from 'react-native';
@@ -14,7 +15,7 @@ function tabIcon(name: IconName) {
   };
 }
 
-/** Kalendarz | Asystent | Dokumenty; w nagłówku ikona profilu. */
+/** Home | Assistant | Documents; profile icon in the header. */
 export default function TabsLayout() {
   const c = useThemeColors();
   const profileButton = () => (
@@ -23,8 +24,29 @@ export default function TabsLayout() {
     </Pressable>
   );
   return (
-    <Tabs screenOptions={{ headerRight: profileButton, tabBarActiveTintColor: c.primary, tabBarInactiveTintColor: c.baseContentMuted }}>
-      <Tabs.Screen name="index" options={{ title: pl.tabs.calendar, tabBarIcon: tabIcon('calendar-outline') }} />
+    <Tabs
+      screenOptions={{
+        headerRight: profileButton,
+        tabBarActiveTintColor: c.primary,
+        tabBarInactiveTintColor: c.baseContentMuted,
+        tabBarStyle: { display: 'none' },
+      }}>
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: pl.tabs.home,
+          tabBarAccessibilityLabel: pl.tabs.home,
+          tabBarIcon: tabIcon('home-outline'),
+          headerTitle: () => (
+            <Image
+              source={require('../../../assets/images/logo.png')}
+              contentFit="contain"
+              accessibilityLabel={pl.appName}
+              style={{ width: 124, height: 32 }}
+            />
+          ),
+        }}
+      />
       <Tabs.Screen name="assistant" options={{ title: pl.tabs.assistant, tabBarIcon: tabIcon('chatbubbles-outline') }} />
       <Tabs.Screen name="documents" options={{ title: pl.tabs.documents, tabBarIcon: tabIcon('document-text-outline') }} />
     </Tabs>

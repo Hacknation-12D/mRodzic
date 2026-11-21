@@ -20,7 +20,7 @@ void SplashScreen.preventAutoHideAsync();
 
 const initialProfile = () => (env.seedPersona ? buildPersona(env.seedPersona, getToday()) : null);
 
-/** Root providers, app bootstrap, and global preview controls. */
+/** Root providers, app bootstrap, persisted-store hydration, and global preview controls. */
 export default function RootLayout() {
   const ready = useAppBootstrap({ initialProfile });
   const hasProfile = useProfileStore((s) => s.profile !== null);

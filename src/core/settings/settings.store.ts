@@ -8,6 +8,7 @@ type State = {
   /** Nadpisanie trybu asystenta z DevPanelu; null = wartość z env. */
   assistantModeOverride: AssistantMode | null;
   setAssistantModeOverride: (mode: AssistantMode | null) => void;
+  /** Nadpisanie motywu urządzenia; null = motyw systemowy. */
   themeOverride: 'light' | 'dark' | null;
   setThemeOverride: (mode: 'light' | 'dark' | null) => void;
 };
