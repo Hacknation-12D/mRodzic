@@ -4,7 +4,7 @@ Aplikacja mobilna pomagająca przyszłym i świeżo upieczonym rodzicom w Polsce
 
 - **Kalendarz** – siatka miesiąca z kropkami terminów w kolorach dzieci, „W tym miesiącu warto”, 3 poradniki dopasowane do etapu.
 - **Asystent** – czat (mock offline albo OpenAI przez Supabase Edge Function) ze źródłami + formularz „Zapytaj człowieka”.
-- **Dokumenty** – oś czasu wniosków (Najbliższe / Wypełnione / Ukryte), szczegóły z wymaganiami (spełniasz / nie spełniasz / uzupełnij profil).
+- **Dokumenty** – zakładki „Przysługuje” i „Nie przysługuje” z wstępną oceną według reguł aplikacji. Sekcja „Uzupełnij dane” pokazuje sprawy z nieustalonym wynikiem. W szczegółach można uzupełnić brakujące dane profilu i otworzyć materiały ZUS.
 - **Profil / onboarding** – logowanie przez mObywatel (symulacja: pobiera imię, płeć i miejscowość rodzica i pyta „Czy te dane się zgadzają?”), rodzic, partner (opcjonalnie), dzieci (kreator „Dziecko 1 z N”, „Dodaj bliźniaka”), gospodarstwo; akcja „Urodziło się!”.
 
 Działa **bez internetu i bez konfiguracji** (wbudowany seed treści + asystent mock). Profil zostaje wyłącznie na telefonie.
@@ -31,6 +31,7 @@ Wymagania: Node 20+ (testowane na Node 24), Expo SDK 58.
 | `npm run lint` | ESLint (flat config) z regułami granic architektury |
 | `npm test` | Vitest – czyste funkcje w `src/core`, walidacja seeda, format CSV |
 | `npm run content:validate` | walidacja `content/seed/*.json` schematami zod |
+| `npm run content:seed-sql` | generuje `supabase/seed.sql` z danych JSON |
 | `npm run content:import -- --from <dir> --format csv\|json [--dry-run]` | CSV/JSON → walidacja → upsert do Supabase |
 | `npm run content:export` | Supabase → `content/seed/*.json` |
 | `npm run check` | typecheck + lint + test + content:validate |
@@ -81,6 +82,16 @@ Brak dowolnej zmiennej nie powoduje błędu: bez Supabase → seed + mock, `remo
 - `content_meta (id=1, version, updated_at)` – trigger na INSERT/UPDATE/DELETE w `content_*` podbija `version`. Aplikacja porównuje wersję i pobiera treść tylko, gdy jest nowsza.
 - `support_requests` – zgłoszenia „Zapytaj człowieka” (limity długości w `check`).
 - **RLS**: `anon` czyta tylko opublikowane treści i `content_meta`, do `support_requests` może tylko wstawiać (bez odczytu). Zapis treści tylko `service_role`.
+
+### Dane przykładowe w SQL Editorze
+
+W nowym projekcie Supabase uruchom w **SQL Editorze** najpierw `supabase/migrations/0001_init.sql`, a następnie `supabase/seed.sql`. Seed zasila katalog dokumentów, poradniki, zadania i podpowiedzi. Dotychczasowe rekordy o tym samym ID zachowują swoje wartości. W już zasilonej bazie do publikacji zmian w katalogu służy `npm run content:import -- --from content/seed --format json`.
+
+Do testowania profilu rodziny użyj person z DevPanelu, niezależnie od danych katalogowych w Supabase. Na przykład wyczyść dochód na osobę w profilu rodziny z noworodkiem i otwórz „Becikowe”. Zapisanie brakującej kwoty przeliczy wynik w szczegółach i na liście.
+
+### Formularze i instrukcje ZUS
+
+Katalog `public/pdfs` zawiera oryginalne pliki ZUS. ZAM obsługuje zasiłek za okres urlopu macierzyńskiego, rodzicielskiego, ojcowskiego i uzupełniającego urlopu macierzyńskiego. ZCNA dotyczy zgłoszenia członka rodziny do ubezpieczenia zdrowotnego. AWP, AWZ i AWD to instrukcje złożenia elektronicznych wniosków programu Aktywny Rodzic. Dla 800+ szczegóły zawierają link do kreatora SW-R w pomocy eZUS. Pola w aplikacji służą do oceny warunków zapisanych w profilu. Wypełnienie i złożenie urzędowego wniosku odbywa się we właściwym kanale wskazanym w szczegółach.
 
 ### Synchronizacja treści w aplikacji
 

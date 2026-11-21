@@ -33,6 +33,7 @@ export const LinkSchema = z.object({
   label: z.string().min(1).max(120),
   url: UrlSchema,
   kind: z.enum(['apply', 'info', 'guide']),
+  pdfFile: z.string().regex(/^[A-Z0-9-]+\.pdf$/).optional(),
 });
 
 export const DocumentCategorySchema = z.enum(['benefit', 'registry', 'work', 'health', 'education', 'other']);

@@ -11,6 +11,7 @@ import { DeadlineBadge } from './components/DeadlineBadge';
 import { DocumentActions } from './components/DocumentActions';
 import { EligibilityBadge } from './components/EligibilityBadge';
 import { LinksList } from './components/LinksList';
+import { MissingProfileFields } from './components/MissingProfileFields';
 import { RequirementList } from './components/RequirementList';
 import { useDocumentDetail } from './hooks/useDocumentDetail';
 
@@ -18,7 +19,7 @@ import { useDocumentDetail } from './hooks/useDocumentDetail';
 export function DocumentDetailScreen() {
   const { docId, childId } = useLocalSearchParams<{ docId: string; childId?: string }>();
   const isDark = useIsDark();
-  const { instance, child, changeStatus } = useDocumentDetail(docId, childId);
+  const { instance, child, profile, profileChild, today, changeStatus } = useDocumentDetail(docId, childId);
 
   if (!instance) {
     return (
@@ -61,10 +62,13 @@ export function DocumentDetailScreen() {
 
       <DocumentActions status={instance.status} onChangeStatus={changeStatus} onAskAssistant={() => goToAssistant({ docId: instance.id, childId: instance.childId })} />
 
+      {profile ? <MissingProfileFields key={instance.key} instance={instance} profile={profile} child={profileChild} today={today} /> : null}
+
       <Card>
         <AppText variant="subheading" accessibilityRole="header">
           {pl.documents.requirements}
         </AppText>
+        <AppText variant="small" tone="muted">{pl.documents.eligibilityHint}</AppText>
         <RequirementList results={instance.requirementResults} />
       </Card>
 

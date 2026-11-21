@@ -16,8 +16,11 @@
       }
     ],
     "links": [
-      { "label": "Złóż wniosek w ZUS (PUE ZUS)", "url": "https://www.zus.pl", "kind": "apply" },
-      { "label": "Program na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" }
+      { "label": "Złóż wniosek w eZUS", "url": "https://www.zus.pl/ezus/logowanie", "kind": "apply" },
+      { "label": "Program na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" },
+      { "label": "Aktywni rodzice w pracy – instrukcja ZUS (PDF)", "url": "https://www.zus.pl/documents/10182/12225863/Wniosek%2Bo%2B%C5%9Bwiadczenie%2Baktywni%2Brodzice%2Bw%2Bpracy%2B-%2Binstrukcja.pdf/9da74d97-f81a-de61-7894-bb2aff68e28e", "kind": "guide", "pdfFile": "AWP.pdf" },
+      { "label": "Aktywnie w żłobku – instrukcja ZUS (PDF)", "url": "https://www.zus.pl/documents/10182/12225863/Wniosek%2Bo%2B%C5%9Bwiadczenie%2Baktywnie%2Bw%2B%C5%BC%C5%82obku%2B%28AwZ%29%2B-%2Binstrukcja.pdf/6f42dc3b-4166-1d2e-5e89-9b416316b9a3?t=1727765056307", "kind": "guide", "pdfFile": "AWZ.pdf" },
+      { "label": "Aktywnie w domu – instrukcja ZUS (PDF)", "url": "https://www.zus.pl/documents/10182/12225863/Wniosek%2Bo%2B%C5%9Bwiadczenie%2Baktywnie%2Bw%2Bdomu%2B%28AwD%29-%2Binstrukcja.pdf/bd08c41b-5f31-042f-c4c7-8317fdfa6891?t=1727765055999", "kind": "guide", "pdfFile": "AWD.pdf" }
     ],
     "checklist": [
       "Numer PESEL dziecka i rodziców",
@@ -136,7 +139,8 @@
     ],
     "links": [
       { "label": "Informacje w ZUS", "url": "https://www.zus.pl", "kind": "info" },
-      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" }
+      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" },
+      { "label": "ZAM – wniosek o zasiłek macierzyński (PDF)", "url": "https://www.zus.pl/documents/10182/4223950/ZAM_wypelnij_i_wydrukuj.pdf/4e4534c6-e7cd-b934-9c5e-aab4d64f3f20?t=1793008198611", "kind": "guide", "pdfFile": "ZAM.pdf" }
     ],
     "checklist": ["Karta informacyjna / zaświadczenie ze szpitala", "Wniosek do pracodawcy lub ZUS"],
     "assistantPrompts": [
@@ -231,9 +235,10 @@
       }
     ],
     "links": [
-      { "label": "Złóż wniosek w PUE ZUS", "url": "https://www.zus.pl", "kind": "apply" },
+      { "label": "Złóż wniosek w eZUS", "url": "https://www.zus.pl/ezus/logowanie", "kind": "apply" },
       { "label": "Złóż wniosek w mObywatelu", "url": "https://www.gov.pl/web/mobywatel", "kind": "apply" },
-      { "label": "Emp@tia – informacje", "url": "https://empatia.mrips.gov.pl", "kind": "info" }
+      { "label": "Emp@tia – informacje", "url": "https://empatia.mrips.gov.pl", "kind": "info" },
+      { "label": "SW-R – instrukcja kreatora w eZUS", "url": "https://www.zus.pl/portal/pomoc/kub0024.html", "kind": "guide" }
     ],
     "checklist": ["PESEL dziecka", "Numer rachunku bankowego", "Dostęp do PUE ZUS / mObywatela / banku"],
     "assistantPrompts": [
@@ -314,7 +319,8 @@
     ],
     "links": [
       { "label": "PUE ZUS", "url": "https://www.zus.pl", "kind": "apply" },
-      { "label": "Ubezpieczenie zdrowotne – NFZ", "url": "https://www.nfz.gov.pl", "kind": "info" }
+      { "label": "Ubezpieczenie zdrowotne – NFZ", "url": "https://www.nfz.gov.pl", "kind": "info" },
+      { "label": "ZCNA – zgłoszenie członka rodziny (PDF)", "url": "https://bip.zus.pl/documents/10182/18428/2384_20%2BZCNA__WCAG_do%2Bzapisu.pdf/aaae2bde-9065-d64d-01cf-250841193f28?t=1779184759043", "kind": "guide", "pdfFile": "ZCNA.pdf" }
     ],
     "checklist": ["PESEL dziecka", "Dane rodzica ubezpieczonego"],
     "assistantPrompts": ["Jak zgłosić dziecko do ubezpieczenia, jeśli prowadzę JDG?", "Kto zgłasza dziecko do NFZ, gdy oboje pracujemy?"],
@@ -347,7 +353,8 @@
     ],
     "links": [
       { "label": "Zasiłek macierzyński – ZUS", "url": "https://www.zus.pl", "kind": "info" },
-      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" }
+      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" },
+      { "label": "ZAM – wniosek o zasiłek macierzyński (PDF)", "url": "https://www.zus.pl/documents/10182/4223950/ZAM_wypelnij_i_wydrukuj.pdf/4e4534c6-e7cd-b934-9c5e-aab4d64f3f20?t=1793008198611", "kind": "guide", "pdfFile": "ZAM.pdf" }
     ],
     "checklist": ["Akt urodzenia dziecka (odpis)", "Wniosek o urlop do pracodawcy / ZUS", "Zaświadczenie lekarskie (jeśli urlop od daty przed porodem)"],
     "assistantPrompts": [
@@ -389,7 +396,8 @@
     ],
     "links": [
       { "label": "Zasiłek za urlop ojcowski – ZUS", "url": "https://www.zus.pl", "kind": "info" },
-      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" }
+      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" },
+      { "label": "ZAM – wniosek o zasiłek macierzyński (PDF)", "url": "https://www.zus.pl/documents/10182/4223950/ZAM_wypelnij_i_wydrukuj.pdf/4e4534c6-e7cd-b934-9c5e-aab4d64f3f20?t=1793008198611", "kind": "guide", "pdfFile": "ZAM.pdf" }
     ],
     "checklist": ["Akt urodzenia dziecka (odpis)", "Wniosek o urlop ojcowski"],
     "assistantPrompts": ["Kiedy najlepiej wziąć urlop ojcowski?", "Czy urlop ojcowski można podzielić na części?"],
@@ -421,7 +429,8 @@
     ],
     "links": [
       { "label": "Zasiłek macierzyński – ZUS", "url": "https://www.zus.pl", "kind": "info" },
-      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" }
+      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" },
+      { "label": "ZAM – wniosek o zasiłek macierzyński (PDF)", "url": "https://www.zus.pl/documents/10182/4223950/ZAM_wypelnij_i_wydrukuj.pdf/4e4534c6-e7cd-b934-9c5e-aab4d64f3f20?t=1793008198611", "kind": "guide", "pdfFile": "ZAM.pdf" }
     ],
     "checklist": ["Odpis aktu urodzenia", "Ustalony podział urlopu między rodzicami", "Wniosek do pracodawcy / ZUS"],
     "assistantPrompts": [
