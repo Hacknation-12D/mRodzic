@@ -2,7 +2,7 @@ import { Text, type TextProps } from 'react-native';
 
 import { cn } from '../lib/cn';
 
-export type TypographyVariant = 'title' | 'heading' | 'subheading' | 'body' | 'bodyStrong' | 'small' | 'caption';
+export type TypographyVariant = 'display' | 'title' | 'heading' | 'subheading' | 'body' | 'bodyStrong' | 'small' | 'caption';
 
 export type AppTextProps = TextProps & {
   variant?: TypographyVariant;
@@ -10,8 +10,9 @@ export type AppTextProps = TextProps & {
 };
 
 const VARIANT: Record<TypographyVariant, string> = {
-  title: 'text-[24px] leading-[30px] font-bold',
-  heading: 'text-[19px] leading-6 font-bold',
+  display: 'text-[34px] leading-[40px] font-extrabold tracking-tight',
+  title: 'text-[26px] leading-8 font-extrabold tracking-tight',
+  heading: 'text-xl leading-[26px] font-bold tracking-tight',
   subheading: 'text-base leading-[22px] font-semibold',
   body: 'text-[15px] leading-[21px]',
   bodyStrong: 'text-[15px] leading-[21px] font-semibold',

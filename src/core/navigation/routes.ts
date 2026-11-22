@@ -39,6 +39,10 @@ export function goToChildEdit(childId: string) {
   router.push({ pathname: '/profile/child/[childId]', params: { childId } });
 }
 
+export function goToCalculator() {
+  router.push('/calculator');
+}
+
 export function goToChildNew() {
   router.push('/profile/child/new');
 }

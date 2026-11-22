@@ -10,8 +10,8 @@ export default function OnboardingLayout() {
   const c = useThemeColors();
   const homeHref = useProfileStore((s) => (s.profile ? '/' : '/onboarding'));
   return (
-    <Stack screenOptions={{ title: pl.appName, headerTitle: '', ...appHeaderOptions(c, { homeHref, backFallback: '/onboarding' }) }}>
-      <Stack.Screen name="index" options={appHeaderOptions(c, { homeHref, showBack: false })} />
+    <Stack screenOptions={{ title: pl.appName, ...appHeaderOptions(c, { homeHref, backFallback: '/onboarding' }), headerTitle: '' }}>
+      <Stack.Screen name="index" options={{ ...appHeaderOptions(c, { homeHref, showBack: false }), headerTitle: '' }} />
     </Stack>
   );
 }
