@@ -89,6 +89,11 @@
         {
           "id": "P01-C1",
           "name": "Zosia",
+          "pesel": "26290331129",
+          "birthRegistry": {
+            "actNumber": "1312/2026/DEMO",
+            "office": "Urząd Stanu Cywilnego w Warszawa (DEMO)"
+          },
           "status": "born",
           "sex": "female",
           "premature": false,
@@ -199,7 +204,99 @@
         "postalCode": "30-702",
         "city": "Kraków",
         "gender": "female",
-        "employment": "self_employed"
+        "employment": "self_employed",
+        "work": {
+          "employedSince": "2021-02-01",
+          "fte": 1,
+          "employerInsuredCount": 1,
+          "benefitPayer": "zus",
+          "monthlyGross": 5652,
+          "monthlyNet": 4300,
+          "earnings": [
+            {
+              "month": "2025-11",
+              "gross": 5652
+            },
+            {
+              "month": "2025-12",
+              "gross": 5652
+            },
+            {
+              "month": "2026-01",
+              "gross": 5652
+            },
+            {
+              "month": "2026-02",
+              "gross": 5652
+            },
+            {
+              "month": "2026-03",
+              "gross": 5652
+            },
+            {
+              "month": "2026-04",
+              "gross": 5652
+            },
+            {
+              "month": "2026-05",
+              "gross": 5652
+            },
+            {
+              "month": "2026-06",
+              "gross": 5652
+            },
+            {
+              "month": "2026-07",
+              "gross": 5652
+            },
+            {
+              "month": "2026-08",
+              "gross": 5652
+            },
+            {
+              "month": "2026-09",
+              "gross": 5652
+            },
+            {
+              "month": "2026-10",
+              "gross": 5652
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 0,
+            "usedDays": 0
+          },
+          "zus": {
+            "sickness": {
+              "insured": true,
+              "kind": "voluntary",
+              "since": "2021-02-01",
+              "titleCode": "0570 00 0"
+            },
+            "gaps": [],
+            "periods": [
+              {
+                "kind": "self_employed",
+                "from": "2021-02-01",
+                "fixedTerm": false
+              }
+            ],
+            "contributionBase": 5652,
+            "payer": {
+              "name": "Marta Zielińska – działalność gospodarcza (DEMO)",
+              "nip": "6771203454",
+              "regon": "771203453",
+              "city": "Kraków",
+              "paysBenefits": false
+            },
+            "arrears": {
+              "amount": 725,
+              "checkedAt": "2026-11-21"
+            },
+            "benefitHistory": [],
+            "leaveHistory": []
+          }
+        }
       },
       "children": [
         {
@@ -210,8 +307,7 @@
           "premature": false,
           "disability": false,
           "colorKey": "coral",
-          "dueDate": "2027-02-18",
-          "insured": true
+          "dueDate": "2027-02-18"
         }
       ],
       "household": {
@@ -315,7 +411,59 @@
         "postalCode": "80-288",
         "city": "Gdańsk",
         "gender": "female",
-        "employment": "civil_contract"
+        "employment": "civil_contract",
+        "work": {
+          "employedSince": "2026-10-01",
+          "fte": 1,
+          "employerInsuredCount": 34,
+          "benefitPayer": "employer",
+          "monthlyGross": 4200,
+          "monthlyNet": 3290,
+          "earnings": [
+            {
+              "month": "2026-10",
+              "gross": 4200
+            },
+            {
+              "month": "2026-11",
+              "gross": 4200
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 0,
+            "usedDays": 0
+          },
+          "zus": {
+            "sickness": {
+              "insured": true,
+              "kind": "voluntary",
+              "since": "2026-10-01",
+              "titleCode": "0411 00 0"
+            },
+            "gaps": [],
+            "periods": [
+              {
+                "kind": "civil_contract",
+                "from": "2026-10-01",
+                "fixedTerm": true
+              }
+            ],
+            "contributionBase": 4200,
+            "payer": {
+              "name": "Pomorska Agencja Usługowa sp. z o.o. (DEMO)",
+              "nip": "5842001178",
+              "regon": "842001170",
+              "city": "Gdańsk",
+              "paysBenefits": true
+            },
+            "arrears": {
+              "amount": 0,
+              "checkedAt": "2026-11-21"
+            },
+            "benefitHistory": [],
+            "leaveHistory": []
+          }
+        }
       },
       "children": [
         {
@@ -326,8 +474,7 @@
           "premature": false,
           "disability": false,
           "colorKey": "coral",
-          "dueDate": "2027-04-15",
-          "insured": true
+          "dueDate": "2027-04-15"
         }
       ],
       "household": {
@@ -367,8 +514,7 @@
           "premature": false,
           "disability": false,
           "colorKey": "coral",
-          "dueDate": "2027-03-20",
-          "insured": true
+          "dueDate": "2027-03-20"
         }
       ],
       "household": {
@@ -546,6 +692,11 @@
         {
           "id": "P05-C1",
           "name": "Lena",
+          "pesel": "26301531249",
+          "birthRegistry": {
+            "actNumber": "1313/2026/DEMO",
+            "office": "Urząd Stanu Cywilnego w Wrocław (DEMO)"
+          },
           "status": "born",
           "sex": "female",
           "premature": true,
@@ -559,6 +710,11 @@
         {
           "id": "P05-C2",
           "name": "Olek",
+          "pesel": "26301531379",
+          "birthRegistry": {
+            "actNumber": "1314/2026/DEMO",
+            "office": "Urząd Stanu Cywilnego w Wrocław (DEMO)"
+          },
           "status": "born",
           "sex": "male",
           "premature": true,
@@ -739,6 +895,11 @@
         {
           "id": "P06-C1",
           "name": "Kuba",
+          "pesel": "20262031497",
+          "birthRegistry": {
+            "actNumber": "1315/2020/DEMO",
+            "office": "Urząd Stanu Cywilnego w Łodzi (DEMO)"
+          },
           "status": "born",
           "sex": "male",
           "premature": false,
@@ -917,6 +1078,11 @@
         {
           "id": "P07-C1",
           "name": "Filip",
+          "pesel": "17251131517",
+          "birthRegistry": {
+            "actNumber": "1316/2017/DEMO",
+            "office": "Urząd Stanu Cywilnego w Katowice (DEMO)"
+          },
           "status": "born",
           "sex": "male",
           "premature": false,
@@ -1139,7 +1305,102 @@
         "postalCode": "70-781",
         "city": "Szczecin",
         "gender": "female",
-        "employment": "unemployed"
+        "employment": "unemployed",
+        "work": {
+          "employedSince": "2022-03-01",
+          "fte": 1,
+          "employerInsuredCount": 15,
+          "benefitPayer": "zus",
+          "monthlyGross": 5200,
+          "monthlyNet": 3790,
+          "earnings": [
+            {
+              "month": "2025-11",
+              "gross": 5200
+            },
+            {
+              "month": "2025-12",
+              "gross": 5200
+            },
+            {
+              "month": "2026-01",
+              "gross": 5200
+            },
+            {
+              "month": "2026-02",
+              "gross": 5200
+            },
+            {
+              "month": "2026-03",
+              "gross": 5200
+            },
+            {
+              "month": "2026-04",
+              "gross": 5200
+            },
+            {
+              "month": "2026-05",
+              "gross": 5200
+            },
+            {
+              "month": "2026-06",
+              "gross": 5200
+            },
+            {
+              "month": "2026-07",
+              "gross": 5200
+            },
+            {
+              "month": "2026-08",
+              "gross": 5200
+            },
+            {
+              "month": "2026-09",
+              "gross": 5200
+            },
+            {
+              "month": "2026-10",
+              "gross": 5200
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 26,
+            "usedDays": 26
+          },
+          "zus": {
+            "sickness": {
+              "insured": false,
+              "kind": "mandatory",
+              "since": "2022-03-01",
+              "until": "2026-10-31",
+              "endReason": "liquidation",
+              "titleCode": "0110 00 0"
+            },
+            "gaps": [],
+            "periods": [
+              {
+                "kind": "employment_contract",
+                "from": "2022-03-01",
+                "to": "2026-10-31",
+                "fixedTerm": false
+              }
+            ],
+            "contributionBase": 5200,
+            "payer": {
+              "name": "Zachodniopomorska Hurtownia sp. z o.o. w likwidacji (DEMO)",
+              "nip": "8513004421",
+              "regon": "513004423",
+              "city": "Szczecin",
+              "paysBenefits": false
+            },
+            "arrears": {
+              "amount": 0,
+              "checkedAt": "2026-11-21"
+            },
+            "benefitHistory": [],
+            "leaveHistory": []
+          }
+        }
       },
       "children": [
         {
@@ -1150,8 +1411,7 @@
           "premature": false,
           "disability": false,
           "colorKey": "coral",
-          "dueDate": "2027-01-10",
-          "insured": true
+          "dueDate": "2027-01-10"
         }
       ],
       "household": {
@@ -1252,6 +1512,11 @@
         {
           "id": "P10-C1",
           "name": "Emilka",
+          "pesel": "26251931621",
+          "birthRegistry": {
+            "actNumber": "1317/2026/DEMO",
+            "office": "Urząd Stanu Cywilnego w Rzeszów (DEMO)"
+          },
           "status": "born",
           "sex": "female",
           "premature": false,

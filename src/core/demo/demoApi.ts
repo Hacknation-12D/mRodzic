@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { env } from '../config/env';
 import { ProfileSchema } from '../schemas/profile';
 import { localDemoProfiles, pickLocalDemoProfile } from './localDemoProfiles';
+import { DemoDataProvider } from './DemoDataProvider';
 
 /**
  * Dane demonstracyjne: z API SQLite (`EXPO_PUBLIC_DEMO_API_URL`, patrz README_INTEGRACJA.md)
@@ -84,9 +85,5 @@ export async function loginDemoProfile(profileId: string | undefined, signal: Ab
 }
 
 export async function getDemoSnapshot(profileId: string, signal?: AbortSignal, baseUrl = env.demoApiUrl) {
-  if (!baseUrl) return local(() => pickLocalDemoProfile(profileId).profile, signal, 0);
-  const response = await request(`/api/demo-snapshot/${encodeURIComponent(profileId)}`, { signal }, baseUrl);
-  const result = snapshot.parse(response);
-  if (result.profileId !== profileId) throw new Error('Unexpected demo snapshot profile');
-  return result.appProfileV1;
+  return (await DemoDataProvider.snapshot(profileId, signal, baseUrl)).appProfileV1;
 }

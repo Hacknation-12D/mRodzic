@@ -107,6 +107,13 @@ export function VariantCard({ result, upfront, onChange }: { result: BenefitScen
           {t.variantsBody}
         </AppText>
       </View>
+      {result.upfrontDeadline ? (
+        <View className={result.upfrontDeadlinePassed ? 'rounded-field bg-warning-soft p-3' : 'rounded-field bg-base-200 p-3'}>
+          <AppText variant="small" tone={result.upfrontDeadlinePassed ? 'warning' : 'default'}>
+            {result.upfrontDeadlinePassed ? t.upfrontDeadlinePassed(isoToPolishDate(result.upfrontDeadline)) : t.upfrontDeadline(isoToPolishDate(result.upfrontDeadline))}
+          </AppText>
+        </View>
+      ) : null}
       <View className="gap-3 md:flex-row">
         <ChoiceTile className="md:flex-1" title={t.upfront.title} description={t.upfront.body} selected={upfront} onPress={() => onChange(true)}>
           <AppText variant="heading">{formatMoney(cmp.upfrontTotal, 0)}</AppText>

@@ -12,9 +12,10 @@ import {
   type BenefitScenarioResult,
 } from '@/core/benefits';
 import { useToday } from '@/core/clock/useToday';
+import { goToFamilyPlan, goToApplications } from '@/core/navigation/routes';
 import { useProfileStore } from '@/core/profile/profile.store';
 import { parseAmount } from '@/shared/lib/money';
-import { Alert, AppText, Card, ChoiceTile, IconBadge, Screen, SectionHeader } from '@/shared/ui';
+import { Alert, AppText, Button, Card, ChoiceTile, IconBadge, Screen, SectionHeader } from '@/shared/ui';
 
 import { InputsCard } from './components/InputsCard';
 import { BreakdownCard, EligibilityCard, HowCard, SummaryStats, TimelineCard, VariantCard, WhereCard } from './components/Results';
@@ -61,6 +62,8 @@ export function CalculatorScreen() {
 
   return (
     <Screen keyboard>
+      <Button label="Podziel rodzicielski i połącz go z pracą" onPress={goToFamilyPlan} />
+      <Button label="Przejdź do procesu wniosku" variant="secondary" onPress={goToApplications} />
       {/* Nagłówek */}
       <Card tone="tinted" elevation={0} className="gap-3 p-5 md:p-6">
         <View className="flex-row items-center gap-3">

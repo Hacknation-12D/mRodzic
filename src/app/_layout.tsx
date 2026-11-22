@@ -17,7 +17,7 @@ import { pl } from '@/shared/i18n/pl';
 import { darkColors, lightColors } from '@/shared/theme';
 import type { Profile } from '@/core/types';
 import { AppText, appHeaderOptions, PreviewControls } from '@/shared/ui';
-import demoProfiles from '@/dev/dummyData/mrodzic_compat_profiles_v1.json';
+import { offlineProfiles as demoProfiles } from '@/core/demo/DemoDataProvider';
 import { prepareDemoProfile } from '@/dev/personas';
 
 void SplashScreen.preventAutoHideAsync();
@@ -65,6 +65,8 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false, title: pl.appName }} />
           <Stack.Screen name="document/[docId]" options={{ title: pl.documents.details }} />
           <Stack.Screen name="calculator" options={{ title: pl.pageSwitcher.calculator }} />
+          <Stack.Screen name="applications" options={{ title: pl.pageSwitcher.applications }} />
+          <Stack.Screen name="family-plan" options={{ title: pl.pageSwitcher.familyPlan }} />
           <Stack.Screen name="profile/index" options={{ title: pl.profile.title, ...appHeaderOptions(c, { homeHref, showProfile: hasProfile, profileName, onLogout: logOut }) }} />
           <Stack.Screen
             name="profile/child/[childId]"

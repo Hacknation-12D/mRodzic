@@ -56,6 +56,33 @@ def check_identity(parent, who):
         raise ValueError(f"{who}: postal code must be 00-000")
 
 
+def pesel_valid(pesel, birth_date, sex=None):
+    if not isinstance(pesel, str) or not re.fullmatch(r"[0-9]{11}", pesel):
+        return False
+    checksum = (10 - sum(w * int(d) for w, d in zip(PESEL_WEIGHTS, pesel)) % 10) % 10
+    if checksum != int(pesel[10]) or pesel_birth_date(pesel) != birth_date:
+        return False
+    return sex not in ("female", "male") or (int(pesel[9]) % 2 == 0) == (sex == "female")
+
+
+def check_child(child, who):
+    """Dane dziecka zgodne z rejestrem: w drodze – bez ubezpieczenia/PESEL/aktu; urodzone – PESEL i akt; martwe – bez PESEL."""
+    if child.get("status") == "expected":
+        for key in ("insured", "pesel", "birthRegistry"):
+            if key in child:
+                raise ValueError(f"{who}: an unborn child cannot have {key}")
+    elif child.get("loss"):
+        if "insured" in child:
+            raise ValueError(f"{who}: a lost child is not insured")
+        if child["loss"].get("kind") == "stillbirth" and "pesel" in child:
+            raise ValueError(f"{who}: a stillborn child has no PESEL")
+    else:
+        if not pesel_valid(child.get("pesel"), child.get("birthDate"), child.get("sex")):
+            raise ValueError(f"{who}: PESEL missing or not matching the date of birth / sex")
+        if not child.get("birthRegistry"):
+            raise ValueError(f"{who}: birth certificate (birthRegistry) missing")
+
+
 def read_rows(source):
     records = json.loads(source.read_text(encoding="utf-8-sig"))
     if not isinstance(records, list) or not records:
@@ -73,6 +100,8 @@ def read_rows(source):
         for role, parent in (("me", me), ("partner", profile.get("partner"))):
             if parent is not None:
                 check_identity(parent, f"{profile_id} {role}")
+        for child in profile["children"]:
+            check_child(child, f"{profile_id} {child.get('id')}")
         first_name = me["firstName"]
         label = f"{first_name} – {SCENARIOS.get(profile_id, slug)}"
         # Dane „z mObywatela” pokazywane przy logowaniu pochodzą z profilu (adres zamieszkania → miejscowość).

@@ -3,7 +3,7 @@ import { FlatList, View } from 'react-native';
 import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context';
 import { withUniwind } from 'uniwind';
 
-import { goToDocument } from '@/core/navigation/routes';
+import { goToDocument, goToApplications } from '@/core/navigation/routes';
 import { pl } from '@/shared/i18n/pl';
 import { AppText, Button, ChildFilterBar, EmptyState } from '@/shared/ui';
 
@@ -29,6 +29,7 @@ export function DocumentsScreen() {
       <View className="w-full flex-1 self-center md:max-w-[58rem]">
         <ChildFilterBar items={children} value={filter} onChange={setFilter} />
         <View className="gap-2 px-4 pt-2">
+          <Button label="Dane ZUS → analiza PDF → moje wnioski" onPress={goToApplications} />
           {showHidden ? null : <DocumentTabs value={tab} onChange={setTab} counts={counts} />}
           {showHidden ? null : <AppText variant="small" tone="muted">{pl.documents.eligibilityHint}</AppText>}
           {showHidden || hidden.length > 0 ? (

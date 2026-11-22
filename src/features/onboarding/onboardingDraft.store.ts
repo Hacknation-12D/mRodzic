@@ -71,11 +71,11 @@ export const MAX_CHILDREN = 10;
 export const colorForIndex = (index: number): ChildColorKey => CHILD_COLOR_KEYS[index % CHILD_COLOR_KEYS.length];
 
 function blankChild(index: number, count: number): DraftChild {
-  // Ostatnie dziecko domyślnie „w drodze” – najczęstszy przypadek przy pierwszym uruchomieniu.
+  // Ręcznie dodaje się tylko dzieci w drodze – urodzone pochodzą z rejestru (mObywatel / ZUS / USC).
   return {
     key: createId('draft_'),
     name: '',
-    status: index === count - 1 ? 'expected' : 'born',
+    status: 'expected',
     touched: false,
   };
 }

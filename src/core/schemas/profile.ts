@@ -30,6 +30,11 @@ export const ZusRecordSchema = z.object({
     since: IsoDateSchema,
     /** Brak = ubezpieczenie trwa. */
     until: IsoDateSchema.optional(),
+    /**
+     * Przyczyna ustania ubezpieczenia. Gdy ustało w ciąży wskutek śmierci pracodawcy, jego upadłości lub likwidacji
+     * albo z naruszeniem prawa (prawomocny wyrok), zasiłek macierzyński przysługuje mimo to (art. 30 ustawy zasiłkowej).
+     */
+    endReason: z.enum(['liquidation', 'bankruptcy', 'employer_death', 'unlawful_termination', 'other']).optional(),
     /** Kod tytułu ubezpieczenia, np. „0110 11 0”. */
     titleCode: z.string(),
   }),
@@ -129,6 +134,18 @@ export const ChildSchema = ChildBaseSchema.superRefine((child, ctx) => {
   if (child.loss && child.status !== 'born') {
     ctx.addIssue({ code: 'custom', path: ['loss'], message: 'Utrata dotyczy dziecka urodzonego (także martwo urodzonego)' });
   }
+}).transform((child): z.infer<typeof ChildBaseSchema> => {
+  // Dziecko w drodze nie może być jeszcze zgłoszone do ubezpieczenia zdrowotnego ani mieć PESEL / aktu urodzenia,
+  // a dziecko utracone nie jest już ubezpieczone. Starsze zapisy z takimi polami czytamy bez nich (zamiast odrzucać profil).
+  if (child.status === 'expected') {
+    const { insured: _i, pesel: _p, birthRegistry: _b, vaccinations: _v, ...rest } = child;
+    return rest;
+  }
+  if (child.loss) {
+    const { insured: _i, vaccinations: _v, ...rest } = child;
+    return rest;
+  }
+  return child;
 });
 
 export const HouseholdSchema = z.object({
