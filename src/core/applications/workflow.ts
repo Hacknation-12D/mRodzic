@@ -1,11 +1,11 @@
 import { isValidPesel } from '../profile/pesel';
 import type { Child, Profile } from '../types';
-import { addDateDays, evaluateApplication, LEGAL_2026 } from './engine';
+import { maternityWeeksFor } from '../legal/parameters';
+import { addDateDays, evaluateApplication } from './engine';
 import { applicant, childDetails, leaveDates, leaves, payer, reasons, statements } from './forms/zamFields';
 import { ApplicationDraftSchema, BenefitFactsSchema, type ApplicationDraft, type BenefitFacts } from './model';
 
 export const FORM_VERSION = 'ZAM-2026-10-24';
-export const FORM_SOURCE = 'https://www.zus.pl/wzory-formularzy/zasilki/zasilek-macierzynski';
 export const applicationOwner = (profile: Profile, demoId: string | null) => demoId ?? `manual:${profile.me.id}:${profile.createdAt}`;
 export function defaultFacts(profile: Profile, child: Child, today: string): BenefitFacts {
   const zus = profile.me.work?.zus;
@@ -13,7 +13,7 @@ export function defaultFacts(profile: Profile, child: Child, today: string): Ben
   const earnings = profile.me.work?.earnings ?? [];
   const count = child.multipleBirthGroupId ? profile.children.filter((c) => c.multipleBirthGroupId === child.multipleBirthGroupId).length : 1;
   return BenefitFactsSchema.parse({
-    kind: 'maternity', eventDate, start: eventDate, end: addDateDays(eventDate, LEGAL_2026.maternityWeeks[Math.min(count, 5) - 1] * 7 - 1), applicationDate: today,
+    kind: 'maternity', eventDate, start: eventDate, end: addDateDays(eventDate, maternityWeeksFor(count) * 7 - 1), applicationDate: today,
     // Bez konta ZUS: student / osoba bez pracy nie ma tytułu do ubezpieczenia chorobowego; w innych przypadkach – nie wiemy.
     insurance: zus ? zus.sickness.insured ? 'yes' : 'no' : profile.me.employment === 'student' || profile.me.employment === 'unemployed' ? 'no' : 'unknown', insuranceSince: zus?.sickness.since ?? '', insuranceUntil: zus?.sickness.until ?? '',
     employment: profile.me.employment ?? 'other', baseGrossCents: Math.round((earnings.length ? earnings.reduce((n, e) => n + e.gross, 0) / earnings.length : profile.me.work?.monthlyGross ?? 0) * 100),

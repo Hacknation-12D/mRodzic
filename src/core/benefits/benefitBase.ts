@@ -22,15 +22,15 @@
  */
 import { addMonths } from 'date-fns';
 
+import { maxBenefitBaseNonEmployee, minBenefitBase } from '../legal/parameters';
+
 import {
   afterSocialContributions,
   assertNonNegative,
   assertPositive,
   BenefitInputError,
   DAYS_PER_BENEFIT_MONTH,
-  MAX_BENEFIT_BASE_NON_EMPLOYEE_2026,
-  MAX_CONTRIBUTION_BASE_NON_EMPLOYEE_2026,
-  MIN_BENEFIT_BASE_2026,
+  legal,
   parseIsoDate,
   roundMoney,
 } from './common';
@@ -248,7 +248,7 @@ function employeeBase(input: EmployeeBenefitBaseInput): BenefitBaseResult {
 
   const averageMonthlyGross = roundMoney(averageSalary + bonusesMonthlyShare);
   const baseBeforeLimits = afterSocialContributions(averageSalary + bonusesMonthlyShare);
-  const minimum = roundMoney(MIN_BENEFIT_BASE_2026 * fraction);
+  const minimum = roundMoney(minBenefitBase() * fraction);
   const minimumApplied = baseBeforeLimits < minimum;
   const base = minimumApplied ? minimum : baseBeforeLimits;
   if (minimumApplied) {
@@ -295,18 +295,18 @@ function nonEmployeeBase(input: NonEmployeeBenefitBaseInput): BenefitBaseResult 
 
   let monthCapped = false;
   const capped = values.map((v) => {
-    if (v > MAX_CONTRIBUTION_BASE_NON_EMPLOYEE_2026) {
+    if (v > legal().maxContributionBaseNonEmployee) {
       monthCapped = true;
-      return MAX_CONTRIBUTION_BASE_NON_EMPLOYEE_2026;
+      return legal().maxContributionBaseNonEmployee;
     }
     return v;
   });
-  if (monthCapped) notes.push(`Przychód ponad ${MAX_CONTRIBUTION_BASE_NON_EMPLOYEE_2026} zł/mies. obcięto do limitu podstawy składki.`);
+  if (monthCapped) notes.push(`Przychód ponad ${legal().maxContributionBaseNonEmployee} zł/mies. obcięto do limitu podstawy składki.`);
 
   const average = sum(capped) / capped.length;
   const baseBeforeLimits = afterSocialContributions(average);
-  const capApplied = monthCapped || baseBeforeLimits > MAX_BENEFIT_BASE_NON_EMPLOYEE_2026;
-  const base = Math.min(baseBeforeLimits, MAX_BENEFIT_BASE_NON_EMPLOYEE_2026);
+  const capApplied = monthCapped || baseBeforeLimits > maxBenefitBaseNonEmployee();
+  const base = Math.min(baseBeforeLimits, maxBenefitBaseNonEmployee());
 
   return {
     base,
@@ -315,7 +315,7 @@ function nonEmployeeBase(input: NonEmployeeBenefitBaseInput): BenefitBaseResult 
     averageMonthlyGross: roundMoney(average),
     baseBeforeLimits,
     monthsCounted: incomes.length,
-    months: incomes.map((v, i) => ({ month: `${i + 1}`, status: 'full', countedGross: Math.min(v, MAX_CONTRIBUTION_BASE_NON_EMPLOYEE_2026) })),
+    months: incomes.map((v, i) => ({ month: `${i + 1}`, status: 'full', countedGross: Math.min(v, legal().maxContributionBaseNonEmployee) })),
     bonusesMonthlyShare: 0,
     minimumApplied: false,
     capApplied,
@@ -330,4 +330,22 @@ export function calculateBenefitBase(input: BenefitBaseInput): BenefitBaseResult
   if (input.insuredType === 'employee') return employeeBase(input);
   if (input.insuredType === 'non_employee') return nonEmployeeBase(input);
   throw new BenefitInputError('insuredType musi być „employee” albo „non_employee”.', 'insuredType');
+}
+
+/**
+ * Podstawa z przeciętnego miesięcznego wynagrodzenia brutto – wspólna dla kalkulatora, wniosku i planu rodziny.
+ * Pracownik (i osoba po ustaniu zatrudnienia): −13,71% i minimalna podstawa dla pełnego etatu.
+ * Nie-pracownik: −13,71% i limit podstawy. Brak tytułu ubezpieczenia → 0.
+ */
+export function benefitBaseFromAverageGross(averageMonthlyGross: number, employment: string, employmentFraction = 1): number {
+  if (!(averageMonthlyGross > 0)) return 0;
+  if (employment === 'student' || employment === 'unemployed') return 0;
+  if (employment === 'self_employed' || employment === 'civil_contract') {
+    return calculateBenefitBase({ insuredType: 'non_employee', monthlyIncomes: Array.from({ length: 12 }, () => averageMonthlyGross) }).base;
+  }
+  return calculateBenefitBase({
+    insuredType: 'employee',
+    employmentFraction,
+    months: Array.from({ length: 12 }, () => ({ fixedGross: averageMonthlyGross })),
+  }).base;
 }

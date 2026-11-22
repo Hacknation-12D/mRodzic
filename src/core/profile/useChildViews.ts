@@ -5,7 +5,7 @@ import { isoToPolishDate } from '../../shared/lib/date';
 import { useIsDark } from '../../shared/theme/colors';
 import { getStage } from '../stage/getStage';
 import { stageLabel } from '../stage/stageLabel';
-import type { Child, ChildColorKey, MarkKey, Profile, Stage } from '../types';
+import type { Child, ChildColorKey, Profile, Stage } from '../types';
 import { getChildColor } from './childColors';
 import { useProfileStore } from './profile.store';
 
@@ -47,8 +47,3 @@ export function useChildViews(date: Date): ChildView[] {
   return useMemo(() => toChildViews(profile, date, isDark), [profile, date, isDark]);
 }
 
-/** Kolor dla klucza znacznika (dziecko albo „cała rodzina”) w bieżącym motywie. */
-export function useMarkColor(): (key: MarkKey) => string {
-  const isDark = useIsDark();
-  return (key) => getChildColor(key, isDark);
-}

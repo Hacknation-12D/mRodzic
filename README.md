@@ -1,302 +1,230 @@
-# Rodzic – świadczenia i formalności dla rodziców (Expo + Supabase + OpenAI)
+# mRodzic – urlopy, zasiłki i wnioski ZUS dla rodziców
 
-Aplikacja mobilna pomagająca przyszłym i świeżo upieczonym rodzicom w Polsce ogarnąć świadczenia, urlopy i formalności związane z ciążą i dziećmi. Obsługuje wiele dzieci (także dziecko w drodze i bliźnięta).
+> Projekt na hackathon. **Wszystkie dane w aplikacji są fikcyjne (SYMULACJA – DANE FIKCYJNE).** Aplikacja nie wysyła niczego do ZUS, pracodawcy, USC ani mObywatela.
 
-- **Kalendarz** – siatka miesiąca z kropkami terminów w kolorach dzieci, „W tym miesiącu warto”, 3 poradniki dopasowane do etapu.
-- **Asystent** – czat (mock offline albo OpenAI przez Supabase Edge Function) ze źródłami + formularz „Zapytaj człowieka”.
-- **Dokumenty** – zakładki „Przysługuje” i „Nie przysługuje” z wstępną oceną według reguł aplikacji. Sekcja „Uzupełnij dane” pokazuje sprawy z nieustalonym wynikiem. W szczegółach można otworzyć materiały ZUS oraz wypełnić i pobrać formularz ZAM w wersji webowej.
-- **Profil / onboarding** – logowanie przez mObywatel (symulacja: pobiera imię, płeć i miejscowość rodzica i pyta „Czy te dane się zgadzają?”), rodzic, partner (opcjonalnie), dzieci (kreator „Dziecko 1 z N”, „Dodaj bliźniaka”), gospodarstwo; akcja „Urodziło się!”.
+## Problem
 
-Działa **bez internetu i bez konfiguracji** (wbudowany seed treści + asystent mock). Profil zapisuje się na urządzeniu. Po skonfigurowaniu Supabase użytkownik może dodatkowo zapisać dane rodziny na swoim koncie.
+Rodzic, który spodziewa się dziecka, musi poskładać informacje z kilku miejsc: ZUS, kodeksu pracy, poradników i forów. Musi ustalić, czy przysługuje mu zasiłek, w jakiej wysokości, jak podzielić urlop z partnerem, jaki wniosek złożyć, komu i w jakim terminie. Przy bliźniętach, adopcji, umowie zlecenia, własnej firmie lub utracie dziecka sprawa robi się jeszcze trudniejsza.
 
----
+## Rozwiązanie
 
-## Szybki start (bez Supabase)
+**mRodzic** to aplikacja webowa/mobilna (iOS, Android i web), która:
+
+1. **Pobiera dane rodziny** po symulowanym zalogowaniu przez mObywatel. Dane rodziców, dzieci, ubezpieczenia i składek pochodzą z fikcyjnych rejestrów ZUS, PUE, e-ZLA i USC.
+2. **Ocenia prawo do świadczeń** i podaje uzasadnienie, również wtedy, gdy świadczenie nie przysługuje.
+3. **Liczy kwotę i długość urlopów** dla obojga rodziców i pomaga je podzielić.
+4. **Prowadzi przez wniosek** – od danych, przez formularz ZAM i plik PDF, do złożenia w symulacji.
+5. **Odpowiada na pytania** w czacie z asystentem AI. Do modelu nie trafiają imiona, daty ani miejscowości.
+
+## Co można zobaczyć w aplikacji
+
+| Ekran | Co robi |
+|---|---|
+| **Logowanie (mObywatel – symulacja)** | Losuje jeden z 10 profili DEMO albo pozwala wybrać konkretny. Pokazuje pobrane dane i pyta „Czy te dane się zgadzają?”. |
+| **Start** | Szacunkowy zasiłek macierzyński (miesięcznie, długość urlopu), lista dzieci z oznaczeniem zaległych terminów, skróty. |
+| **Dokumenty** | Sprawy dopasowane do rodziny, podzielone na „Przysługuje” i „Nie przysługuje”. Sekcja „Uzupełnij dane” zbiera sprawy, których nie da się ocenić bez dodatkowych informacji. W szczegółach są terminy, lista dokumentów, linki i oryginalne formularze ZUS (PDF). |
+| **Kalkulator świadczeń** (`/calculator`) | Jeden zintegrowany kalkulator: narodziny, ciąża, **zwolnienie w ciąży** (wynagrodzenie chorobowe i zasiłek 100%, okres wyczekiwania 30/90 dni, limit 270 dni, świadczenie rehabilitacyjne, zasiłek w wysokości macierzyńskiego po utracie pracy), adopcja, rodzina zastępcza. Prawo do zasiłku z uzasadnieniem, kwoty **obojga rodziców** (każde z własną podstawą), przejęcie macierzyńskiego przez ojca, uzupełniający urlop macierzyński (wcześniak, szpital), warianty 100%/81,5%, oś czasu, ryzyka (przedłużenie umowy do porodu, pozorność umowy, podwyższona podstawa, zadłużenie JDG, termin 21 dni). |
+| **Plan rodziny** (`/family-plan`) | Podział urlopu rodzicielskiego między rodziców, gotowe warianty, części jednoczesne, łączenie z pracą do ½ etatu (wydłużenie urlopu i pomniejszony zasiłek), kwoty dla każdego rodzica. |
+| **Wnioski do pracodawcy i USC** (`/requests`) | Zaprojektowane wnioski urlopowe (macierzyński, macierzyński + rodzicielski, rodzicielski, łączenie z pracą, ojcowski, rezygnacja i przejęcie macierzyńskiego) z kontrolą terminów i limitów; wniosek o odpis aktu urodzenia; zaświadczenie o stanie rozliczeń z ZUS. PDF z polskimi znakami i wysyłka w symulacji z historią. |
+| **Wsparcie** (`/support`) | Zweryfikowane organizacje non-profit (strata dziecka, poronienie, wcześniak, ciężka choroba, kryzys) dobrane do sytuacji z profilu oraz oficjalne źródła: ZUS, MRPiPS, PIP, gov.pl. |
+| **Panel administracyjny** (`/admin`) | Zmiana parametrów prawnych bez nowej wersji aplikacji: stawki, wymiary urlopów, płaca minimalna, limity, terminy. Walidacja, podgląd skutków zmiany, wersje, historia, import/eksport JSON. |
+| **Wnioski** (`/applications`) | Kreator w 6 krokach: Dane ZUS → Analiza PDF (OCR w przeglądarce) → Prawo i kwota → Formularz ZAM → PDF i złożenie w symulacji → Moje wnioski (historia). |
+| **Asystent** | Czat o urlopach i zasiłkach ze wskazaniem źródeł oraz formularz „Zapytaj człowieka”. |
+| **Profil** | Dane rodziców i dzieci, dane z PUE/eZUS, dziecko w drodze, akcja „Urodziło się!”, obsługa utraty dziecka. |
+
+## Gdzie działa sztuczna inteligencja
+
+| Funkcja | AI? | Jak |
+|---|---|---|
+| Asystent (czat) | **tak** | Model językowy (DeepSeek / OpenAI) dostaje zanonimizowany opis rodziny; bez klucza – tryb offline na regułach. Odpowiedź z modelu jest oznaczona w czacie. |
+| Analiza PDF (krok 2 wniosku) | **częściowo** | OCR Tesseract (model rozpoznawania tekstu) w przeglądarce; pola wymagają potwierdzenia przez użytkownika. Plik nie trafia do serwera ani do modelu językowego. |
+| Kalkulatory, ocena prawa, wnioski, panel administracyjny, katalog wsparcia | **nie** | Deterministyczne reguły z ustawy zasiłkowej i Kodeksu pracy (`core/benefits`, `core/applications`, `core/requests`), pokryte testami. |
+
+AI wspierało także proces tworzenia kodu i dokumentacji.
+
+## Asystent AI
+
+Asystent sam wybiera, skąd bierze odpowiedzi. Sprawdza możliwości w tej kolejności:
+
+1. **Model językowy (DeepSeek albo OpenAI)** – gdy w `.env` jest klucz API dostawcy wybranego w `settings.json`. Aplikacja łączy się z dostawcą bezpośrednio, przez endpoint `/chat/completions` (oba używają formatu OpenAI).
+2. **Supabase Edge Function `assistant`** (OpenAI po stronie serwera) – gdy ustawiono `EXPO_PUBLIC_ASSISTANT_MODE=remote` i skonfigurowano Supabase. Model ustawia sekret `OPENAI_MODEL`.
+3. **Tryb offline (mock)** – w pozostałych przypadkach. Odpowiada na podstawie wbudowanej treści aplikacji i nie potrzebuje internetu.
+
+Dostawcę i model wybiera się w [settings.json](settings.json):
+
+```json
+{
+  "AI_PROVIDER": "deepseek",
+  "DEEPSEEK_MODEL": "deepseek-flash",
+  "OPENAI_MODEL": "gpt-4.1-mini"
+}
+```
+
+| `AI_PROVIDER` | Model (domyślny) | Adres API | Klucz w `.env` |
+|---|---|---|---|
+| `deepseek` (**domyślnie**) | `deepseek-flash` (`DEEPSEEK_MODEL`) | `https://api.deepseek.com` | `EXPO_PUBLIC_DEEPSEEK_API_KEY` |
+| `openai` | `gpt-4.1-mini` (`OPENAI_MODEL`) | `https://api.openai.com/v1` | `EXPO_PUBLIC_OPENAI_API_KEY` |
+
+Klucz musi należeć do wybranego dostawcy. Jeśli `AI_PROVIDER` to `openai`, a w `.env` jest tylko klucz DeepSeek, asystent działa offline.
+
+**Co trafia do modelu**
+
+- Zanonimizowany opis rodziny – bez imion, dat i miejscowości. Dzieci mają aliasy „Dziecko 1/2”, a imiona aplikacja podstawia z powrotem lokalnie.
+- Dokumenty z najbliższymi terminami dla tej rodziny oraz dokument, z którego użytkownik przeszedł do czatu.
+- Ostatnie 2 pary pytanie–odpowiedź i bieżące pytanie.
+
+**Parametry:** `temperature` 0,3, limit czasu 50 s, odpowiedzi do ok. 300 znaków, po polsku. Model ma nie zmyślać kwot ani terminów i odsyłać do oficjalnych źródeł. Instrukcja systemowa jest w [systemPrompt.ts](src/features/assistant/llm/systemPrompt.ts).
+
+**Gdy model nie odpowiada** (błąd sieci, limit czasu, błąd API), aplikacja zwraca odpowiedź trybu offline i oznacza ją w dymku czatu. Pod każdą odpowiedzią jest przycisk „Zapytaj człowieka”.
+
+## Scenariusz demo (ok. 3 minuty)
+
+1. Uruchom aplikację (patrz niżej) i wybierz **Zaloguj przez mObywatel (demo)** → profil **P01 – Anna**.
+2. Ekran **Start**: szacunkowy zasiłek i lista dzieci.
+3. **Dokumenty** → otwórz zasiłek macierzyński: ocena prawa, terminy, formularze.
+4. **Kalkulator świadczeń**: kwota dzienna i oś czasu urlopów obojga rodziców; kafelek **Zwolnienie w ciąży** (najlepiej na profilu P03).
+5. **Panel administracyjny**: zmień stawkę rodzicielskiego na 75% (nowa wersja np. `2027.1`) i wróć do kalkulatora – kwota przelicza się od razu.
+6. **Wnioski**: przejdź 6 kroków – dane ZUS, ocena prawa, formularz ZAM, pobranie PDF i złożenie w symulacji. Wniosek zostaje w historii po odświeżeniu strony.
+7. Wyloguj się i zaloguj jako **P04 – Alicja (studentka)**. Aplikacja odmawia zasiłku i podaje uzasadnienie (brak tytułu ubezpieczenia).
+
+### Profile DEMO
+
+| ID | Osoba | Przypadek |
+|---|---|---|
+| P01 | Anna | Etat, zasiłek wypłaca pracodawca, partner prowadzi firmę |
+| P02 | Marta | Własna firma z zaległościami w ZUS, ciąża |
+| P03 | Julia | Umowa zlecenie od niedawna, okres wyczekiwania, e-ZLA |
+| P04 | Alicja | Studentka bez ubezpieczenia chorobowego (odmowa) |
+| P05 | Iga | Wcześniacze bliźnięta w szpitalu, urlop uzupełniający |
+| P06 | Elżbieta | Adopcja dziecka 6-letniego |
+| P07 | Piotr | Niezawodowa rodzina zastępcza, odroczenie obowiązku szkolnego |
+| P08 | Monika | Utrata dziecka – **tylko z wyboru ręcznego**, nie bierze udziału w losowaniu |
+| P09 | Weronika | Likwidacja pracodawcy w czasie ciąży |
+| P10 | Natalia | „Za życiem”, urlop rodzicielski łączony z pracą |
+
+Stan danych testowych: **21.11.2026**.
+
+## Szybki start
+
+Wymagania: **Node 22.5+** (testowane na Node 24).
 
 ```bash
-npm i
+npm install
 npx expo start
 ```
 
-Zeskanuj kod QR w **Expo Go** (iOS/Android) albo naciśnij `w`, żeby otworzyć wersję web. Plik `.env` nie jest potrzebny.
+Naciśnij `w`, żeby otworzyć wersję web, albo zeskanuj kod QR w **Expo Go**. **Plik `.env` nie jest potrzebny** – aplikacja działa offline na wbudowanych danych DEMO, z asystentem w trybie offline.
 
-Wymagania: Node 20+ (testowane na Node 24), Expo SDK 58.
+Kreator wniosków z analizą PDF i pobieraniem formularza ZAM działa w wersji **web**.
 
-## Skrypty npm
+## Konfiguracja (opcjonalna)
 
-| Skrypt | Co robi |
+Skopiuj `.env.example` do `.env`. Każda zmienna jest opcjonalna. Brak zmiennej oznacza tryb offline.
+
+| Co chcesz włączyć | Co ustawić |
 |---|---|
-| `npm start` | `expo start` |
-| `npm run typecheck` | `tsc --noEmit` (TypeScript strict) |
-| `npm run lint` | ESLint (flat config) z regułami granic architektury |
-| `npm test` | Vitest – czyste funkcje w `src/core`, walidacja seeda, format CSV |
-| `npm run content:validate` | walidacja `content/seed/*.json` schematami zod |
-| `npm run content:seed-sql` | generuje `supabase/seed.sql` z danych JSON |
-| `npm run content:import -- --from <dir> --format csv\|json [--dry-run]` | CSV/JSON → walidacja → upsert do Supabase |
-| `npm run content:export` | Supabase → `content/seed/*.json` |
-| `npm run check` | typecheck + lint + test + content:validate |
+| Asystent AI na prawdziwym modelu (tylko do testów) | `EXPO_PUBLIC_DEEPSEEK_API_KEY` (model `deepseek-flash`) albo `EXPO_PUBLIC_OPENAI_API_KEY` (model `gpt-4.1-mini`); dostawcę wybierasz w `settings.json` – patrz [Asystent AI](#asystent-ai) |
+| Asystent przez Supabase Edge Function | `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`, `EXPO_PUBLIC_ASSISTANT_MODE=remote` |
+| Parametry prawne z serwera | `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY` + migracja `0005` |
+| Dane DEMO z lokalnego API SQLite | `npm run demo:server`, potem `EXPO_PUBLIC_DEMO_API_URL=http://127.0.0.1:8765` |
 
-## Zmienne środowiskowe
+> Klucze `EXPO_PUBLIC_*` trafiają do paczki aplikacji. Klucze do modeli AI ustawiaj tylko lokalnie, na czas testów. Klucz `SUPABASE_SERVICE_ROLE_KEY` służy wyłącznie skryptom i nigdy nie trafia do aplikacji.
 
-Skopiuj `.env.example` do `.env` (plik jest w `.gitignore`).
+<details>
+<summary><b>Supabase krok po kroku</b></summary>
 
-| Zmienna | Gdzie | Opis |
-|---|---|---|
-| `EXPO_PUBLIC_SUPABASE_URL` | aplikacja | URL projektu Supabase |
-| `EXPO_PUBLIC_SUPABASE_ANON_KEY` | aplikacja | klucz **anon** (publiczny; RLS ogranicza dostęp) |
-| `EXPO_PUBLIC_ASSISTANT_MODE` | aplikacja | `mock` (domyślnie) albo `remote` |
-| `EXPO_PUBLIC_DEMO_API_URL` | aplikacja | opcjonalny adres API SQLite (README_INTEGRACJA.md); pusty = logowanie na wbudowanym `src/dev/dummyData/mrodzic_compat_profiles_v1.json` |
-| `SUPABASE_URL` | skrypty | URL projektu (dla `content:import/export`) |
-| `SUPABASE_SERVICE_ROLE_KEY` | skrypty | klucz **service role** – tylko lokalnie/CI, **nigdy w aplikacji** |
-
-Brak dowolnej zmiennej nie powoduje błędu: bez Supabase → seed + mock, `remote` bez Supabase → mock.
-
-## Konfiguracja Supabase krok po kroku
-
-1. Załóż projekt na [supabase.com](https://supabase.com), skopiuj URL, klucz anon i service role do `.env`.
-2. Zainstaluj CLI i połącz projekt:
+1. Załóż projekt na [supabase.com](https://supabase.com) i wpisz URL oraz klucze do `.env`.
+2. Połącz projekt i utwórz tabele:
    ```bash
-   npx supabase init          # tworzy supabase/config.toml (istniejące migracje zostają)
    npx supabase login
    npx supabase link --project-ref <ref>
+   npx supabase db push            # migracje z supabase/migrations
    ```
-3. Utwórz tabele, RLS i trigger wersji treści:
+   Możesz też uruchomić w SQL Editorze pliki z `supabase/migrations` w kolejności numerów, a potem `supabase/seed.sql`.
+3. Wgraj treści: `npm run content:import -- --from content/seed --format json`.
+4. Asystent przez Edge Function:
    ```bash
-   npx supabase db push
-   ```
-4. Wgraj treść (seed JSON albo arkusz CSV):
-   ```bash
-   npm run content:import -- --from content/seed --format json
-   ```
-5. Wdróż asystenta i ustaw sekrety (model ustawiasz sam – w kodzie nie ma wpisanego na sztywno modelu; sprawdź aktualną listę modeli w dokumentacji OpenAI):
-   ```bash
-   npx supabase secrets set OPENAI_API_KEY=sk-... OPENAI_MODEL=<aktualny-model> OPENAI_WEB_SEARCH=false
+   npx supabase secrets set OPENAI_API_KEY=sk-... OPENAI_MODEL=<model> OPENAI_WEB_SEARCH=false
    npx supabase functions deploy assistant
    ```
-   `TODO(verify)`: jeśli projekt używa nowych kluczy „publishable” (nie-JWT), wdrażaj z `--no-verify-jwt`.
-6. W `.env` ustaw `EXPO_PUBLIC_ASSISTANT_MODE=remote` i zrestartuj `npx expo start`.
+5. Parametry prawne: migracja `0005_legal_parameters.sql` tworzy tabelę wersji parametrów. Aplikacja przy starcie pobiera najnowszy opublikowany zestaw (`published = true`). Zestaw przygotujesz w panelu `/admin` (eksport JSON) i opublikujesz kluczem serwerowym.
 
-### Co jest w bazie (`supabase/migrations/0001_init.sql`)
+Tabele: `content_*` (katalog treści z wersjonowaniem), `support_requests` („Zapytaj człowieka”), `legal_parameters` (wersje parametrów prawnych), `family_parents` i `family_children` (profile rodzin, używane przez prefill formularza ZAM).
 
-- `content_documents`, `content_tips`, `content_todos`, `content_prompts` – kolumny jak w schematach zod (snake_case), pola złożone jako `jsonb` (w środku camelCase), `published`, `updated_at`.
-- `content_meta (id=1, version, updated_at)` – trigger na INSERT/UPDATE/DELETE w `content_*` podbija `version`. Aplikacja porównuje wersję i pobiera treść tylko, gdy jest nowsza.
-- `support_requests` – zgłoszenia „Zapytaj człowieka” (limity długości w `check`).
-- **RLS**: `anon` czyta tylko opublikowane treści i `content_meta`, do `support_requests` może tylko wstawiać (bez odczytu). Zapis treści tylko `service_role`.
+</details>
 
-### Dane przykładowe w SQL Editorze
+## Pokrycie wymagań ZUS
 
-W nowym projekcie Supabase uruchom w **SQL Editorze** migracje z katalogu `supabase/migrations` w kolejności numerów, a następnie `supabase/seed.sql`. Seed zasila katalog dokumentów, poradniki, zadania i podpowiedzi. Dotychczasowe rekordy o tym samym ID zachowują swoje wartości. W już zasilonej bazie do publikacji zmian w katalogu służy `npm run content:import -- --from content/seed --format json`.
+Szczegóły, status i testy każdego wymagania: **[docs/REQUIREMENTS_MATRIX.md](docs/REQUIREMENTS_MATRIX.md)**.
 
-### Konto rodzinne w Supabase
+- **Działa:** zintegrowany kalkulator (ciąża i zwolnienie, narodziny, adopcja, rodzina zastępcza), kwoty obojga rodziców, przejęcie macierzyńskiego, uzupełniający urlop, łączenie rodzicielskiego z pracą, ryzyka utraty prawa, wnioski do pracodawcy i USC, zaświadczenie o rozliczeniach, katalog organizacji wsparcia, panel administracyjny parametrów, wniosek ZAM od danych do złożenia w symulacji.
+- **Częściowo:** analiza PDF/OCR prawdziwych formularzy z zestawów ZUS (rozpoznawany jest format syntetyczny; pozostałe dane wpisuje się ręcznie).
 
-Migracja `0002_family_profiles.sql` tworzy prywatne tabele `family_parents` i `family_children`. RLS wiąże rekordy z identyfikatorem konta Supabase Auth. Zapisywanie rodzica i aktualnej listy dzieci odbywa się w jednej transakcji.
+Zasady prawne zastosowane w kodzie (m.in. martwe urodzenie, zasiłek pogrzebowy, likwidacja pracodawcy, zadłużenie składkowe) opisuje ten sam dokument.
 
-Migracja `0003_child_last_name.sql` dodaje `family_children.last_name`, uzupełnia ją w dotychczasowych rekordach i synchronizuje nazwisko dziecka z nazwiskiem rodzica. Edytor ZAM wczytuje imię i nazwisko dziecka.
+## Technologie
 
-W Supabase Auth włącz logowanie przez e-mail i w szablonie „Magic Link” umieść kod `{{ .Token }}`. Po skonfigurowaniu `EXPO_PUBLIC_SUPABASE_URL` i `EXPO_PUBLIC_SUPABASE_ANON_KEY` aplikacja pokaże sekcję **Konto rodzinne** w profilu. Zaloguj się kodem i wybierz **Zapisz profil na koncie**. Ponowne zapisanie aktualizuje profil i listę dzieci. W tej samej sekcji można usunąć kopię z konta.
+- **Expo SDK 58**, React Native 0.88, React 19, Expo Router, TypeScript (tryb strict)
+- **Uniwind** (Tailwind v4) z jasnym motywem w konwencji DaisyUI
+- **zustand** (stan i zapis lokalny), **zod** (te same schematy w aplikacji, skryptach i bazie)
+- **pdf-lib** (wypełnianie oryginalnego formularza ZAM, polskie znaki), **pdf.js + tesseract.js** (OCR w przeglądarce)
+- **Supabase** (opcjonalnie: treści, parametry prawne, Edge Function asystenta), **DeepSeek `deepseek-flash`** (do testów) / **OpenAI `gpt-4.1-mini`** (asystent AI)
+- **SQLite** (`node:sqlite`) jako źródło fikcyjnych danych ZUS, PUE, e-ZLA i USC
+- **Vitest**, ESLint z regułami granic architektury
 
-Do testowania profilu rodziny użyj person z DevPanelu, niezależnie od danych katalogowych w Supabase. Na przykład wyczyść dochód na osobę w profilu rodziny z noworodkiem i otwórz „Becikowe”. Zapisanie brakującej kwoty przeliczy wynik w szczegółach i na liście.
-
-### Formularze i instrukcje ZUS
-
-Katalog `public/pdfs` zawiera oryginalne pliki ZUS. ZAM obsługuje zasiłek za okres urlopu macierzyńskiego, rodzicielskiego, ojcowskiego i uzupełniającego urlopu macierzyńskiego. ZCNA dotyczy zgłoszenia członka rodziny do ubezpieczenia zdrowotnego. AWP, AWZ i AWD to instrukcje złożenia elektronicznych wniosków programu Aktywny Rodzic. Dla 800+ szczegóły zawierają link do kreatora SW-R w pomocy eZUS.
-
-W wersji webowej wybierz **Otwórz formularz ZAM** w szczegółach odpowiedniego urlopu. Aplikacja wczytuje dane rodzica i dziecka z zapisanego konta rodzinnego. Uzupełnij i sprawdź dane w stałym formularzu. **Pobierz** zapisuje wypełniony urzędowy plik ZAM z osadzoną czcionką obsługującą polskie znaki. **Wyślij** otwiera eZUS, gdzie należy wybrać usługę „Złożenie dokumentu ZAM” i podpisać wniosek. Wpisane zmiany dotyczą bieżącego otwarcia formularza.
-
-### Konta testowe ZAM
-
-W Supabase Online użyj osobnego projektu testowego. W SQL Editorze zastosuj brakujące migracje w kolejności numerów. Ustaw w `.env` adres projektu, klucz publiczny i klucz serwerowy zgodnie z `.env.example`. Ustaw także `SUPABASE_TEST_PROJECT_REF` zgodny z adresem projektu, własne `SUPABASE_TEST_USERS_PASSWORD` (co najmniej 16 znaków) i `EXPO_PUBLIC_ENABLE_TEST_LOGIN=true`. Uruchom `npm run db:seed-test-users` i zrestartuj aplikację.
-
-W sekcji **Konto rodzinne** wybierz logowanie do konta testowego. Adresy to `anna.zam@example.test` i `michal.zam@example.test`. Pierwsze konto ma jedno dziecko, drugie pozwala sprawdzić wybór między dwojgiem dzieci. Przy testowaniu z wbudowanym katalogiem możesz ustawić `EXPO_PUBLIC_SEED_PERSONA=ania`, aby od razu przejść do dokumentów. Skrypt obsługuje również lokalny Supabase, gdzie domyślne hasło testowe to `ZamDemo-2026!`.
-
-### Synchronizacja treści w aplikacji
-
-1. Start: cache (AsyncStorage) jeśli nowszy niż seed, inaczej seed – UI renderuje się od razu.
-2. W tle: `content_meta.version` > lokalnej → pobranie, walidacja zod (niepoprawne rekordy są pomijane z `console.warn`), zapis w cache, podmiana.
-3. Ponowienie przy powrocie aplikacji na pierwszy plan, nie częściej niż co 15 min. DevPanel: „Synchronizuj teraz”.
-
-## Jak dodać / zmienić treść
-
-Źródłem prawdy jest **`content/seed/*.json`** (wbudowane w aplikację) albo **arkusz CSV** (np. Google Sheets → Plik → Pobierz → CSV).
-
-```bash
-# 1. edytuj JSON albo CSV
-# 2. walidacja (te same schematy zod co aplikacja)
-npm run content:validate
-npm run content:import -- --from content/import --format csv --dry-run
-# 3. publikacja do Supabase
-npm run content:import -- --from content/import --format csv
-# 4. aplikacja pobierze nową wersję przy następnej synchronizacji
-# 5. (opcjonalnie) odśwież wbudowany seed z bazy
-npm run content:export
-```
-
-Walidacja wyłapuje: złe typy pól, nieznane klucze faktów w regułach (np. literówkę `child.premture`), zduplikowane `id`, niepoprawne URL-e, `asOf` w złym formacie, `relatedDocumentId` wskazujące nieistniejący dokument. Przy jakimkolwiek błędzie import nic nie wgrywa i wypisuje raport `plik [id] pole: komunikat`.
-
-### Format CSV
-
-Jeden plik na typ: `documents.csv`, `tips.csv`, `todos.csv`, `prompts.csv` (przykłady po 2 wiersze w `content/import/`). Nagłówki = nazwy pól (camelCase). **Pola złożone wpisujesz jako JSON w komórce.** Pusta komórka = brak pola. `priority` to liczba, `needsReview` to `true`/`false`.
-
-**documents.csv**
-
-| Kolumna | Typ | Przykład |
-|---|---|---|
-| `id` | slug | `becikowe` |
-| `scope` | `child` \| `household` | `child` |
-| `category` | `benefit` `registry` `work` `health` `education` `other` | `benefit` |
-| `title`, `summary` | tekst | |
-| `bodyMd` | markdown | `## Co to jest\n...` |
-| `timing` | JSON | `{"showFrom": -60, "deadline": 365, "deadlineNote": "12 miesięcy od urodzenia"}` |
-| `visibleWhen` | JSON (reguła, opcjonalnie) | `{"fact": "household.childrenCount", "op": "gte", "value": 3}` |
-| `requirements` | JSON (lista) | `[{"id":"dochod","label":"Dochód do 1922 zł","who":"household","rule":{"fact":"household.incomePerPersonNet","op":"lte","value":1922}}]` |
-| `links` | JSON (lista) | `[{"label":"Złóż wniosek","url":"https://empatia.mrips.gov.pl","kind":"apply"}]` |
-| `checklist` | JSON (lista, opcjonalnie) | `["PESEL dziecka"]` |
-| `assistantPrompts` | JSON (lista) | `["Czy przysługuje mi becikowe?"]` |
-| `amountLabel` | tekst (opcjonalnie) | `1000 zł jednorazowo` |
-| `tags` | JSON (lista) | `["becikowe","gmina"]` |
-| `source` | JSON | `{"name":"gov.pl","url":"https://www.gov.pl","asOf":"2026-11"}` |
-| `needsReview` | `true`/`false` | `true` |
-| `priority` | 1–5 (5 = najważniejsze) | `4` |
-
-**tips.csv**: `id, title, summaryMd, bodyMd, timing ({showFrom, showTo}), visibleWhen, tags, source, priority`
-**todos.csv**: `id, title, descriptionMd, timing, visibleWhen, category (health|home|work|registry|education|other), relatedDocumentId, source, priority`
-**prompts.csv**: `id, text, timing ({showFrom, showTo}), visibleWhen`
-
-### Oś czasu: dni względem porodu
-
-Wszystkie `timing` liczone są w **dniach względem porodu danego dziecka** (`birthDate`, a gdy go brak – `dueDate`): ujemne = ciąża, 0 = poród, dodatnie = wiek dziecka.
-
-| Moment | Offset |
-|---|---|
-| tydzień ciąży **T** | **(T − 40) × 7** |
-| 10. tydzień ciąży | −210 |
-| 28. tydzień ciąży | −84 |
-| 36. tydzień ciąży | −28 |
-| poród | 0 |
-| 21 dni po porodzie | 21 |
-| 3 miesiące | ≈ 90 |
-| 12 miesięcy | ≈ 365 |
-| 3 lata | ≈ 1095 |
-
-`showTo` pominięte = bez końca (gdy brak `deadline`) albo do `deadline + 30 dni` (żeby było widać „po terminie”). Dokumenty `scope: household` liczone są względem najmłodszego pasującego dziecka.
-
-### Reguły (`visibleWhen`, `requirements[].rule`)
-
-```jsonc
-{ "all": [ ... ] } | { "any": [ ... ] } | { "not": { ... } } | { "fact": "<FactKey>", "op": "<Op>", "value": ... }
-```
-
-Operatory: `eq neq in notIn lt lte gt gte exists notExists`. Logika trójwartościowa: brak danych (np. dochodu) → `unknown` → w UI „Uzupełnij profil”. `in`/`eq` na listach (`anyParent.employment`) = „którykolwiek element pasuje”.
-
-Fakty: `child.status, child.dayOffset, child.ageMonths, child.premature, child.disability, child.isMultipleBirth, me.gender, me.employment, partner.exists, partner.gender, partner.employment, anyParent.employment, household.size, household.incomePerPersonNet, household.singleParent, household.childrenCount (wszystkie, także w drodze), household.childrenUnder18Count (urodzone < 18 lat), household.city`.
-
----
-
-## Architektura
+## Struktura projektu
 
 ```
 src/
-├─ app/        TYLKO routing (Expo Router). Pliki re-eksportują ekrany z features.
-├─ features/   onboarding · profile · calendar · assistant · documents
-│              każdy widok w swoim folderze, BEZ importów między nimi
-├─ core/       kontrakty i czysta logika: schematy zod, typy, etapy, reguły,
-│              selektory treści, store'y (profil, statusy, filtr), asystent, sync, nawigacja
-├─ shared/     UI kit (klasy DaisyUI), motyw, i18n (pl.ts), helpery – nie zna core ani features
-├─ global.css  JEDYNE źródło kolorów: tokeny motywu DaisyUI (light/dark)
-└─ dev/        DevPanel + persony
-content/seed   wbudowana treść (JSON)      content/import   przykładowe CSV
-scripts/       validate / import / export treści (Node + tsx)
-supabase/      migracja SQL, Edge Function `assistant`
+├─ app/        tylko routing (Expo Router) – pliki re-eksportują ekrany z features
+├─ features/   home · onboarding · documents · calculator · assistant · profile · support · admin
+├─ core/       czysta logika: świadczenia, wnioski, reguły, schematy, store'y, nawigacja
+├─ shared/     UI kit, motyw, teksty (i18n/pl.ts), helpery
+└─ dev/        DevPanel i persony
+content/seed   wbudowana treść (dokumenty, porady, zadania)
+public/pdfs    oryginalne formularze i instrukcje ZUS
+scripts/       walidacja i import treści, generator danych DEMO
+supabase/      migracje SQL, Edge Function `assistant`
+docs/          macierz wymagań
 ```
 
-```
-         ┌──────────── features/* ────────────┐
-app/ ──▶ │ calendar  documents  assistant ... │ ──▶ core/ ──▶ shared/
-         └──── ✗ nie importują się nawzajem ──┘
-```
+Najważniejsze moduły logiki:
 
-### Reguły granic (wymuszone ESLintem)
+- `core/benefits/` – urlopy macierzyński, rodzicielski, ojcowski i uzupełniający, podstawa wymiaru, kwota zasiłku, chorobowe w ciąży, plan rodziny. Kwoty liczone są w groszach.
+- `core/legal/` – **jedno źródło parametrów prawnych** (schemat zod, wartości 2026, wersje z panelu i z Supabase). Kalkulatory i silnik wniosku czytają je przy każdym obliczeniu.
+- `core/applications/` – silnik oceny prawa, workflow wniosku, pola formularza ZAM.
+- `core/requests/` – wnioski urlopowe do pracodawcy, odpis aktu urodzenia, zaświadczenie o rozliczeniach (terminy, walidacja, treść PDF).
+- `core/support/` – katalog organizacji wsparcia i oficjalnych źródeł.
+- `core/rules/` i `core/content/` – reguły trójwartościowe (`tak` / `nie` / `brak danych`) dopasowujące dokumenty do rodziny.
+- `core/profile/anonymize.ts` – anonimizacja profilu przed wysłaniem do AI.
 
-1. `src/features/<X>/**` importuje tylko `@/core/**`, `@/shared/**` i własne pliki.
-2. `src/core/**` nie importuje z `features` ani `dev`; `src/shared/**` nie importuje z `core` ani `features` (`ChildChip`/`ChildFilterBar` dostają dane przez propsy).
-3. Pliki w `src/app/**` tylko re-eksportują ekrany: `export { CalendarScreen as default } from '@/features/calendar';`.
-4. Komunikacja między widokami wyłącznie przez `core/navigation/routes.ts` (`goToDocument`, `goToAssistant`, …) i store'y w `core`.
-5. Logika domenowa = czyste funkcje w `core`, przyjmujące `ContentBundle`, `Profile`, `today`.
-6. Wszystkie teksty UI w `src/shared/i18n/pl.ts`.
+Zasady architektury pilnuje ESLint: moduły z `features/` nie importują się nawzajem, `core/` nie zna `features/`, a `shared/` nie zna `core/`. Wszystkie teksty interfejsu są w `src/shared/i18n/pl.ts`.
 
-Przykład – linter blokuje import z innej funkcji:
+## Skrypty
 
-```ts
-// src/features/calendar/components/Foo.tsx
-import { DocumentsScreen } from '@/features/documents';
-```
+| Skrypt | Co robi |
+|---|---|
+| `npm start` / `npm run web` | serwer Expo / wersja web |
+| `npm run check` | typecheck + lint + testy + walidacja treści |
+| `npm test` | testy Vitest (świadczenia, scenariusze, workflow, PDF, reguły) |
+| `npm run demo:server` | lokalne API z danymi DEMO (SQLite, port 8765) |
+| `npm run demo:build` | odświeża wbudowany snapshot danych DEMO |
+| `npm run build:web` | snapshot + zasoby PDF + eksport web do `dist/` |
+| `npm run content:validate` | walidacja `content/seed/*.json` |
+| `npm run content:import -- --from <dir> --format csv\|json [--dry-run]` | import treści do Supabase |
 
-```
-error  '@/features/documents' import is restricted from being used by a pattern.
-       Feature "calendar" nie może importować innych funkcji. Użyj @/core (store'y, routes) albo @/shared
-       no-restricted-imports
-```
+## Wskazówki dla developerów
 
-### Kluczowe moduły `core`
+- **DevPanel**: w Profilu stuknij 3 razy w numer wersji. Pozwala zmienić datę „dzisiaj”, wybrać profil DEMO, przełączyć tryb asystenta i zsynchronizować treść.
+- **Oś czasu** w treściach liczona jest w dniach względem porodu: ujemne liczby oznaczają ciążę, `0` to poród, dodatnie to wiek dziecka. Tydzień ciąży `T` = `(T − 40) × 7`.
+- **Treści** edytujesz w `content/seed/*.json` albo w CSV (`content/import/`). Przed importem uruchom `npm run content:validate`.
+- **Kolory** zmieniasz w dwóch miejscach: `src/global.css` i `src/shared/theme/palette.ts`. Zgodność obu plików sprawdza test.
+- Więcej o bazie DEMO i jej API: **[README_INTEGRACJA.md](README_INTEGRACJA.md)**.
 
-- `schemas/` – zod: profil, treść, reguły (te same schematy w aplikacji, skryptach i przy odczycie z Supabase).
-- `stage/getStage.ts` – `dayOffset`, `getStage`, `offsetToDate`; `stageLabel` („28. tydzień ciąży”, „4. miesiąc życia”, „2 lata i 4 miesiące”).
-- `rules/` – `buildFacts` + `evaluate` (trójwartościowo).
-- `content/selectors.ts` – `getDocumentInstances`, `getDocumentInstance`, `getMonthItems`, `getDeadlineMarks`, `getTipsFor`, `getSuggestedPrompts`.
-- `profile/anonymize.ts` – `toAnonymousSummary` (bez imion, dat i miejscowości). Do AI trafia tylko to + aliasy „Dziecko 1/2”; imiona podstawiane z powrotem lokalnie.
-- `clock/` – `getToday()` / `useToday()` z możliwością nadpisania w DevPanelu. Logika nie używa `new Date()`.
-- `assistant/` – `mockAssistant` (offline), `remoteAssistant` (Edge Function, timeout 30 s, `AbortSignal`), `humanSupport` (Supabase + kolejka lokalna ponawiana przy starcie).
+## Ograniczenia
 
-## Praca nad jednym widokiem
-
-- Logowanie („Zaloguj przez mObywatel (demo)”) domyślnie losuje jeden z 9 profili DEMO (P08 – scenariusz wrażliwy – tylko z wyboru ręcznego).
-- **DevPanel** (Profil → „Panel deweloperski” w trybie dev albo 3× stuknięcie w numer wersji): zmiana daty „dzisiaj” (±tydzień/miesiąc, konkretna data), profil DEMO (losowy lub konkretny), tryb asystenta mock/remote, źródło i wersja treści, „Synchronizuj teraz”, czyszczenie statusów/danych.
-- Persony (daty liczone względem „dzisiaj”):
-  - `ania` – Anna (umowa o pracę) + Tomek (JDG), Zosia 3 miesiące, dochód nieznany,
-  - `magda` – samotna mama (zlecenie), bliźnięta-wcześniaki 5 tygodni, 1500 zł/os.,
-  - `kasia` – Kasia (bez pracy) + Marek (etat), dzieci 4 lata, 18 miesięcy i w drodze (24. tydz.) → Karta Dużej Rodziny, przedszkole, Aktywny rodzic.
-- Asystent `mock` działa offline – nie potrzeba kluczy.
-
-## Podział pracy (3–5 osób)
-
-| Osoba | Zakres | Główne pliki |
-|---|---|---|
-| 1 | Kalendarz | `src/features/calendar/**` |
-| 2 | Dokumenty | `src/features/documents/**` |
-| 3 | Asystent + Edge Function | `src/features/assistant/**`, `supabase/functions/assistant` |
-| 4 | Onboarding + profil | `src/features/onboarding/**`, `src/features/profile/**` |
-| 5 | Treść / Supabase / skrypty | `content/**`, `scripts/**`, `supabase/migrations` |
-
-Zmiany w `src/core/**` (kontrakty: schematy, selektory, trasy) zgłaszaj zespołowi – to wspólne API. Każdy feature ma `index.ts` eksportujący tylko ekrany.
-
-## Interfejs: DaisyUI + Uniwind
-
-- **Stylowanie:** klasy Tailwind v4 przez [Uniwind](https://docs.uniwind.dev) (`className` na komponentach RN, działa na iOS, Androidzie i web). Konfiguracja: `metro.config.js`, `src/global.css`.
-- **Motyw w konwencji DaisyUI 5:** tokeny semantyczne `primary`, `secondary`, `accent`, `neutral`, `base-100/200/300`, `base-content`, `info`/`success`/`warning`/`error` (+ `*-content`) i promienie `rounded-box` / `rounded-field` / `rounded-selector`. Motyw jasny i ciemny przełącza się razem z ustawieniem systemu.
-- **Dlaczego nie sam plugin `daisyui`?** Jego komponenty (`btn`, `card`, `badge`…) to CSS, którego React Native nie wykona (pseudo-elementy, `color-mix`). Dlatego `src/shared/ui` odwzorowuje komponenty DaisyUI na tych samych tokenach: `Button` (btn / btn-soft / btn-outline / btn-error), `Card`, `Badge` (badge-soft), `Chip`, `Alert` (alert-soft), `SegmentedControl` (tabs-box), `Stepper` (join), `ToggleRow` (toggle), `Sheet` (modal-bottom), `TextField`/`Select` (input/select), czat (chat-bubble).
-- **Kolory w JS** (ikony, nawigacja, kolory dzieci): `src/shared/theme/palette.ts`. Test `palette.test.ts` pilnuje, żeby zgadzał się z `global.css`. Zmieniasz kolor → zmień oba pliki.
-- **Pułapka web:** style bazowe RN-web mają pierwszeństwo przed warstwą `utilities` Tailwinda. Dla właściwości, które RN-web ustawia samo (np. `flexGrow`/`flexShrink` poziomego `ScrollView`), użyj inline `style`, nie klasy.
-
-## Logowanie przez mObywatel (symulacja)
-
-Pierwszy krok onboardingu (`/onboarding`, `StepLogin`). Nic nie łączy się z prawdziwym mObywatelem: `mockMObywatelService` po ~1,4 s zwraca przykładową osobę. Użytkownik widzi pobrane dane (imię, nazwisko, data urodzenia, płeć, miejscowość) i odpowiada „Tak, zgadza się” (uzupełnia imię, płeć i miejscowość w szkicu, potem krok „Twoje dane” z dopisaną formą zatrudnienia i liczbą dzieci) albo „Nie, wpiszę ręcznie” (puste pola). Nazwisko i data urodzenia **nie są zapisywane** (test w `onboardingDraft.store.test.ts`). Dane dzieci wpisuje się jak dotąd. Prawdziwa integracja: podmień `MObywatelService` (`src/features/onboarding/mobywatel/mObywatelService.ts`, `TODO(verify)` w pliku).
-
-## Jakość i dostępność
-
-- TypeScript strict, zero `any` w `core` (reguła ESLint).
-- Testy (Vitest): etapy (granice, rok przestępny, wcześniak, termin w przeszłości), reguły trójwartościowe, `buildFacts`, selektory (dwoje dzieci, bliźnięta, household, statusy), anonimizacja (brak wycieku imion/dat), kontrast kolorów dzieci, walidacja seeda, format CSV i mapowanie snake/camel, mock asystenta.
-- Dostępność: role i etykiety na przyciskach/chipach/dniach kalendarza („15 maja, 2 terminy: …”), chip dziecka ma inicjał i imię (kolor nie jest jedynym nośnikiem informacji), cele ≥ 44×44, dynamiczna wielkość czcionki, tryb jasny i ciemny.
-
-## Znane ograniczenia i TODO
-
-- **Treść wymaga weryfikacji merytorycznej** – każdy dokument ma `needsReview: true`; w `bodyMd` są miejsca `TODO: uzupełnić po weryfikacji` (kwoty/terminy spoza zweryfikowanej listy). Linki prowadzą na strony główne instytucji.
-- `TODO(verify)`:
-  - `src/shared/ui/DateField.tsx` – pole daty jest tekstowe (DD.MM.RRRR); natywny picker do rozważenia,
-  - `supabase/functions/assistant/index.ts` – nazwa narzędzia web search i filtr domen w Responses API; nazwa klucza `SUPABASE_ANON_KEY` vs `SUPABASE_PUBLISHABLE_KEY`,
-  - `--no-verify-jwt` przy nowych kluczach Supabase.
-- Edge Function nie była uruchamiana lokalnie (brak Deno CLI w środowisku generowania) – typy sprawdzone shimami.
-- Limit zapytań w Edge Function jest best-effort (pamięć instancji). Porządnie: tabela w Postgresie / Redis.
-- Dokumenty dotyczące porodu (np. urlop rodzicielski) dla bliźniąt tworzą się per dziecko – do rozważenia grupowanie po `multipleBirthGroupId`.
-- Uniwind i `className` na komponentach firm trzecich wymagają `withUniwind` (patrz `Screen`); na web style bazowe RN-web wygrywają z klasami Tailwinda (patrz „Interfejs”).
-- Brak gestu przesuwania miesięcy w kalendarzu (strzałki działają).
-- Na web `Alert` (potwierdzenia usuwania) nie wyświetla przycisków – docelowe platformy to iOS/Android.
+- To **prototyp**. Wynik aplikacji nie jest decyzją ZUS.
+- Logowanie przez mObywatel, rejestry ZUS i składanie wniosków są **symulowane**.
+- Panel administracyjny zapisuje zmiany lokalnie; publikacja dla wszystkich użytkowników wymaga tabeli `legal_parameters` w Supabase i roli administratora po stronie serwera.
+- OCR słabo radzi sobie ze skanami niskiej jakości. Wyniki analizy PDF trzeba sprawdzić ręcznie.
+- Formularz ZAM, analiza PDF i pobieranie plików działają w wersji web. Na iOS i Androidzie działa przegląd, kalkulatory i asystent.

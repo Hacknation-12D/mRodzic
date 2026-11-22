@@ -14,9 +14,7 @@ import type {
   PromptDefSchema,
   RequirementSchema,
   SourceSchema,
-  TimingSchema,
   TipDefSchema,
-  TodoDefSchema,
   WorkSchema,
   ZusRecordSchema,
 } from '../schemas';
@@ -36,13 +34,11 @@ export type Household = z.infer<typeof HouseholdSchema>;
 export type Profile = z.infer<typeof ProfileSchema>;
 
 // --- Treść ---
-export type Timing = z.infer<typeof TimingSchema>;
 export type Source = z.infer<typeof SourceSchema>;
 export type Requirement = z.infer<typeof RequirementSchema>;
 export type DocumentLink = z.infer<typeof LinkSchema>;
 export type DocumentDef = z.infer<typeof DocumentDefSchema>;
 export type TipDef = z.infer<typeof TipDefSchema>;
-export type TodoDef = z.infer<typeof TodoDefSchema>;
 export type PromptDef = z.infer<typeof PromptDefSchema>;
 export type ContentBundle = z.infer<typeof ContentBundleSchema>;
 
@@ -80,22 +76,5 @@ export type DocumentInstance = DocumentDef & {
   eligibility: RuleResult;
   requirementResults: RequirementResult[];
 };
-
-export type MonthItem = {
-  key: string;
-  date?: Date;
-  childId?: string;
-  kind: 'deadline' | 'todo';
-  refId: string;
-  title: string;
-  urgency: Urgency;
-  done: boolean;
-  /** 1–5, wyższa = ważniejsza (sortowanie). */
-  priority: number;
-  /** Dla todo powiązanego z dokumentem. */
-  relatedDocumentId?: string;
-};
-
-export type TipForChild = TipDef & { childId?: string };
 
 export type MarkKey = ChildColorKey | 'family';

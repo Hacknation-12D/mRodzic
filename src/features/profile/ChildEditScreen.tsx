@@ -8,7 +8,8 @@ import { getDocumentInstances } from '@/core/content/selectors';
 import { useDocumentStatusStore } from '@/core/documents/documentStatus.store';
 import { useContentData } from '@/core/content/useContentData';
 import { deadlineLabel, urgencyTone } from '@/core/content/format';
-import { goToDocument } from '@/core/navigation/routes';
+import { legal } from '@/core/legal/parameters';
+import { goToDocument, goToSupport } from '@/core/navigation/routes';
 import { exactAgeLabel, maskPesel, nextVaccination, vaccinationLabel } from '@/core/profile/childDetails';
 import { isMultipleBirth } from '@/core/rules/buildFacts';
 import { getChildColor } from '@/core/profile/childColors';
@@ -18,6 +19,7 @@ import { stageLabel } from '@/core/stage/stageLabel';
 import type { Child } from '@/core/types';
 import { pl } from '@/shared/i18n/pl';
 import { isoToPolishDate } from '@/shared/lib/date';
+import { formatMoney } from '@/shared/lib/money';
 import { useIsDark } from '@/shared/theme';
 import { AppText, Badge, Button, Card, ChildDot, EmptyState, Screen, ToggleRow } from '@/shared/ui';
 
@@ -57,8 +59,8 @@ function LossDetails({ child, loss }: { child: Child; loss: NonNullable<Child['l
         <AppText variant="subheading" accessibilityRole="header">
           {t.rightsTitle}
         </AppText>
-        <AppText>• {t.maternity}</AppText>
-        <AppText>• {t.funeral}</AppText>
+        <AppText>• {t.maternity(legal().lossMaternityWeeks, legal().lossMinDaysAfterDeath)}</AppText>
+        <AppText>• {t.funeral(formatMoney(legal().funeralGrant, 0))}</AppText>
         <Button
           label={pl.loss.openMaternity}
           variant="secondary"
@@ -66,8 +68,9 @@ function LossDetails({ child, loss }: { child: Child; loss: NonNullable<Child['l
           onPress={() => goToDocument('urlop-macierzynski', child.id)}
         />
       </Card>
-      <Card tone="tinted" elevation={0} className="p-5">
+      <Card tone="tinted" elevation={0} className="gap-3 p-5">
         <AppText>{t.support}</AppText>
+        <Button label={t.supportOpen} icon="heart-outline" variant="secondary" onPress={() => goToSupport(loss.kind === 'stillbirth' ? 'miscarriage' : 'loss')} />
       </Card>
     </Screen>
   );

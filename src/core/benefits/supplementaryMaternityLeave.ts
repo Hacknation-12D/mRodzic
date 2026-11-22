@@ -18,7 +18,7 @@ import { addDays, differenceInCalendarDays } from 'date-fns';
 import {
   assertIntInRange,
   assertPositive,
-  BENEFIT_RATES,
+  benefitRates,
   BenefitInputError,
   endOfPeriod,
   parseIsoDate,
@@ -155,7 +155,7 @@ export function calculateSupplementaryMaternityLeave(
     lowestBirthWeightGrams: lowestWeight,
     weeks,
     days: weeks * 7,
-    benefitRate: BENEFIT_RATES.full,
+    benefitRate: benefitRates().full,
     notes,
   };
 

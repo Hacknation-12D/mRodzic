@@ -8,9 +8,6 @@ type State = {
   /** Nadpisanie trybu asystenta z DevPanelu; null = wartość z env. */
   assistantModeOverride: AssistantMode | null;
   setAssistantModeOverride: (mode: AssistantMode | null) => void;
-  /** Nadpisanie motywu urządzenia; null = motyw systemowy. */
-  themeOverride: 'light' | 'dark' | null;
-  setThemeOverride: (mode: 'light' | 'dark' | null) => void;
 };
 
 export const useSettingsStore = create<State>()(
@@ -18,14 +15,12 @@ export const useSettingsStore = create<State>()(
     (set) => ({
       assistantModeOverride: null,
       setAssistantModeOverride: (assistantModeOverride) => set({ assistantModeOverride }),
-      themeOverride: null,
-      setThemeOverride: (themeOverride) => set({ themeOverride }),
     }),
     {
       name: `${STORAGE_PREFIX}settings`,
       storage: persistStorage,
       version: 1,
-      partialize: (s) => ({ assistantModeOverride: s.assistantModeOverride, themeOverride: s.themeOverride }),
+      partialize: (s) => ({ assistantModeOverride: s.assistantModeOverride }),
       migrate: (persisted) => persisted as State,
     },
   ),

@@ -2,7 +2,7 @@
 import fontkit from '@pdf-lib/fontkit/dist/fontkit.umd.min.js';
 import { PDFCheckBox, PDFDocument, PDFDropdown, PDFTextField } from 'pdf-lib/dist/pdf-lib.min.js';
 
-import { childDetails, zamSections, type ZamValues } from './zamFields';
+import { childDetails, zamSections, type ZamValues } from '@/core/applications/forms/zamFields';
 
 const childDescriptionIds = new Set([childDetails.basic.id, childDetails.hospital.id]);
 type FormField = { id: string; label: string; type: 'text' | 'date' | 'check' | 'select' };

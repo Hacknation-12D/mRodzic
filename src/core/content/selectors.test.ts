@@ -2,13 +2,10 @@ import { describe, expect, it } from 'vitest';
 
 import type { ContentBundle, DocumentDef, Profile, StatusMap, TipDef } from '../types';
 import {
-  getDeadlineMarks,
   getDocumentInstance,
   getDocumentInstances,
-  getMonthItems,
   getRelevantDocumentIds,
   getSuggestedPrompts,
-  getTipsFor,
   isInWindow,
   overdueCountByChild,
 } from './selectors';
@@ -143,10 +140,6 @@ describe('twins', () => {
     expect(pesel[0].urgency).toBe('overdue');
     expect(list.filter((d) => d.id === 'preem')).toHaveLength(2);
   });
-  it('marks combine twin colors on the same day', () => {
-    const marks = getDeadlineMarks(bundle, twins, {}, 2026, 11, 'all', today);
-    expect(marks['2026-11-07']).toEqual(['coral', 'teal']);
-  });
 });
 
 describe('household documents', () => {
@@ -175,41 +168,6 @@ describe('household documents', () => {
   });
   it('getDocumentInstance returns the household instance', () => {
     expect(getDocumentInstance(bundle, three, {}, today, 'kdr')?.key).toBe('kdr:household');
-  });
-});
-
-describe('getMonthItems', () => {
-  it('lists deadlines in the month and overlapping todos', () => {
-    const items = getMonthItems(bundle, twoKids, {}, 2026, 12, 'all', today);
-    const deadlines = items.filter((i) => i.kind === 'deadline');
-    expect(deadlines.map((i) => `${i.refId}:${i.childId}`)).toEqual(['pesel:zosia']);
-    expect(deadlines[0].date?.getDate()).toBe(2);
-    const todos = items.filter((i) => i.kind === 'todo').map((i) => `${i.refId}:${i.childId}`);
-    expect(todos.sort()).toEqual(['pediatra:malu', 'pediatra:zosia']);
-  });
-  it('skips hidden documents and flags done ones', () => {
-    const items = getMonthItems(bundle, twoKids, { 'pesel:zosia': { status: 'done', updatedAt: '' } }, 2026, 12, 'all', today);
-    expect(items.find((i) => i.refId === 'pesel')?.done).toBe(true);
-    const hidden = getMonthItems(bundle, twoKids, { 'pesel:zosia': { status: 'hidden', updatedAt: '' } }, 2026, 12, 'all', today);
-    expect(hidden.some((i) => i.refId === 'pesel')).toBe(false);
-  });
-  it('dates a todo only when its deadline falls in the month', () => {
-    // Zosia: zlobek deadline = 11.11.2026 + 100 dni = 19.02.2027
-    const feb = getMonthItems(bundle, twoKids, {}, 2027, 2, 'zosia', today);
-    expect(feb.find((i) => i.refId === 'zlobek')?.date?.getDate()).toBe(19);
-    const mar = getMonthItems(bundle, twoKids, {}, 2027, 3, 'zosia', today);
-    expect(mar.find((i) => i.refId === 'zlobek')?.date).toBeUndefined();
-  });
-});
-
-describe('getTipsFor', () => {
-  it('round-robins between children without duplicates', () => {
-    const tips = getTipsFor(bundle, twoKids, today, 'all', 3);
-    expect(tips.map((t) => `${t.id}:${t.childId}`)).toEqual(['t-baby:zosia', 't-preg:malu', 't-baby2:zosia']);
-  });
-  it('changes with the date (future month)', () => {
-    const later = getTipsFor(bundle, twoKids, new Date('2027-02-01'), 'malu', 3);
-    expect(later.map((t) => t.id)).toEqual(['t-baby', 't-baby2', 't-all']);
   });
 });
 

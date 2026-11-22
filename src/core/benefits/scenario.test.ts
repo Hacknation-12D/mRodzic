@@ -172,3 +172,66 @@ describe('kalkulator świadczeń – dane z profilu DEMO', () => {
     expect(r.payer).toBe('zus');
   });
 });
+
+describe('kalkulator świadczeń – oboje rodzice i sytuacje szczególne', () => {
+  const partner = { employment: 'employment_contract' as const, sicknessInsurance: 'yes' as const, averageMonthlyGross: 8000 };
+
+  it('drugi rodzic: własna podstawa, 9 tyg. rodzicielskiego (70%) i ojcowski (100%)', () => {
+    const r = calculateBenefitScenario({ ...base, partner });
+    expect(r.partner?.eligibility.status).toBe('eligible');
+    // 8000 − 13,71% = 6903,20 zł
+    expect(r.partner?.base?.base).toBeCloseTo(6903.2, 2);
+    expect(r.partner?.amounts?.segments.map((s) => [s.leave, s.weeks, s.rate])).toEqual([
+      ['parental_other_parent', 9, 0.7],
+      ['paternity', 2, 1],
+    ]);
+    expect(r.familyTotal).toBeCloseTo((r.amounts?.totalAmount ?? 0) + (r.partner?.amounts?.totalAmount ?? 0), 2);
+  });
+
+  it('ojciec przejmuje macierzyński po 14 tygodniach – matce zostaje 14, ojcu 6 tyg. za 100%', () => {
+    const r = calculateBenefitScenario({ ...base, partner, maternityTransfer: { weeks: 6, reason: 'standard' } });
+    expect(r.periods.slice(0, 2).map((p) => [p.who, p.kind, p.weeks])).toEqual([
+      ['me', 'maternity', 14],
+      ['partner', 'maternity', 6],
+    ]);
+    expect(r.partner?.amounts?.segments[0]).toMatchObject({ leave: 'maternity', weeks: 6, rate: 1 });
+    // Rodzicielski zaczyna się po części ojca.
+    expect(r.periods[1]).toMatchObject({ startDate: '2026-12-10', endDate: '2027-01-20' });
+    expect(r.periods[2].startDate).toBe('2027-01-21');
+  });
+
+  it('ojciec nie przejmie więcej niż pozwala minimum matki; po śmierci matki – całość', () => {
+    expect(calculateBenefitScenario({ ...base, partner, maternityTransfer: { weeks: 10, reason: 'standard' } }).periods[1].weeks).toBe(6);
+    expect(calculateBenefitScenario({ ...base, partner, maternityTransfer: { weeks: 12, reason: 'hospital' } }).periods[1].weeks).toBe(12);
+    expect(calculateBenefitScenario({ ...base, partner, maternityTransfer: { weeks: 20, reason: 'death' } }).periods[1].weeks).toBe(20);
+  });
+
+  it('uzupełniający urlop macierzyński: wcześniak z 30. tyg., 40 dni w szpitalu → 6 tyg. po macierzyńskim (100%)', () => {
+    const r = calculateBenefitScenario({
+      ...base,
+      supplementary: { gestationalWeek: 30, birthWeightGrams: 1400, hospitalFrom: '2026-09-03', hospitalTo: '2026-10-12', takenBy: 'me' },
+    });
+    expect(r.supplementary).toMatchObject({ eligible: true, weeks: 6 });
+    expect(r.periods[1]).toMatchObject({ kind: 'supplementary_maternity', startDate: '2027-01-21', weeks: 6 });
+    expect(r.amounts?.segments.find((s) => s.leave === 'supplementary_maternity')?.rate).toBe(1);
+  });
+
+  it('ryzyko: umowa terminowa kończąca się po 3. miesiącu ciąży jest przedłużana do porodu', () => {
+    const r = calculateBenefitScenario({ ...base, kind: 'pregnancy', eventDate: '2027-03-01', contractEndDate: '2026-12-31' });
+    expect(r.eligibility.status).toBe('eligible');
+    expect(r.eligibility.warnings.join(' ')).toContain('art. 177');
+  });
+
+  it('ryzyko: umowa kończąca się przed upływem 3. miesiąca ciąży – brak prawa w dniu porodu', () => {
+    const r = calculateBenefitScenario({ ...base, kind: 'pregnancy', eventDate: '2027-06-01', contractEndDate: '2026-09-30' });
+    expect(r.eligibility.status).toBe('not_eligible');
+    expect(r.amounts).toBeUndefined();
+  });
+
+  it('ryzyko: ubezpieczenie zaczęte w ciąży i podwyższona podstawa – ostrzeżenia, bez odmowy', () => {
+    const r = calculateBenefitScenario({ ...base, insuranceStartDate: '2026-06-01', baseRaisedInPregnancy: true });
+    expect(r.eligibility.status).toBe('eligible');
+    expect(r.eligibility.warnings.some((w) => w.includes('pozoru'))).toBe(true);
+    expect(r.eligibility.warnings.some((w) => w.includes('niższą podstawę'))).toBe(true);
+  });
+});

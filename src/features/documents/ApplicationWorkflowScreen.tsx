@@ -11,6 +11,7 @@ import { goToOnboardingStep, goToCalculator } from '@/core/navigation/routes';
 import { useProfileStore } from '@/core/profile/profile.store';
 import type { Profile } from '@/core/types';
 import { formatTime, isoToPolishDate, toISODate } from '@/shared/lib/date';
+import { pl } from '@/shared/i18n/pl';
 import { AppText, Button, Card, DateField, Screen, Select, TextField, ToggleRow } from '@/shared/ui';
 import { CaseWorkbench } from './components/CaseWorkbench';
 import { ApplicationPdf } from './components/ApplicationPdf';
@@ -25,6 +26,12 @@ const kinds: { value: BenefitFacts['kind']; label: string }[] = [
 const statusText = { draft: 'Szkic', validated: 'Zweryfikowany', ready: 'Gotowy do symulacji', simulated_submitted: 'Złożono w symulacji – nie wysłano do urzędu' };
 const money = (cents: number) => (cents / 100).toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' });
 const at = () => new Date().toISOString();
+const d = (iso?: string) => (iso ? isoToPolishDate(iso) : '—');
+const errorText = (e: unknown) => (e instanceof Error ? e.message : String(e));
+const INSURANCE_KIND = { mandatory: 'obowiązkowe', voluntary: 'dobrowolne' } as const;
+const BENEFIT_KIND = { sickness: 'Zasiłek chorobowy', care: 'Zasiłek opiekuńczy', maternity: 'Zasiłek macierzyński', parental: 'Rodzicielski', pregnancy_sickness: 'Chorobowy w ciąży' } as const;
+const RECIPIENT = { zus: 'ZUS', employer: 'Pracodawca / płatnik', usc: 'USC', unknown: 'Nie ustalono' } as const;
+const PAYER = { zus: 'ZUS', employer: 'pracodawca' } as const;
 
 function Workflow({ profile, owner }: { profile: Profile; owner: string }) {
   const drafts = useApplicationStore((s) => s.drafts);
@@ -43,7 +50,7 @@ function Workflow({ profile, owner }: { profile: Profile; owner: string }) {
   const change = (patch: Parameters<typeof changeDraft>[1]) => {
     if (!draft) return;
     try { put(changeDraft(draft, patch, at())); setConfirm(false); setMessage('Zapisano szkic na tym urządzeniu.'); }
-    catch (e) { setMessage(String(e)); }
+    catch (e) { setMessage(errorText(e)); }
   };
   const facts = (patch: Partial<BenefitFacts>) => { if (draft) change({ facts: { ...draft.facts, ...patch, verified: false } }); };
   const applyCase = (doc: CaseDocument) => {
@@ -64,20 +71,20 @@ function Workflow({ profile, owner }: { profile: Profile; owner: string }) {
   return <Screen keyboard>
     <Card tone="tinted"><AppText variant="title">Wniosek krok po kroku</AppText><AppText>SYMULACJA – DANE FIKCYJNE. Profil {owner}. Żadne dokumenty nie są wysyłane do urzędu.</AppText></Card>
     <View className="flex-row flex-wrap gap-2">{steps.map((title, i) => <Button key={title} compact variant={step === i ? 'primary' : 'secondary'} label={`${i + 1}. ${title}`} onPress={() => { setStep(i); setMessage(''); }} />)}</View>
-    {!draft ? <Card><Select label="Dziecko / sprawa" value={childId} options={profile.children.map((c) => ({ value: c.id, label: c.name }))} onChange={(id) => { if (id) setChildId(id); }} /><Button label="Utwórz nowy wniosek" onPress={create} /><Button label="Pokaż moje wnioski" variant="secondary" onPress={() => setStep(5)} /></Card> : <Card><AppText>{draft.formId} · {statusText[draft.status]} · {draft.childId}</AppText><Button compact label="Nowy wniosek" variant="secondary" onPress={() => setActive(undefined)} /></Card>}
+    {!draft ? <Card><Select label="Dziecko / sprawa" value={childId} options={profile.children.map((c) => ({ value: c.id, label: c.name }))} onChange={(id) => { if (id) setChildId(id); }} /><Button label="Utwórz nowy wniosek" onPress={create} /><Button label="Pokaż moje wnioski" variant="secondary" onPress={() => setStep(5)} /></Card> : <Card><AppText>{draft.formId} · {statusText[draft.status]} · {profile.children.find((c) => c.id === draft.childId)?.name ?? 'dziecko'}</AppText><Button compact label="Nowy wniosek" variant="secondary" onPress={() => setActive(undefined)} /></Card>}
     {step === 0 ? <Card>
-      <AppText variant="heading">Dane ZUS (symulacja)</AppText><AppText>Źródło: zapis aktywnego profilu {owner}; stan na {profile.updatedAt.slice(0, 10)}. Historia nie jest prognozą świadczenia.</AppText>
-      <AppText>Ubezpieczenie chorobowe: {zus ? zus.sickness.insured ? 'tak' : 'nie' : 'brak danych'} · {zus?.sickness.kind} · {zus?.sickness.since} – {zus?.sickness.until ?? 'brak daty końca'}</AppText>
-      <AppText>Płatnik: {zus?.payer.name ?? 'brak danych'}; wypłata: {profile.me.work?.benefitPayer ?? 'nie ustalono'}</AppText>
-      <AppText>Zadłużenie: {zus ? money(Math.round(zus.arrears.amount * 100)) : 'brak danych'} · stan na {zus?.arrears.checkedAt ?? 'nie ustalono'}</AppText>
+      <AppText variant="heading">Dane ZUS (symulacja)</AppText><AppText>Źródło: zapis aktywnego profilu {owner}; stan na {d(profile.updatedAt.slice(0, 10))}. Historia nie jest prognozą świadczenia.</AppText>
+      <AppText>Ubezpieczenie chorobowe: {zus ? `${zus.sickness.insured ? 'tak' : 'nie'} · ${INSURANCE_KIND[zus.sickness.kind]} · od ${d(zus.sickness.since)}${zus.sickness.until ? ` do ${d(zus.sickness.until)}` : ' (trwa)'}` : 'brak danych'}</AppText>
+      <AppText>Płatnik: {zus?.payer.name ?? 'brak danych'}; zasiłek wypłaca: {profile.me.work ? PAYER[profile.me.work.benefitPayer] : 'nie ustalono'}</AppText>
+      <AppText>Zadłużenie: {zus ? money(Math.round(zus.arrears.amount * 100)) : 'brak danych'} · stan na {d(zus?.arrears.checkedAt)}</AppText>
       <AppText variant="subheading">Historia podstaw (brutto)</AppText>{profile.me.work?.earnings.map((e) => <AppText key={e.month}>{e.month}: {money(Math.round(e.gross * 100))}</AppText>)}
-      <AppText variant="subheading">Okresy ubezpieczenia i zatrudnienia</AppText>{zus?.periods.map((p, i) => <AppText key={i}>{p.kind}: {p.from} – {p.to ?? 'trwa'}</AppText>)}
-      <AppText variant="subheading">Historia świadczeń</AppText>{zus?.benefitHistory.map((b, i) => <AppText key={i}>{b.kind}: {b.from} – {b.to} ({b.days} dni)</AppText>)}
-      <AppText variant="subheading">e-ZLA (symulacja)</AppText>{snapshot?.ezla.length ? snapshot.ezla.map((r) => <AppText key={r.id}>{r.id}: {r.from} – {r.to}, kod {r.code}. {r.source}, stan na {r.asOf}</AppText>) : <AppText>Brak e-ZLA w tym scenariuszu.</AppText>}
-      {snapshot?.hospitalizations.map((h) => <AppText key={h.childId}>Szpital — {h.childId}: {h.from} – {h.to}, {h.birthWeightGrams} g, tydzień {h.gestationalWeek}. {h.source}, stan na {h.asOf}</AppText>)}
-      {snapshot?.civilRegistry.map((r) => <AppText key={r.childId}>USC — {r.recordId}: {r.birthDate}, {r.office}. Stan na {r.asOf}</AppText>)}
-      {snapshot?.placement ? <AppText>Przyjęcie dziecka: {snapshot.placement.kind}, {snapshot.placement.date}; odroczenie szkolne: {snapshot.placement.schoolDeferral ? 'tak' : 'nie'}.</AppText> : null}
-      {snapshot?.zaZyciem ? <AppText>Zaświadczenie „Za życiem”: {snapshot.zaZyciem.childId}, {snapshot.zaZyciem.issuedOn} (fikcyjne).</AppText> : null}
+      <AppText variant="subheading">Okresy ubezpieczenia i zatrudnienia</AppText>{zus?.periods.map((p, i) => <AppText key={i}>{pl.employment[p.kind]}{p.fixedTerm ? ' (na czas określony)' : ''}: {d(p.from)} – {p.to ? d(p.to) : 'trwa'}</AppText>)}
+      <AppText variant="subheading">Historia świadczeń</AppText>{zus?.benefitHistory.map((b, i) => <AppText key={i}>{BENEFIT_KIND[b.kind]}: {d(b.from)} – {d(b.to)} ({b.days} dni)</AppText>)}
+      <AppText variant="subheading">e-ZLA (symulacja)</AppText>{snapshot?.ezla.length ? snapshot.ezla.map((r) => <AppText key={r.id}>{d(r.from)} – {d(r.to)}, kod {r.code}{r.code.includes('B') ? ' (ciąża)' : ''}. {r.source}, stan na {d(r.asOf)}</AppText>) : <AppText>Brak e-ZLA w tym scenariuszu.</AppText>}
+      {snapshot?.hospitalizations.map((h) => <AppText key={h.childId}>Szpital: {d(h.from)} – {d(h.to)}, {h.birthWeightGrams} g, poród w {h.gestationalWeek}. tyg. {h.source}, stan na {d(h.asOf)}</AppText>)}
+      {snapshot?.civilRegistry.map((r) => <AppText key={r.childId}>USC – akt {r.recordId}: urodzenie {d(r.birthDate)}, {r.office}. Stan na {d(r.asOf)}</AppText>)}
+      {snapshot?.placement ? <AppText>Przyjęcie dziecka: {snapshot.placement.kind === 'adoption' ? 'przysposobienie' : 'rodzina zastępcza'}, {d(snapshot.placement.date)}; odroczenie obowiązku szkolnego: {snapshot.placement.schoolDeferral ? 'tak' : 'nie'}.</AppText> : null}
+      {snapshot?.zaZyciem ? <AppText>Zaświadczenie „Za życiem” wydane {d(snapshot.zaZyciem.issuedOn)} (fikcyjne).</AppText> : null}
       <Button label="Przejdź do analizy dokumentu" disabled={!draft} onPress={next} />
     </Card> : null}
     {step === 1 && draft && !readOnly ? <><CaseWorkbench key={draft.id} draft={draft} onCase={applyCase} /><Button label="Wprowadź dane ręcznie" onPress={next} /></> : null}
@@ -115,9 +122,9 @@ function Workflow({ profile, owner }: { profile: Profile; owner: string }) {
       <ToggleRow label="Potwierdzam dane i podpis wyłącznie w symulacji" value={draft.signatureConfirmed} onChange={(v) => { if (!readOnly) change({ signatureConfirmed: v }); }} />
       <Button label="Zweryfikuj formularz" disabled={readOnly} onPress={() => { try { put(validateDraft(draft, at())); setStep(4); setMessage('Walidacja poprawna. Wygeneruj PDF i sprawdź odbiorcę.'); } catch (e) { setMessage(e instanceof Error ? e.message : 'Błąd walidacji'); } }} />
     </Card> : null}
-    {step === 4 && draft ? <Card><AppText variant="heading">Przegląd przed symulacją</AppText><AppText>Odbiorca: {draft.recipient} · {draft.formId} · {isoToPolishDate(draft.facts.start)} – {isoToPolishDate(draft.facts.end)}</AppText>
-      <ApplicationPdf key={`${draft.id}-${draft.updatedAt}`} draft={draft} onReady={(revision) => { const latest = useApplicationStore.getState().drafts.find((d) => d.id === draft.id); if (latest) try { put(markPdfReady(latest, revision, at())); } catch (e) { setMessage(String(e)); } }} />
-      {!readOnly ? <><ToggleRow label="Sprawdziłem PDF i odbiorcę. Potwierdzam wyłącznie symulację." value={confirm} onChange={setConfirm} /><Button label="Złóż w symulacji" disabled={draft.status !== 'ready' || !confirm} onPress={() => { try { put(submitSimulation(draft, owner, confirm, at())); setStep(5); setConfirm(false); setMessage('Złożono w symulacji – nie wysłano do urzędu.'); } catch (e) { setMessage(String(e)); } }} /><Button label="Anuluj i wróć do szkicu" variant="secondary" onPress={() => { change({}); setStep(3); }} /></> : <AppText>{draft.submissionId} · {statusText[draft.status]}</AppText>}
+    {step === 4 && draft ? <Card><AppText variant="heading">Przegląd przed symulacją</AppText><AppText>Odbiorca: {RECIPIENT[draft.recipient]} · {draft.formId} · {isoToPolishDate(draft.facts.start)} – {isoToPolishDate(draft.facts.end)}</AppText>
+      <ApplicationPdf key={`${draft.id}-${draft.updatedAt}`} draft={draft} onReady={(revision) => { const latest = useApplicationStore.getState().drafts.find((d) => d.id === draft.id); if (latest) try { put(markPdfReady(latest, revision, at())); } catch (e) { setMessage(errorText(e)); } }} />
+      {!readOnly ? <><ToggleRow label="Sprawdziłem PDF i odbiorcę. Potwierdzam wyłącznie symulację." value={confirm} onChange={setConfirm} /><Button label="Złóż w symulacji" disabled={draft.status !== 'ready' || !confirm} onPress={() => { try { put(submitSimulation(draft, owner, confirm, at())); setStep(5); setConfirm(false); setMessage('Złożono w symulacji – nie wysłano do urzędu.'); } catch (e) { setMessage(errorText(e)); } }} /><Button label="Anuluj i wróć do szkicu" variant="secondary" onPress={() => { change({}); setStep(3); }} /></> : <AppText>{draft.submissionId} · {statusText[draft.status]}</AppText>}
     </Card> : null}
     {step === 5 ? <Card><AppText variant="heading">Moje wnioski — {owner}</AppText>{own.length === 0 ? <AppText>Brak zapisanych wniosków.</AppText> : own.map((d) => <View key={d.id} className="gap-2 border-b border-base-300 py-3"><AppText>{d.formId} · {isoToPolishDate(d.facts.start)} · {statusText[d.status]}</AppText><AppText>{d.submissionId ?? d.id}</AppText><Button label="Otwórz zapisany wniosek" variant="secondary" onPress={() => { setActive(d.id); setStep(d.status === 'draft' ? 3 : 4); setConfirm(false); }} />{d.history.map((h, i) => <AppText variant="small" key={i}>{formatTime(h.at)} — {h.action}</AppText>)}</View>)}</Card> : null}
     {message ? <Card><AppText accessibilityLiveRegion="polite">{message}</AppText></Card> : null}

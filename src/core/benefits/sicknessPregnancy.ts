@@ -15,23 +15,26 @@
  */
 import { addDays, getYear } from 'date-fns';
 
+import { DEFAULT_LEGAL_PARAMETERS } from '../legal/parameters';
+
 import {
   assertIntInRange,
   assertNonNegative,
   assertPositive,
-  BENEFIT_RATES,
+  benefitRates,
   BenefitInputError,
   dailyBenefitAmount,
   daysInclusive,
+  legal,
   parseIsoDate,
   roundMoney,
   toIsoDate,
 } from './common';
 
-export const EMPLOYER_SICK_PAY_DAYS = 33;
-export const EMPLOYER_SICK_PAY_DAYS_OVER_50 = 14;
-export const PREGNANCY_BENEFIT_PERIOD_DAYS = 270;
-export const GENERAL_BENEFIT_PERIOD_DAYS = 182;
+export const EMPLOYER_SICK_PAY_DAYS = DEFAULT_LEGAL_PARAMETERS.employerSickPayDays;
+export const EMPLOYER_SICK_PAY_DAYS_OVER_50 = DEFAULT_LEGAL_PARAMETERS.employerSickPayDaysOver50;
+export const PREGNANCY_BENEFIT_PERIOD_DAYS = DEFAULT_LEGAL_PARAMETERS.pregnancySicknessPeriodDays;
+export const GENERAL_BENEFIT_PERIOD_DAYS = DEFAULT_LEGAL_PARAMETERS.generalSicknessPeriodDays;
 export const GENERAL_BENEFIT_PERIOD_AFTER_INSURANCE_DAYS = 91;
 export const MAX_GAP_DAYS_FOR_SAME_PERIOD = 60;
 
@@ -108,7 +111,7 @@ type ParsedPeriod = { from: Date; to: Date; pregnancy: boolean; index: number };
 
 /** Limit dni wynagrodzenia chorobowego w danym roku kalendarzowym. */
 export function employerSickPayLimit(year: number, birthYear: number): number {
-  return year > birthYear + 50 ? EMPLOYER_SICK_PAY_DAYS_OVER_50 : EMPLOYER_SICK_PAY_DAYS;
+  return year > birthYear + 50 ? legal().employerSickPayDaysOver50 : legal().employerSickPayDays;
 }
 
 function parsePeriods(periods: IncapacityPeriod[]): ParsedPeriod[] {
@@ -206,14 +209,14 @@ export function calculateSicknessPregnancy(input: SicknessPregnancyInput): Sickn
   groupIntoBenefitPeriods(periods).forEach((group, groupIndex) => {
     const pregnancy = group.periods.some((p) => p.pregnancy);
     const limitDays = pregnancy
-      ? PREGNANCY_BENEFIT_PERIOD_DAYS
+      ? legal().pregnancySicknessPeriodDays
       : input.insuranceStatus === 'insured'
-        ? GENERAL_BENEFIT_PERIOD_DAYS
+        ? legal().generalSicknessPeriodDays
         : GENERAL_BENEFIT_PERIOD_AFTER_INSURANCE_DAYS;
     let counted = 0;
 
     for (const p of group.periods) {
-      const rate = p.pregnancy ? BENEFIT_RATES.full : BENEFIT_RATES.sicknessGeneral;
+      const rate = p.pregnancy ? benefitRates().full : benefitRates().sicknessGeneral;
       const daily = dailyBenefitAmount(input.benefitBase, rate);
       for (let day = p.from; day <= p.to; day = addDays(day, 1)) {
         counted += 1;

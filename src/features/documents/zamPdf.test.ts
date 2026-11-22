@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { PDFDocument } from 'pdf-lib';
 import { describe, expect, it, vi } from 'vitest';
 
-import { applicant, childDetails, leaves, reasons, zamLeave } from './zamFields';
+import { applicant, childDetails, leaves, reasons, zamLeave } from '@/core/applications/forms/zamFields';
 import { fillZamPdf, fillZusPdf } from './zamPdf';
 import { zamChildValues, zamChildValuesFromForm } from './zamPrefill';
 import { zcnaInitialValues, zcnaSections } from './zcnaFields';

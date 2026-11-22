@@ -12,7 +12,6 @@ function clean(params: Record<string, string | undefined | null>): Params {
 }
 
 export type AssistantRouteParams = { docId?: string; childId?: string };
-export type DocumentRouteParams = { docId: string; childId?: string };
 
 export function goToDocument(docId: string, childId?: string) {
   router.push({ pathname: '/document/[docId]', params: clean({ docId, childId }) });
@@ -49,6 +48,18 @@ export function goToApplications() {
 
 export function goToFamilyPlan() { router.push('/family-plan'); }
 
+export function goToSupport(situation?: string) {
+  router.push(situation ? { pathname: '/support', params: { situation } } : '/support');
+}
+
+export function goToRequests() {
+  router.push('/requests');
+}
+
+export function goToAdmin() {
+  router.push('/admin');
+}
+
 export function goToChildNew() {
   router.push('/profile/child/new');
 }
@@ -58,7 +69,6 @@ export function goToDevPanel() {
 }
 
 export type OnboardingStep = 'login' | 'partner' | 'children' | 'household';
-export const ONBOARDING_STEPS: OnboardingStep[] = ['login', 'partner', 'children', 'household'];
 
 export function goToOnboardingStep(step: OnboardingStep) {
   router.push(step === 'login' ? '/onboarding' : `/onboarding/${step}`);

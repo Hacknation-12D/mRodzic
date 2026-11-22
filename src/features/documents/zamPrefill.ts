@@ -1,7 +1,7 @@
 import { getFamilySupabase } from '@/core/supabase/client';
 import type { Child, Profile } from '@/core/types';
 
-import { applicant, childDetails, reasons, zamLeave, type ZamValues } from './zamFields';
+import { applicant, childDetails, reasons, zamLeave, type ZamValues } from '@/core/applications/forms/zamFields';
 
 type ParentData = {
   first_name: string;

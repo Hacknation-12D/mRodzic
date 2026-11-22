@@ -1,25 +1,43 @@
 import { BenefitFactsSchema, type BenefitFacts, type EligibilityResult } from './model';
 import { calculateAdoptionMaternityLeave } from '../benefits/adoptionMaternityLeave';
 import { calculateSupplementaryMaternityLeave } from '../benefits/supplementaryMaternityLeave';
+import { benefitBaseFromAverageGross } from '../benefits/benefitBase';
+import { debtThreshold, DEFAULT_LEGAL_PARAMETERS, legal, type LegalParameters } from '../legal/parameters';
 
-export const LEGAL_2026 = Object.freeze({
-  version: 'PL-2026.11.22-reviewed-subset', effectiveFrom: '2026-01-01', effectiveTo: '2026-12-31',
-  rates: { full: 10000, parental: 7000, upfront: 8150 }, deduction: 1371, debtThresholdCents: 4806,
-  parentalWeeks: [41, 43], zaZyciemWeeks: [65, 67], reservedWeeks: 9, maxParts: 5, upfrontDays: 21,
-  maternityWeeks: [20, 31, 33, 35, 37],
-  sourceCitations: [
-    'https://www.zus.pl/swiadczenia/zasilki/zasilek-macierzynski/komu-przysluguje',
-    'https://www.zus.pl/swiadczenia/zasilki/zasilek-macierzynski/wysokosc',
-    'https://www.gov.pl/web/rodzina/urlop-rodzicielski',
-    'https://eli.gov.pl/eli/DU/2025/1242/ogl',
-  ],
-});
+const bp = (share: number) => Math.round(share * 10000);
+
+/** Reguły silnika wniosku wyliczone z aktywnych parametrów prawnych (panel administracyjny). Stawki w punktach bazowych. */
+export function legalRules(p: LegalParameters = legal()) {
+  return Object.freeze({
+    version: `PL-${p.version}`, effectiveFrom: p.effectiveFrom, effectiveTo: p.effectiveTo,
+    rates: { full: bp(p.rates.full), parental: bp(p.rates.parental), upfront: bp(p.rates.upfront) }, deduction: bp(p.socialContributionRate),
+    debtThresholdCents: Math.round(debtThreshold(p) * 100),
+    parentalWeeks: [p.parentalWeeks.single, p.parentalWeeks.multiple], zaZyciemWeeks: [p.parentalWeeks.singleZaZyciem, p.parentalWeeks.multipleZaZyciem],
+    reservedWeeks: p.parentalNonTransferableWeeks, maxParts: p.parentalMaxParts, upfrontDays: p.upfrontApplicationDays,
+    maternityWeeks: [...p.maternityWeeks], maternityBeforeBirthDays: p.maternityBeforeBirthWeeks * 7,
+    lossDays: p.lossMaternityWeeks * 7, lossMinDays: p.lossMinDaysAfterDeath,
+    paternityDays: p.paternityWeeks * 7, paternityMaxParts: p.paternityMaxParts, paternityMonths: p.paternityDeadlineMonths,
+    waitingMandatoryDays: p.waitingPeriodMandatoryDays, waitingVoluntaryDays: p.waitingPeriodVoluntaryDays,
+    pregnancySicknessDays: p.pregnancySicknessPeriodDays, parentalAgeLimitYears: p.parentalChildAgeLimitYears,
+    adoptionAgeLimitYears: p.adoptionChildAgeLimitYears, fosterAgeLimitYears: p.fosterChildAgeLimitYears, fosterAgeLimitDeferredYears: p.fosterChildAgeLimitDeferredYears,
+    sourceCitations: [
+      'https://www.zus.pl/swiadczenia/zasilki/zasilek-macierzynski/komu-przysluguje',
+      'https://www.zus.pl/swiadczenia/zasilki/zasilek-macierzynski/wysokosc',
+      'https://www.gov.pl/web/rodzina/urlop-rodzicielski',
+      'https://eli.gov.pl/eli/DU/2025/1242/ogl',
+    ],
+  });
+}
+export type LegalRules = ReturnType<typeof legalRules>;
+/** Reguły dla domyślnego zestawu 2026 (dokumentacja i testy). */
+export const LEGAL_2026 = legalRules(DEFAULT_LEGAL_PARAMETERS);
 export function daysBetween(start: string, end: string) { return Math.round((Date.parse(`${end}T12:00:00Z`) - Date.parse(`${start}T12:00:00Z`)) / 86400000); }
+export function addMonthsIso(date: string, months: number) { const [y, m, d] = date.split('-').map(Number); const total = m - 1 + months; return `${y + Math.floor(total / 12)}-${String((total % 12) + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`; }
 export function addDateDays(date: string, days: number) { return new Date(Date.parse(`${date}T12:00:00Z`) + days * 86400000).toISOString().slice(0, 10); }
 const roundedDivide = (numerator: number, denominator: number) => Math.floor((numerator + denominator / 2) / denominator);
 
 /** No decision text, filename or case ID enters this function. Unsupported evidence stays unknown. */
-export function evaluateApplication(raw: BenefitFacts, rules = LEGAL_2026): EligibilityResult {
+export function evaluateApplication(raw: BenefitFacts, rules: LegalRules = legalRules()): EligibilityResult {
   const parsed = BenefitFactsSchema.safeParse(raw);
   const base = { rulesVersion: rules.version, effectiveDate: raw.eventDate, sourceCitations: [...rules.sourceCitations] };
   // Zdarzenie po końcu obowiązywania zestawu reguł (np. termin porodu w przyszłym roku): prognoza wg obecnych przepisów, z jawną adnotacją.
@@ -45,31 +63,31 @@ export function evaluateApplication(raw: BenefitFacts, rules = LEGAL_2026): Elig
     if (f.debtCents > rules.debtThresholdCents && !f.debtArrangementCurrent) return outcome('ineligible', 'CONTRIBUTION_DEBT', 'Dług przekracza 1% minimalnego wynagrodzenia. Spłata całości w ciągu 6 miesięcy może przywrócić prawo za cały okres; zweryfikuj układ ratalny.');
   }
   if (['rehabilitation', 'special_maternity', 'care'].includes(f.kind)) return outcome('unknown', 'SPECIAL_EVIDENCE_REQUIRED', 'Ten zakres wymaga dodatkowej weryfikacji dokumentacji. Dostępny jest szkic i ręczne uzupełnienie.', ['Dokumentacja szczególnego świadczenia']);
-  if (f.kind === 'parental' && f.part > rules.maxParts) return outcome('ineligible', 'PARENTAL_PART_LIMIT', 'Przekroczono limit 5 części urlopu rodzicielskiego.');
+  if (f.kind === 'parental' && f.part > rules.maxParts) return outcome('ineligible', 'PARENTAL_PART_LIMIT', `Przekroczono limit ${rules.maxParts} części urlopu rodzicielskiego.`);
   const days = daysBetween(f.start, f.end) + 1;
   if (f.kind === 'maternity' && f.applicantRole !== 'mother') return outcome('unknown', 'MATERNITY_TRANSFER', 'Przejęcie macierzyńskiego wymaga dat i potwierdzenia uprawnień obojga rodziców.', ['Wykorzystana część matki i podstawa przejęcia']);
   if (f.kind === 'paternity' && f.applicantRole !== 'father') return outcome('ineligible', 'PATERNITY_ROLE', 'Urlop ojcowski jest uprawnieniem ojca. Wybierz jego profil.');
   if (f.lossDate) {
     if (f.kind !== 'maternity') return outcome('ineligible', 'CHILD_LOSS', 'W tej sytuacji sprawdź pozostały okres macierzyńskiego i wsparcie po stracie.');
     if (f.childrenCount > 1) return outcome('unknown', 'MULTIPLE_LOSS_REVIEW', 'W porodzie mnogim ustal oddzielnie sytuację każdego dziecka.', ['Dane wszystkich dzieci z porodu']);
-    const limit = f.lossDate < addDateDays(f.eventDate, 56) ? [addDateDays(f.eventDate, 55), addDateDays(f.lossDate, 7)].sort().at(-1)! : addDateDays(f.lossDate, 7);
+    const limit = f.lossDate < addDateDays(f.eventDate, rules.lossDays) ? [addDateDays(f.eventDate, rules.lossDays - 1), addDateDays(f.lossDate, rules.lossMinDays)].sort().at(-1)! : addDateDays(f.lossDate, rules.lossMinDays);
     if (f.end > limit) return outcome('ineligible', 'LOSS_PERIOD_LIMIT', `Wskazany okres wykracza poza ${limit}.`);
   }
-  if (f.kind === 'maternity' && (f.start < addDateDays(f.eventDate, -42) || days > rules.maternityWeeks[f.childrenCount - 1] * 7)) return outcome('ineligible', 'MATERNITY_PERIOD_LIMIT', 'Przekroczono wymiar urlopu lub limit 6 tygodni przed porodem.');
+  if (f.kind === 'maternity' && (f.start < addDateDays(f.eventDate, -rules.maternityBeforeBirthDays) || days > rules.maternityWeeks[f.childrenCount - 1] * 7)) return outcome('ineligible', 'MATERNITY_PERIOD_LIMIT', `Przekroczono wymiar urlopu lub limit ${rules.maternityBeforeBirthDays / 7} tygodni przed porodem.`);
   if (f.kind === 'maternity' && f.start > f.eventDate) return outcome('unknown', 'MATERNITY_TRANSFER', 'Rozpoczęcie po porodzie wymaga sprawdzenia wcześniejszego wykorzystania i zasad przejęcia.');
   if (f.kind === 'parental') {
     const pool = (f.zaZyciem ? rules.zaZyciemWeeks : rules.parentalWeeks)[f.childrenCount > 1 ? 1 : 0];
     if (days > (f.reserved ? rules.reservedWeeks : pool - rules.reservedWeeks) * 7) return outcome('ineligible', 'PARENTAL_POOL_LIMIT', 'Okres przekracza limit dostępny jednemu rodzicowi.');
-    const lastDay = `${Number(f.eventDate.slice(0, 4)) + 6}-12-31`;
-    if (f.start < f.eventDate || f.end > lastDay) return outcome('ineligible', 'CHILD_AGE_LIMIT', 'Rodzicielski musi przypadać od narodzin do końca roku, w którym dziecko kończy 6 lat.');
+    const lastDay = `${Number(f.eventDate.slice(0, 4)) + rules.parentalAgeLimitYears}-12-31`;
+    if (f.start < f.eventDate || f.end > lastDay) return outcome('ineligible', 'CHILD_AGE_LIMIT', `Rodzicielski musi przypadać od narodzin do końca roku, w którym dziecko kończy ${rules.parentalAgeLimitYears} lat.`);
   }
-  if (f.kind === 'paternity' && (days > 14 || f.part > 2 || days % 7 !== 0 || f.start < f.eventDate || f.end >= `${Number(f.eventDate.slice(0, 4)) + 1}${f.eventDate.slice(4)}`)) return outcome('ineligible', 'PATERNITY_LIMIT', 'Ojcowski: do 2 tygodni w maksymalnie 2 częściach, przed ukończeniem przez dziecko 12 miesięcy.');
+  if (f.kind === 'paternity' && (days > rules.paternityDays || f.part > rules.paternityMaxParts || days % 7 !== 0 || f.start < f.eventDate || f.end >= addMonthsIso(f.eventDate, rules.paternityMonths))) return outcome('ineligible', 'PATERNITY_LIMIT', 'Ojcowski: do 2 tygodni w maksymalnie 2 częściach, przed ukończeniem przez dziecko 12 miesięcy.');
   if (f.kind === 'adoption' || f.kind === 'foster') {
     if (!evidence.placementConfirmed || !f.childBirthDate) return outcome('unknown', 'PLACEMENT_EVIDENCE', 'Potwierdź dokument przyjęcia, postępowanie sądowe i wiek dziecka.', ['Dokument przyjęcia']);
     if (f.kind === 'foster' && evidence.professionalFoster) return outcome('ineligible', 'PROFESSIONAL_FOSTER', 'Ta ścieżka dotyczy rodziny zastępczej niezawodowej.');
     if (f.childrenCount > 1) return outcome('unknown', 'PLACEMENT_CHILDREN', 'Podaj oddzielne daty urodzenia wszystkich przyjętych dzieci w kalkulatorze adopcyjnym.');
     try {
-      const leave = calculateAdoptionMaternityLeave({ startDate: f.eventDate, childBirthDates: [f.childBirthDate], ageLimitYears: f.kind === 'adoption' ? 14 : f.schoolDeferral ? 10 : 7 });
+      const leave = calculateAdoptionMaternityLeave({ startDate: f.eventDate, childBirthDates: [f.childBirthDate], ageLimitYears: f.kind === 'adoption' ? rules.adoptionAgeLimitYears : f.schoolDeferral ? rules.fosterAgeLimitDeferredYears : rules.fosterAgeLimitYears });
       if (f.start < f.eventDate || f.end > leave.endDate) return outcome('ineligible', 'PLACEMENT_PERIOD_LIMIT', `Okres wykracza poza dostępny urlop (do ${leave.endDate}).`);
     } catch { return outcome('ineligible', 'PLACEMENT_AGE_LIMIT', 'Dziecko nie spełnia warunku wieku albo daty są sprzeczne.'); }
   }
@@ -83,14 +101,15 @@ export function evaluateApplication(raw: BenefitFacts, rules = LEGAL_2026): Elig
   }
   if (f.kind === 'pregnancy_sickness') {
     if (!evidence.confirmed || !evidence.pregnancyCodeB) return outcome('unknown', 'SICKNESS_HISTORY_REQUIRED', 'Potwierdź e-ZLA/kod B i kompletną historię okresu zasiłkowego.', ['e-ZLA i historia niezdolności']);
-    const waiting = f.employment === 'employment_contract' ? 30 : 90;
+    const waiting = f.employment === 'employment_contract' ? rules.waitingMandatoryDays : rules.waitingVoluntaryDays;
     if (!evidence.waitingException && daysBetween(f.insuranceSince, f.start) + evidence.previousInsuranceDays < waiting) return outcome('ineligible', 'WAITING_PERIOD', `Nie upłynął okres wyczekiwania ${waiting} dni. Sprawdź ustawowe wyjątki i wcześniejsze okresy.`);
-    if (days + evidence.sicknessDaysUsed > 270) return outcome('ineligible', 'SICKNESS_LIMIT', 'Przekroczono 270 dni okresu zasiłkowego w ciąży. Sprawdź świadczenie rehabilitacyjne.');
+    if (days + evidence.sicknessDaysUsed > rules.pregnancySicknessDays) return outcome('ineligible', 'SICKNESS_LIMIT', `Przekroczono ${rules.pregnancySicknessDays} dni okresu zasiłkowego w ciąży. Sprawdź świadczenie rehabilitacyjne.`);
   }
   if (!f.baseConfirmed || f.baseGrossCents <= 0) return outcome('unknown', 'BASE_NOT_CONFIRMED', 'Potwierdź indywidualną podstawę. Średnia z konta może wymagać uzupełnienia miesięcy i składników.', ['Zweryfikowana podstawa wymiaru']);
   const timely = f.upfront && daysBetween(f.eventDate, f.applicationDate) >= 0 && daysBetween(f.eventDate, f.applicationDate) <= rules.upfrontDays;
   const rate = f.kind === 'paternity' || f.kind === 'supplementary' || f.kind === 'pregnancy_sickness' || !!f.lossDate || f.start < f.eventDate ? rules.rates.full : f.reserved && f.kind === 'parental' ? rules.rates.parental : timely ? rules.rates.upfront : f.kind === 'parental' ? rules.rates.parental : rules.rates.full;
-  const baseCents = roundedDivide(f.baseGrossCents * (10000 - rules.deduction), 10000);
+  // Ta sama podstawa co w kalkulatorze: odliczenie składek, minimalna podstawa (pracownik) i limit (nie-pracownik).
+  const baseCents = Math.round(benefitBaseFromAverageGross(f.baseGrossCents / 100, f.employment) * 100);
   const dailyCents = roundedDivide(baseCents * rate, 300000);
   return { ...outcome('eligible', 'INSURED_SUPPORTED_PERIOD', 'Na podstawie potwierdzonych danych warunki symulacji są spełnione. Wynik nie jest decyzją ZUS.'), amount: { baseCents, dailyCents, estimate30Cents: dailyCents * 30, days, totalCents: dailyCents * days, rate: rate / 10000 } };
 }

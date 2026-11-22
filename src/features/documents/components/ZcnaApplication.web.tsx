@@ -4,7 +4,7 @@ import { openExternalLink } from '@/shared/lib/links';
 import { AppText, Button, Card } from '@/shared/ui';
 
 import { downloadPdf, loadPdfAssets } from '../pdfDownload';
-import type { ZamValues } from '../zamFields';
+import type { ZamValues } from '@/core/applications/forms/zamFields';
 import { fillZusPdf } from '../zamPdf';
 import { loadZamProfile, localZamChild, localZamParent } from '../zamPrefill';
 import { zcnaInitialValues, zcnaSections } from '../zcnaFields';

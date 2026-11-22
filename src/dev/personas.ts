@@ -7,7 +7,6 @@ import type { Profile } from '@/core/types';
  * Wczytywane z DevPanelu albo przez EXPO_PUBLIC_SEED_PERSONA.
  */
 export type PersonaId = 'ania' | 'magda' | 'kasia';
-export const PERSONA_IDS: PersonaId[] = ['ania', 'magda', 'kasia'];
 
 const iso = (d: Date) => format(d, 'yyyy-MM-dd');
 const annaIdentity = {

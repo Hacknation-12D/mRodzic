@@ -7,15 +7,15 @@ Wszystkie dane są fikcyjne (SYMULACJA – DANE FIKCYJNE). Żaden wniosek nie je
 
 | | Wymaganie | Status | Gdzie | Uwagi / testy |
 |---|---|---|---|---|
-| a | Świadczenia w ciąży, w tym brak uprawnienia | częściowo | `core/applications/engine.ts` (chorobowy w ciąży: kod B, okres wyczekiwania 30/90 dni, limit 270 dni), `core/benefits/scenario.ts` | Odmowa z uzasadnieniem: brak tytułu ubezpieczenia (P04), zadłużenie JDG (art. 2a), ustanie ubezpieczenia. Świadczenie rehabilitacyjne i zasiłek w wysokości macierzyńskiego → stan `unknown` (wymaga dokumentów). Testy: `scenario.test.ts`, `workflow.test.ts` |
-| b | Kalkulator dla obojga rodziców, liczba dzieci, „Za życiem” | działa | `/calculator`, `/family-plan` | 9 tygodni nieprzenoszalnych, bliźnięta, „Za życiem” 65/67 tyg. Testy: `scenario.test.ts` |
-| c | Rodzicielski łączony z pracą | częściowo | `/family-plan` (`familyLeavePlan.ts`) | Wydłużenie wg wymiaru pracy (do ½ etatu); stawka 70%. Nie zweryfikowano na przykładach z poradnika |
-| d | Podział urlopu i wypłat między rodziców, jednoczesność | działa | `/calculator` (oś czasu), `/family-plan` (jednoczesne części, limit puli i 5 części) | |
-| e, j | Adopcja i rodzina zastępcza niezawodowa | działa | `/calculator` | Granice wieku: 14 lat (adopcja), 7 / 10 lat przy odroczeniu szkoły (rodzina zastępcza). Test: `scenario.test.ts` |
-| f | Indywidualna podstawa wymiaru, testy na sprawach konkursowych | częściowo | `benefitBase.ts`, dane ZUS profilu | Podstawa z 12 miesięcy, kwoty w groszach. **Sprawy konkursowe: 87 w prywatnym manifeście, 1 sprawa (8 stron) przetworzona OCR lokalnie, pewność 18–41%, 0 zweryfikowanych** – brak testów zgodności z decyzjami |
-| g | Dokumenty, terminy, odbiorca (pracodawca/ZUS), kreatory | częściowo | `/applications`, `/documents` | ZAM (wzór od 24.10.2026) – wypełnienie, walidacja, PDF, symulowane złożenie, historia. Odbiorca: pracownik – pracodawca; JDG i zlecenie – ZUS. Wypłaca: pracodawca przy > 20 ubezpieczonych, w pozostałych przypadkach ZUS (kalkulator). Pisma do pracodawcy, USC, Z-3/Z-3a, ZAS-53 – **brak** |
-| h | Ryzyka utraty prawa / zmiany kwoty | działa | `/calculator` (karta prawa i ostrzeżenia) | Termin 21 dni na 81,5%, zadłużenie JDG, ustanie umowy przed porodem, utrata 9 tygodni |
-| i | Katalog organizacji charytatywnych | brak | – | Na ekranie po stracie dziecka jest tylko ogólna wskazówka |
+| a | Świadczenia w ciąży, w tym brak uprawnienia | działa | `/calculator` → „Zwolnienie w ciąży” (`core/benefits/pregnancyScenario.ts`) | Wynagrodzenie chorobowe 33/14 dni, zasiłek 100% przy kodzie B, okres wyczekiwania 30/90 dni (z wyjątkami), limit 270 dni, świadczenie rehabilitacyjne, zasiłek w wysokości macierzyńskiego do porodu (art. 30 ust. 3), brak tytułu ubezpieczenia. e-ZLA z PUE wczytywane automatycznie. Testy: `pregnancyScenario.test.ts` |
+| b | Kalkulator dla obojga rodziców, liczba dzieci, „Za życiem” | działa | `/calculator` | Każdy rodzic: własne prawo i podstawa; 9 tyg. nieprzenoszalne (70%), ojcowski (100%), przejęcie macierzyńskiego przez ojca (po 14 tyg. lub wcześniej: szpital, niezdolność, śmierć, porzucenie), uzupełniający urlop macierzyński (wcześniak / szpital), suma dla rodziny. Testy: `scenario.test.ts` |
+| c | Rodzicielski łączony z pracą | działa | `/family-plan` (`familyLeavePlan.ts`) | Praca do ½ etatu, wydłużenie urlopu (art. 182¹e KP), zasiłek pomniejszony o wymiar pracy, wariant „praca także w okresie wydłużenia”. Wniosek do pracodawcy w `/requests` |
+| d | Podział urlopu między rodziców, jednoczesność | działa | `/family-plan`, `/calculator` | Gotowe warianty planu, części jednoczesne, limit puli i 5 części, start po macierzyńskim, granica roku 6. urodzin, kwoty dla każdego rodzica |
+| e, j | Adopcja i rodzina zastępcza niezawodowa | działa | `/calculator` | Granice wieku: 14 lat (adopcja), 7 / 10 lat przy odroczeniu szkoły (rodzina zastępcza); min. 9 tygodni. Test: `scenario.test.ts` |
+| f | Indywidualna podstawa wymiaru, sprawy konkursowe | częściowo | `benefitBase.ts` (wspólna funkcja dla kalkulatora, planu i wniosku) | Podstawa z 12 miesięcy, minimum dla etatu, limit dla nie-pracowników – identyczna na wszystkich ekranach. **OCR rozpoznaje format syntetyczny; dane z prawdziwych formularzy z zestawów ZUS wpisuje się ręcznie.** |
+| g | Dokumenty, terminy, odbiorca (pracodawca/ZUS), kreatory | działa | `/applications`, `/requests`, `/documents` | ZAM od danych do złożenia w symulacji; zaprojektowane wnioski urlopowe do pracodawcy z kontrolą terminów (21 dni rodzicielski, 7 dni ojcowski i przejęcie macierzyńskiego, 21 dni po porodzie dla 81,5%); odbiorca wg płatnika (> 20 ubezpieczonych) |
+| h | Ryzyka utraty prawa / zmiany kwoty | działa | `/calculator` | Termin 21 dni na 81,5%, zadłużenie JDG (art. 2a), ustanie umowy przed porodem, przedłużenie umowy terminowej do porodu (art. 177 § 3 KP), pozorność umowy, podwyższenie podstawy w ciąży, wyrejestrowanie z dobrowolnego chorobowego, utrata 9 tygodni |
+| i | Organizacje charytatywne | działa | `/support` (`core/support/organizations.ts`) | 7 zweryfikowanych organizacji non-profit (strona i telefon sprawdzone 22.11.2026), dobór do sytuacji z profilu, link z ekranu po stracie dziecka |
 
 ## Symulacje dodatkowe
 
@@ -23,11 +23,13 @@ Wszystkie dane są fikcyjne (SYMULACJA – DANE FIKCYJNE). Żaden wniosek nie je
 |---|---|---|
 | Logowanie mObywatel (symulacja), losowanie profilu (P08 tylko ręcznie) | działa | `/onboarding` |
 | Dane ZUS / PUE / eZUS (ubezpieczenie, płatnik, podstawy, zadłużenie, świadczenia) | działa | `/applications` krok 1, `/profile` |
-| e-ZLA, hospitalizacje, rejestr USC, przyjęcie dziecka, „Za życiem” | działa (podgląd) | `/applications` krok 1 (snapshot z SQLite) |
-| Wypełnianie i składanie wniosku (symulacja) | działa (ZAM) | `/applications` kroki 3–6 |
-| Odpis aktu urodzenia (USC) | brak | – |
-| Analiza PDF / OCR | częściowo | `/applications` krok 2 (web, lokalnie w przeglądarce); niska jakość OCR na skanach |
-| Panel administracyjny parametrów prawnych | brak | parametry w `core/benefits/common.ts`, `LEGAL_2026` w `engine.ts` |
+| Zaświadczenie o stanie zadłużenia na dzień powstania prawa | działa | `/requests` → „Zaświadczenie ZUS” (PDF) |
+| e-ZLA, hospitalizacje, rejestr USC, przyjęcie dziecka, „Za życiem” | działa | `/applications` krok 1, `/calculator` (zwolnienie w ciąży) |
+| Wypełnianie i składanie wniosków o urlopy i świadczenia (symulacja) | działa | `/applications` (ZAM), `/requests` (urlopy do pracodawcy) |
+| Odpis aktu urodzenia (USC) | działa | `/requests` → „Odpis aktu” (opłata, sposób odbioru, PDF, link do gov.pl) |
+| Przekierowanie do ZUS, MRPiPS, PIP | działa | `/support` → „Oficjalne informacje” |
+| Analiza PDF / OCR | częściowo | `/applications` krok 2 (web, lokalnie w przeglądarce) |
+| Panel administracyjny parametrów prawnych | działa | `/admin` (`core/legal/`), migracja `0005_legal_parameters.sql`. Test: `parameters.test.ts` |
 
 ## Zasady prawne sprawdzone z materiałami konkursowymi
 
@@ -40,4 +42,4 @@ Wszystkie dane są fikcyjne (SYMULACJA – DANE FIKCYJNE). Żaden wniosek nie je
 
 ## Testy
 
-`npm run typecheck`, `npm run lint`, `npm test` (238 testów, 23 pliki) – przechodzą. Ręczny E2E w przeglądarce (headless Edge, build web): P01 logowanie → dane ZUS → ocena prawa (kwota 207,10 zł/dzień, 140 dni) → ZAM → PDF → złożenie w symulacji → historia po odświeżeniu; P04 – odmowa z uzasadnieniem, bez kwoty i bez możliwości złożenia. Rozdzielczości: 1280 px i 420 px.
+`npm run typecheck`, `npm run lint`, `npm test` (255 testów, 26 plików), `npm run content:validate` – przechodzą. Ręczny E2E w przeglądarce (headless Edge, build web): P01 logowanie → dane ZUS → ocena prawa (kwota 207,10 zł/dzień, 140 dni) → ZAM → PDF → złożenie w symulacji → historia po odświeżeniu; P04 – odmowa z uzasadnieniem, bez kwoty i bez możliwości złożenia. Rozdzielczości: 1280 px i 420 px.

@@ -1,7 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { View } from 'react-native';
 
-import { SOCIAL_CONTRIBUTION_RATE, type BenefitScenarioResult, type Eligibility } from '@/core/benefits';
+import { legal, type BenefitScenarioResult, type Eligibility } from '@/core/benefits';
 import { isoToPolishDate } from '@/shared/lib/date';
 import { formatMoney, formatPercent } from '@/shared/lib/money';
 import { useThemeColors } from '@/shared/theme';
@@ -224,7 +224,7 @@ export function TimelineCard({ result }: { result: BenefitScenarioResult }) {
 /** Gdzie i kiedy złożyć wniosek (płatnik: pracodawca albo ZUS). */
 export function WhereCard({ result, upfront }: { result: BenefitScenarioResult; upfront: boolean }) {
   const c = useThemeColors();
-  const items = [t.payer[result.payer], ...(upfront && result.amounts ? [t.deadline21] : []), t.documentsHint];
+  const items = [t.payer[result.payer].replace('{n}', String(legal().payerThresholdInsured)), ...(upfront && result.amounts ? [t.deadline21] : []), t.documentsHint];
   return (
     <Card className="gap-3 p-5">
       <View className="flex-row items-center gap-3">
@@ -244,7 +244,7 @@ export function HowCard({ result, gross }: { result: BenefitScenarioResult; gros
   if (!base) return null;
   const rows: [string, string][] = [
     [t.howGross, formatMoney(gross)],
-    [t.howContributions, `− ${formatMoney(gross * SOCIAL_CONTRIBUTION_RATE)}`],
+    [t.howContributions(formatPercent(legal().socialContributionRate)), `− ${formatMoney(gross * legal().socialContributionRate)}`],
     [t.howBase, formatMoney(base.base)],
     [t.howDaily, formatMoney(base.dailyBase)],
   ];
@@ -271,6 +271,68 @@ export function HowCard({ result, gross }: { result: BenefitScenarioResult; gros
           ))}
         </View>
       ) : null}
+    </Card>
+  );
+}
+
+/** Drugi rodzic: własne prawo, kwoty przejętego macierzyńskiego, rodzicielskiego i ojcowskiego + suma dla rodziny. */
+export function PartnerCard({ result }: { result: BenefitScenarioResult }) {
+  const c = useThemeColors();
+  const partner = result.partner;
+  if (!partner) return null;
+  const s = STATUS[partner.eligibility.status];
+  const amounts = partner.amounts;
+  const notes = [...partner.eligibility.reasons, ...partner.eligibility.missing, ...partner.eligibility.warnings];
+  return (
+    <Card className="gap-3 p-5">
+      <View className="flex-row items-center gap-3">
+        <IconBadge icon={s.icon} tone={s.tone} size={40} />
+        <View className="flex-1">
+          <AppText variant="caption" tone="muted" className="uppercase tracking-wide">
+            {t.partnerResultTitle}
+          </AppText>
+          <AppText variant="heading" accessibilityRole="header">
+            {t.partnerStatus[partner.eligibility.status]}
+          </AppText>
+        </View>
+      </View>
+      {notes.length ? <Bullets items={notes} icon="ellipse" color={c.baseContentMuted} /> : null}
+      {amounts?.segments.map((x) => (
+        <View key={x.leave} className="flex-row items-start justify-between gap-3 border-b border-base-300 py-3" accessible>
+          <View className="min-w-0 flex-1 gap-0.5">
+            <AppText variant="bodyStrong">{x.label}</AppText>
+            <AppText variant="small" tone="muted">
+              {t.weeks(x.weeks)} · {t.rateDaily(formatPercent(x.rate), formatMoney(x.dailyAmount))}
+            </AppText>
+          </View>
+          <AppText variant="bodyStrong">{formatMoney(x.amount)}</AppText>
+        </View>
+      ))}
+      {amounts ? (
+        <View className="flex-row items-center justify-between">
+          <AppText variant="subheading">{t.total}</AppText>
+          <AppText variant="heading">{formatMoney(amounts.totalAmount)}</AppText>
+        </View>
+      ) : null}
+      {result.familyTotal > 0 && amounts ? (
+        <StatTile emphasis label={t.familyTotal} value={formatMoney(result.familyTotal, 0)} hint={t.familyTotalHint} />
+      ) : null}
+    </Card>
+  );
+}
+
+/** Wynik oceny uzupełniającego urlopu macierzyńskiego (także gdy nie przysługuje). */
+export function SupplementaryCard({ result }: { result: BenefitScenarioResult }) {
+  const info = result.supplementary;
+  if (!info) return null;
+  return (
+    <Card className={info.eligible ? 'gap-2 p-5' : 'gap-2 bg-warning-soft p-5'}>
+      <AppText variant="bodyStrong">{info.eligible ? t.supplementaryResult(info.weeks, info.caseLabel) : t.supplementaryNone}</AppText>
+      {info.notes.map((n) => (
+        <AppText key={n} variant="small" tone="muted">
+          • {n}
+        </AppText>
+      ))}
     </Card>
   );
 }

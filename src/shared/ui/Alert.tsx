@@ -15,6 +15,8 @@ type Props = {
   icon?: ComponentProps<typeof Ionicons>['name'];
   /** Elementy po prawej (np. przycisk). */
   actions?: ReactNode;
+  /** Pionowe wyrównanie ikony i treści: domyślnie do góry, `center` dla krótkich, jednowierszowych komunikatów. */
+  align?: 'start' | 'center';
   className?: string;
 };
 
@@ -35,11 +37,11 @@ const ICON: Record<AlertTone, ComponentProps<typeof Ionicons>['name']> = {
 };
 
 /** DaisyUI: alert alert-soft alert-{info|success|warning|error}. */
-export function Alert({ tone = 'info', title, children, icon, actions, className }: Props) {
+export function Alert({ tone = 'info', title, children, icon, actions, align = 'start', className }: Props) {
   const c = useThemeColors();
   const color = { info: c.info, success: c.success, warning: c.warning, error: c.error, neutral: c.baseContentMuted }[tone];
   return (
-    <View className={cn('flex-row items-start gap-3 rounded-box border p-3', BOX[tone], className)} accessibilityRole="alert">
+    <View className={cn('flex-row gap-3 rounded-box border p-3', align === 'center' ? 'items-center' : 'items-start', BOX[tone], className)} accessibilityRole="alert">
       <Ionicons name={icon ?? ICON[tone]} size={20} color={color} />
       <View className="flex-1 gap-1">
         {title ? <AppText variant="bodyStrong">{title}</AppText> : null}

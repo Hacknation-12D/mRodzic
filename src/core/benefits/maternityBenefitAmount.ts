@@ -12,7 +12,7 @@
  * jego część liczy się osobnym wywołaniem.
  * Kwota dzienna = podstawa × stawka / 30; kwota za okres = kwota dzienna × liczba dni.
  */
-import { assertNonNegative, assertPositive, BENEFIT_RATES, BenefitInputError, dailyBenefitAmount, roundMoney } from './common';
+import { assertNonNegative, assertPositive, benefitRates, BenefitInputError, dailyBenefitAmount, roundMoney } from './common';
 
 export type LeaveKind =
   | 'maternity'
@@ -67,14 +67,14 @@ export function maternityBenefitRate(leave: LeaveKind, upfrontApplication: boole
   switch (leave) {
     case 'maternity':
     case 'adoption_maternity':
-      return upfrontApplication ? BENEFIT_RATES.upfront : BENEFIT_RATES.full;
+      return upfrontApplication ? benefitRates().upfront : benefitRates().full;
     case 'supplementary_maternity':
     case 'paternity':
-      return BENEFIT_RATES.full;
+      return benefitRates().full;
     case 'parental':
-      return upfrontApplication ? BENEFIT_RATES.upfront : BENEFIT_RATES.parental;
+      return upfrontApplication ? benefitRates().upfront : benefitRates().parental;
     case 'parental_other_parent':
-      return BENEFIT_RATES.parental;
+      return benefitRates().parental;
     default:
       throw new BenefitInputError(`Nieznany rodzaj urlopu: ${String(leave)}.`, 'segments.leave');
   }

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import demoProfiles from '../../dev/dummyData/mrodzic_compat_profiles_v1.json';
 import { getSeedBundle } from '../content/seedRepository';
-import { getDocumentInstances, getTipsFor } from '../content/selectors';
+import { getDocumentInstances } from '../content/selectors';
 import { ProfileSchema } from '../schemas/profile';
 import { calculateBenefitScenario, type BenefitScenarioInput } from './scenario';
 import { scenarioDefaultsFromProfile } from './scenarioDefaults';
@@ -22,15 +22,11 @@ const base: BenefitScenarioInput = {
   upfrontApplication: true,
 };
 
-describe('utrata dziecka – dokumenty i wskazówki (P08, martwe urodzenie)', () => {
+describe('utrata dziecka – dokumenty (P08, martwe urodzenie)', () => {
   it('zostaje tylko urlop i zasiłek macierzyński, z właściwym wymiarem', () => {
     const docs = getDocumentInstances(getSeedBundle(), p08, {}, today, 'all').filter((d) => d.childId === 'P08-C1');
     expect(docs.map((d) => d.id)).toEqual(['urlop-macierzynski']);
     expect(docs[0].amountLabel).toMatch(/8 tygodni/);
-  });
-
-  it('nie pokazuje porad o opiece nad dzieckiem', () => {
-    expect(getTipsFor(getSeedBundle(), p08, today, 'all')).toEqual([]);
   });
 });
 

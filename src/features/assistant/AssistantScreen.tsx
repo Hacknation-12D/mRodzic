@@ -242,7 +242,7 @@ export function AssistantScreen() {
           <Disclaimer />
           {handoff ? (
             <View className="px-3 pb-2 pt-1">
-              <Alert tone="info" icon="time-outline">
+              <Alert tone="info" icon="time-outline" align="center">
                 <View className="flex-row items-center gap-3">
                   <AppText variant="small" className="flex-1">
                     {t.waitingBar(handoff.email)}

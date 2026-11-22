@@ -7,8 +7,13 @@ import { useToday } from '@/core/clock/useToday';
 import { overdueCountByChild } from '@/core/content/selectors';
 import { useContentData } from '@/core/content/useContentData';
 import {
+  goToAdmin,
+  goToApplications,
   goToAssistant,
   goToCalculator,
+  goToFamilyPlan,
+  goToRequests,
+  goToSupport,
   goToChildEdit,
   goToChildNew,
   goToDocuments,
@@ -95,6 +100,22 @@ export function HomeScreen() {
             <ActionTile icon="person-circle-outline" tone="neutral" title={t.profileTile} description={t.profileTileBody} onPress={goToProfile} />
           ) : null}
         </View>
+      </View>
+
+      {/* Wszystkie funkcje */}
+      <SectionHeader title={t.moreTitle} />
+      <View className="flex-row flex-wrap gap-3">
+        {[
+          { icon: 'folder-open-outline' as const, title: t.applicationsTile, body: t.applicationsTileBody, onPress: goToApplications, tone: 'primary' as const },
+          { icon: 'people-outline' as const, title: t.familyPlanTile, body: t.familyPlanTileBody, onPress: goToFamilyPlan, tone: 'primary' as const },
+          { icon: 'create-outline' as const, title: t.requestsTile, body: t.requestsTileBody, onPress: goToRequests, tone: 'info' as const },
+          { icon: 'heart-outline' as const, title: t.supportTile, body: t.supportTileBody, onPress: () => goToSupport(), tone: 'warning' as const },
+          { icon: 'settings-outline' as const, title: t.adminTile, body: t.adminTileBody, onPress: goToAdmin, tone: 'neutral' as const },
+        ].map((x) => (
+          <View key={x.title} className="min-w-64 flex-1">
+            <ActionTile icon={x.icon} tone={x.tone} title={x.title} description={x.body} onPress={x.onPress} className="flex-1" />
+          </View>
+        ))}
       </View>
 
       {/* Dzieci */}

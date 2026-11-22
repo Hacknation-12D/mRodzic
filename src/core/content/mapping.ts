@@ -11,7 +11,6 @@ export const CONTENT_TABLES: Record<ContentKind, string> = {
 /** Kolumny techniczne, których nie ma w schematach zod. */
 const TECHNICAL_COLUMNS = new Set(['published', 'updated_at', 'created_at']);
 
-export const toSnake = (key: string) => key.replace(/[A-Z]/g, (m) => `_${m.toLowerCase()}`);
 export const toCamel = (key: string) => key.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase());
 
 /** Wiersz z bazy (snake_case, null) → rekord treści (camelCase, brak pola zamiast null). Tylko klucze najwyższego poziomu. */

@@ -4,35 +4,40 @@
  */
 import { addDays, differenceInCalendarDays, format, isValid, parseISO } from 'date-fns';
 
+import { DEFAULT_LEGAL_PARAMETERS as D, legal, maxBenefitBaseNonEmployee, minBenefitBase, netOfContributions } from '../legal/parameters';
+
+export { legal } from '../legal/parameters';
+
+/*
+ * Wartości DOMYŚLNE (zestaw 2026). Kalkulatory czytają aktywny zestaw przez `legal()` – te stałe
+ * służą do dokumentacji i testów. Zmiana parametrów: panel administracyjny albo src/core/legal/parameters.ts.
+ */
+
 /** Składki społeczne finansowane przez pracownika – odejmowane od przychodu przy ustalaniu podstawy. */
-export const SOCIAL_CONTRIBUTION_RATE = 0.1371;
+export const SOCIAL_CONTRIBUTION_RATE = D.socialContributionRate;
 
 /** Płaca minimalna 2026 (brutto). */
-export const MINIMUM_WAGE_2026 = 4806;
+export const MINIMUM_WAGE_2026 = D.minimumWage;
 
 /** Minimalna podstawa wymiaru zasiłku 2026 dla pełnego etatu: 4806 zł − 13,71%. */
-export const MIN_BENEFIT_BASE_2026 = 4147.1;
+export const MIN_BENEFIT_BASE_2026 = minBenefitBase(D);
 
 /** Maksymalna miesięczna podstawa wymiaru dobrowolnej składki chorobowej 2026 (nie-pracownicy). */
-export const MAX_CONTRIBUTION_BASE_NON_EMPLOYEE_2026 = 23550;
+export const MAX_CONTRIBUTION_BASE_NON_EMPLOYEE_2026 = D.maxContributionBaseNonEmployee;
 
 /** Limit podstawy wymiaru zasiłku 2026 dla nie-pracowników: 23 550 zł − 13,71%. */
-export const MAX_BENEFIT_BASE_NON_EMPLOYEE_2026 = 20321.3;
+export const MAX_BENEFIT_BASE_NON_EMPLOYEE_2026 = maxBenefitBaseNonEmployee(D);
 
 /** Stawka dzienna zasiłku = 1/30 miesięcznej podstawy. */
 export const DAYS_PER_BENEFIT_MONTH = 30;
 
 /** Wysokości świadczeń jako ułamek podstawy wymiaru. */
-export const BENEFIT_RATES = {
-  /** Zasiłek macierzyński (macierzyński, na warunkach macierzyńskiego, uzupełniający, ojcowski) i chorobowe w ciąży. */
-  full: 1,
-  /** Urlop macierzyński + rodzicielski przy wniosku złożonym w ciągu 21 dni po porodzie. */
-  upfront: 0.815,
-  /** Urlop rodzicielski oraz 9 tygodni niezbywalnej części drugiego rodzica. */
-  parental: 0.7,
-  /** Chorobowe poza ciążą (stawka ogólna – używana tylko dla okresów niezwiązanych z ciążą). */
-  sicknessGeneral: 0.8,
-} as const;
+export const BENEFIT_RATES = D.rates;
+
+/** Aktywne stawki (z panelu administracyjnego). */
+export function benefitRates() {
+  return legal().rates;
+}
 
 /** Błąd nieprawidłowych danych wejściowych kalkulatora. `field` wskazuje pole, którego dotyczy. */
 export class BenefitInputError extends Error {
@@ -50,12 +55,9 @@ export function roundMoney(value: number): number {
   return Math.round((value + Number.EPSILON) * 100) / 100;
 }
 
-/** 1 − 13,71% w punktach bazowych (8629) – liczenie na liczbach całkowitych omija błędy float. */
-const NET_FACTOR_BP = 10_000 - Math.round(SOCIAL_CONTRIBUTION_RATE * 10_000);
-
 /** Kwota po odjęciu składek społecznych pracownika (13,71%), zaokrąglona do groszy. */
 export function afterSocialContributions(gross: number): number {
-  return Math.round((gross * NET_FACTOR_BP) / 100) / 100;
+  return netOfContributions(gross);
 }
 
 /** Dzienna kwota świadczenia: podstawa × stawka / 30, zaokrąglona do groszy. */

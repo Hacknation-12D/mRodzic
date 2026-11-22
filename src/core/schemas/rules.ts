@@ -66,5 +66,3 @@ export const RuleSchema: z.ZodType<Rule> = z.lazy(() =>
       }),
   ]),
 );
-
-export const RuleResultSchema = z.enum(['met', 'unmet', 'unknown']);

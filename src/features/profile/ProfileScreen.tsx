@@ -11,7 +11,6 @@ import { pl } from '@/shared/i18n/pl';
 import { AppText, Button, Card, Screen } from '@/shared/ui';
 
 import { ChildRow } from './components/ChildRow';
-import { FamilyAccountCard } from './components/FamilyAccountCard';
 import { HouseholdCard } from './components/HouseholdCard';
 import { MarkBornSheet } from './components/MarkBornSheet';
 import { ParentCard } from './components/ParentCard';
@@ -59,7 +58,6 @@ export function ProfileScreen() {
       </Card>
 
       <HouseholdCard profile={profile} onSave={updateHousehold} />
-      <FamilyAccountCard profile={profile} />
 
       <AppText variant="small" tone="muted" className="text-center">
         {pl.profile.privacy}

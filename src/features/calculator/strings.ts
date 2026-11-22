@@ -1,4 +1,4 @@
-import type { BenefitScenarioKind, EligibilityStatus, SicknessInsurance } from '@/core/benefits';
+import type { BenefitScenarioKind, EligibilityStatus, JobLossReason, MaternityTransferReason, SicknessInsurance } from '@/core/benefits';
 
 /** Teksty kalkulatora świadczeń. */
 export const t = {
@@ -14,6 +14,7 @@ export const t = {
     adoption: { label: 'Adopcja', hint: 'Przyjęcie w celu przysposobienia' },
     foster: { label: 'Rodzina zastępcza', hint: 'Niezawodowa' },
   } satisfies Record<BenefitScenarioKind, { label: string; hint: string }>,
+  sicknessKind: { label: 'Zwolnienie w ciąży', hint: 'Zasiłek chorobowy, rehabilitacyjne' },
 
   inputsTitle: 'Dane do obliczeń',
   eventDate: {
@@ -74,7 +75,7 @@ export const t = {
 
   whereTitle: 'Gdzie i kiedy złożyć wniosek',
   payer: {
-    employer: 'Wniosek składasz u pracodawcy – to on wypłaca zasiłek (zatrudnia ponad 20 ubezpieczonych).',
+    employer: 'Wniosek składasz u pracodawcy – to on wypłaca zasiłek (zgłasza do ubezpieczenia chorobowego więcej niż {n} osób).',
     zus: 'Wniosek składasz w ZUS – najwygodniej przez PUE/eZUS (wniosek ZAM).',
     unknown: 'Sprawdź w PUE/eZUS lub u pracodawcy, kto wypłaca Twój zasiłek – od tego zależy, gdzie złożysz wniosek.',
   },
@@ -83,7 +84,7 @@ export const t = {
 
   howTitle: 'Jak to policzyliśmy',
   howGross: 'Przeciętne miesięczne wynagrodzenie brutto',
-  howContributions: 'minus składki społeczne (13,71%)',
+  howContributions: (rate: string) => `minus składki społeczne (${rate})`,
   howBase: 'Podstawa wymiaru zasiłku',
   howDaily: 'Stawka dzienna przy 100% (podstawa ÷ 30)',
   howMinimum: 'Zastosowano minimalną podstawę wymiaru.',
@@ -94,5 +95,89 @@ export const t = {
     const rounded = Math.round(n * 10) / 10;
     const label = rounded === 1 ? 'tydzień' : [2, 3, 4].includes(rounded % 10) && ![12, 13, 14].includes(rounded % 100) ? 'tygodnie' : 'tygodni';
     return Number.isInteger(rounded) ? `${rounded} ${label}` : `${rounded.toLocaleString('pl-PL')} tyg.`;
+  },
+
+  // --- Oboje rodzice, sytuacje szczególne, ryzyka ---
+  familyTitle: 'Drugi rodzic i sytuacje szczególne',
+  hasPartner: 'Policz także drugiego rodzica',
+  hasPartnerHint: 'Każdy rodzic ma własne prawo do zasiłku i własną podstawę wymiaru.',
+  partnerEmployment: 'Forma zatrudnienia drugiego rodzica',
+  partnerSickness: 'Dobrowolne chorobowe drugiego rodzica',
+  partnerGross: 'Wynagrodzenie brutto drugiego rodzica (12 mies.)',
+  transferTitle: 'Ojciec przejmuje część urlopu macierzyńskiego',
+  transferWeeks: 'Tygodnie przejęte przez ojca',
+  transferWeeksHint: (min: number) => `Matka wykorzystuje co najmniej ${min} tyg. – zwykle 14, przy szpitalu lub niezdolności 8.`,
+  transferReason: 'Powód przejęcia',
+  transferReasons: {
+    standard: 'Rezygnacja matki po 14 tygodniach',
+    hospital: 'Matka w szpitalu',
+    incapacity: 'Matka niezdolna do samodzielnej egzystencji',
+    death: 'Śmierć matki',
+    abandonment: 'Matka porzuciła dziecko',
+  } satisfies Record<MaternityTransferReason, string>,
+  supplementaryToggle: 'Wcześniak albo pobyt dziecka w szpitalu',
+  supplementaryHint: 'Uzupełniający urlop macierzyński: tydzień urlopu za każdy tydzień w szpitalu, do 8 albo 15 tygodni.',
+  gestationalWeek: 'Tydzień ciąży w dniu porodu',
+  birthWeight: 'Masa urodzeniowa (g)',
+  hospitalFrom: 'Dziecko w szpitalu od',
+  hospitalTo: 'Dziecko w szpitalu do',
+  supplementaryWho: 'Kto weźmie uzupełniający urlop',
+  supplementaryResult: (weeks: number, label: string) => `Uzupełniający urlop macierzyński: ${weeks} tyg. (${label}).`,
+  supplementaryNone: 'Uzupełniający urlop macierzyński nie przysługuje przy podanych danych.',
+  whoOptions: { me: 'Ja', partner: 'Drugi rodzic' },
+  risksTitle: 'Sprawdź ryzyka utraty lub obniżenia zasiłku',
+  contractEnd: 'Umowa na czas określony / próbny kończy się',
+  contractEndHint: 'Puste = umowa na czas nieokreślony.',
+  insuranceStart: 'Ubezpieczenie chorobowe od',
+  insuranceStartHint: 'Umowa lub działalność zaczęta w ciąży bywa sprawdzana przez ZUS.',
+  baseRaised: 'Podstawa składek wzrosła w czasie ciąży',
+  partnerResultTitle: 'Drugi rodzic',
+  partnerStatus: {
+    eligible: 'Zasiłek drugiego rodzica przysługuje',
+    not_eligible: 'Drugiemu rodzicowi zasiłek nie przysługuje',
+    unknown: 'Brakuje danych drugiego rodzica',
+  } satisfies Record<EligibilityStatus, string>,
+  familyTotal: 'Łącznie dla rodziny',
+  familyTotalHint: 'suma świadczeń obojga rodziców',
+  notesTitle: 'Ważne informacje',
+
+  // --- Zwolnienie w ciąży ---
+  pregnancySick: {
+    inputsTitle: 'Zwolnienie lekarskie w ciąży',
+    insuranceSince: 'Ubezpieczenie chorobowe od',
+    waitingException: 'Nie dotyczy mnie okres wyczekiwania',
+    waitingExceptionHint: 'Np. absolwent zgłoszony w ciągu 90 dni od ukończenia szkoły albo co najmniej 10 lat ubezpieczenia obowiązkowego.',
+    birthYear: 'Rok urodzenia',
+    employerDaysUsed: 'Dni chorobowego od pracodawcy wykorzystane w tym roku',
+    periodsTitle: 'Zwolnienia (e-ZLA)',
+    periodsFromZus: 'Wczytaliśmy zwolnienia e-ZLA z PUE/eZUS (symulacja).',
+    from: 'Od',
+    to: 'Do',
+    codeB: 'Kod „B” – ciąża',
+    addPeriod: 'Dodaj zwolnienie',
+    removePeriod: 'Usuń',
+    dueDate: 'Przewidywany termin porodu',
+    jobLoss: 'Straciłam pracę w ciąży (likwidacja, upadłość, śmierć pracodawcy, wyrok sądu)',
+    jobLossDate: 'Ostatni dzień zatrudnienia',
+    jobLossReason: 'Przyczyna',
+    jobLossReasons: {
+      liquidation: 'Likwidacja pracodawcy',
+      bankruptcy: 'Upadłość pracodawcy',
+      employer_death: 'Śmierć pracodawcy',
+      unlawful_termination: 'Naruszenie prawa (prawomocny wyrok)',
+    } satisfies Record<JobLossReason, string>,
+    status: {
+      eligible: 'Zasiłek chorobowy w ciąży przysługuje',
+      not_eligible: 'Zasiłek chorobowy nie przysługuje',
+      unknown: 'Nie można ustalić – brakuje danych',
+    } satisfies Record<EligibilityStatus, string>,
+    employer: 'Wynagrodzenie chorobowe (pracodawca)',
+    zus: 'Zasiłek chorobowy (ZUS)',
+    remaining: (days: number, limit: number) => `Z okresu zasiłkowego w ciąży zostało ${days} z ${limit} dni.`,
+    waitingFrom: (date: string) => `Zasiłek od ${date} (po okresie wyczekiwania)`,
+    rehabTitle: 'Świadczenie rehabilitacyjne',
+    maternityLevelTitle: 'Zasiłek w wysokości zasiłku macierzyńskiego',
+    maternityLevelPeriod: (from: string, to: string, days: number) => `${from} – ${to} · ${days} dni`,
+    where: 'e-ZLA trafia do ZUS i pracodawcy automatycznie. Pracownik nie składa wniosku; zleceniobiorca – przez płatnika (Z-3a); prowadzący działalność – wniosek ZAS-53 w ZUS.',
   },
 };

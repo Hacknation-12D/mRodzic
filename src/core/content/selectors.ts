@@ -1,4 +1,4 @@
-import { differenceInCalendarDays, endOfMonth, format, isSameMonth, startOfMonth } from 'date-fns';
+import { differenceInCalendarDays } from 'date-fns';
 
 import { instanceKey } from '../documents/documentKey';
 import { buildFacts } from '../rules/buildFacts';
@@ -10,19 +10,14 @@ import type {
   ContentBundle,
   DocumentDef,
   DocumentInstance,
-  MarkKey,
-  MonthItem,
   Profile,
   RuleResult,
   StatusMap,
-  TipForChild,
   Urgency,
 } from '../types';
 
 /** Gdy brak showTo, a jest deadline – dokument widać jeszcze tyle dni „po terminie”. */
 export const OVERDUE_GRACE_DAYS = 30;
-/** Gdy todo nie ma ani showTo, ani deadline – domyślna długość okna. */
-export const DEFAULT_TODO_WINDOW_DAYS = 30;
 
 const URGENCY_RANK: Record<Urgency, number> = { overdue: 0, urgent: 1, soon: 2, later: 3, none: 4 };
 
@@ -169,132 +164,6 @@ export function getDocumentInstance(
   const child = (childId ? profile.children.find((c) => c.id === childId) : undefined) ?? profile.children[0];
   if (!child) return undefined;
   return buildInstance(doc, profile, statuses, today, child, child.id);
-}
-
-/** Terminy dokumentów i todo w danym miesiącu (month: 1–12) + todo, których okno nachodzi na miesiąc. */
-export function getMonthItems(
-  bundle: ContentBundle,
-  profile: Profile,
-  statuses: StatusMap,
-  year: number,
-  month: number,
-  filter: ChildFilter,
-  today: Date,
-): MonthItem[] {
-  const monthStart = startOfMonth(new Date(year, month - 1, 1));
-  const monthEnd = endOfMonth(monthStart);
-  const deadlines: MonthItem[] = [];
-  const todos: MonthItem[] = [];
-
-  for (const { doc, child, childId, visibility } of documentCandidates(bundle, profile, today, filter)) {
-    if (visibility === 'unmet' || !child || doc.timing.deadline === undefined) continue;
-    const date = offsetToDate(child, doc.timing.deadline);
-    if (!isSameMonth(date, monthStart)) continue;
-    const key = instanceKey(doc.id, childId);
-    const status = statuses[key]?.status;
-    if (status === 'hidden') continue;
-    const done = status === 'done';
-    deadlines.push({
-      key: `deadline:${key}`,
-      date,
-      childId,
-      kind: 'deadline',
-      refId: doc.id,
-      title: doc.title,
-      urgency: done ? 'none' : urgencyFor(differenceInCalendarDays(date, today)),
-      done,
-      priority: doc.priority,
-    });
-  }
-
-  for (const child of caredForChildren(profile, filter)) {
-    const facts = buildFacts(profile, child, today);
-    for (const todo of bundle.todos) {
-      if (evaluateOptional(todo.visibleWhen, facts) === 'unmet') continue;
-      const start = offsetToDate(child, todo.timing.showFrom);
-      const endOffset = todo.timing.showTo ?? todo.timing.deadline ?? todo.timing.showFrom + DEFAULT_TODO_WINDOW_DAYS;
-      const end = offsetToDate(child, endOffset);
-      if (start > monthEnd || end < monthStart) continue;
-      const deadline = todo.timing.deadline !== undefined ? offsetToDate(child, todo.timing.deadline) : undefined;
-      const date = deadline && isSameMonth(deadline, monthStart) ? deadline : undefined;
-      todos.push({
-        key: `todo:${todo.id}:${child.id}`,
-        date,
-        childId: child.id,
-        kind: 'todo',
-        refId: todo.id,
-        title: todo.title,
-        urgency: date ? urgencyFor(differenceInCalendarDays(date, today)) : 'none',
-        done: false,
-        priority: todo.priority,
-        relatedDocumentId: todo.relatedDocumentId,
-      });
-    }
-  }
-
-  const byDate = (a: MonthItem, b: MonthItem) =>
-    (a.date?.getTime() ?? Number.MAX_SAFE_INTEGER) - (b.date?.getTime() ?? Number.MAX_SAFE_INTEGER) ||
-    b.priority - a.priority ||
-    a.title.localeCompare(b.title, 'pl');
-  return [...deadlines.sort(byDate), ...todos.sort(byDate)];
-}
-
-export function dateKey(date: Date): string {
-  return format(date, 'yyyy-MM-dd');
-}
-
-/** Kropki w siatce: 'YYYY-MM-DD' → kolory dzieci (maks. 3, bez powtórzeń). */
-export function getDeadlineMarks(
-  bundle: ContentBundle,
-  profile: Profile,
-  statuses: StatusMap,
-  year: number,
-  month: number,
-  filter: ChildFilter,
-  today: Date,
-): Record<string, MarkKey[]> {
-  const marks: Record<string, MarkKey[]> = {};
-  const colorOf = new Map(profile.children.map((c) => [c.id, c.colorKey]));
-  for (const item of getMonthItems(bundle, profile, statuses, year, month, filter, today)) {
-    if (!item.date) continue;
-    const key = dateKey(item.date);
-    const color: MarkKey = (item.childId && colorOf.get(item.childId)) || 'family';
-    const list = marks[key] ?? [];
-    if (!list.includes(color) && list.length < 3) list.push(color);
-    marks[key] = list;
-  }
-  return marks;
-}
-
-/** Poradniki na dany dzień: round-robin między dziećmi, bez duplikatów, wg priorytetu. */
-export function getTipsFor(bundle: ContentBundle, profile: Profile, date: Date, filter: ChildFilter, count = 3): TipForChild[] {
-  const perChild = caredForChildren(profile, filter).map((child) => {
-    const facts = buildFacts(profile, child, date);
-    const offset = dayOffset(child, date);
-    const tips = bundle.tips
-      .filter((t) => isInWindow(offset, t.timing) && evaluateOptional(t.visibleWhen, facts) !== 'unmet')
-      .sort((a, b) => b.priority - a.priority || a.id.localeCompare(b.id));
-    return { child, tips, index: 0 };
-  });
-
-  const result: TipForChild[] = [];
-  const used = new Set<string>();
-  let progressed = true;
-  while (result.length < count && progressed) {
-    progressed = false;
-    for (const entry of perChild) {
-      if (result.length >= count) break;
-      while (entry.index < entry.tips.length) {
-        const tip = entry.tips[entry.index++];
-        if (used.has(tip.id)) continue;
-        used.add(tip.id);
-        result.push({ ...tip, childId: entry.child.id });
-        progressed = true;
-        break;
-      }
-    }
-  }
-  return result;
 }
 
 /** Podpowiedzi czatu: 2–3 pytania z dokumentów z najbliższym terminem + PromptDef dla etapu. */

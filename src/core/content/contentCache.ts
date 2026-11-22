@@ -26,7 +26,3 @@ export async function saveCachedBundle(bundle: ContentBundle): Promise<void> {
     console.warn('[content] Nie udało się zapisać cache', e);
   }
 }
-
-export async function clearCachedBundle(): Promise<void> {
-  await AsyncStorage.removeItem(KEY);
-}

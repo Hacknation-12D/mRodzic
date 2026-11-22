@@ -1,4 +1,4 @@
-import type { ZamValues } from './zamFields';
+import type { ZamValues } from '@/core/applications/forms/zamFields';
 import type { localZamParent, ZamChild } from './zamPrefill';
 
 type Option = readonly [value: string, label: string];

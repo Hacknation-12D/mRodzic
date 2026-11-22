@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRequestsStore } from '../requests/requests.store';
 import { useApplicationStore } from '../applications/application.store';
 
 import { useClockStore } from '../clock/clock';
@@ -23,12 +24,12 @@ export async function resetAllData(options: { keepDevSettings?: boolean } = {}):
   clearFamilySession();
   useProfileStore.getState().resetAll();
   useApplicationStore.getState().clear();
+  useRequestsStore.getState().clear();
   useDocumentStatusStore.getState().clearAll();
   useChildFilterStore.getState().setFilter('all');
   if (!options.keepDevSettings) {
     useClockStore.getState().setOverrideDate(null);
     useSettingsStore.getState().setAssistantModeOverride(null);
-    useSettingsStore.getState().setThemeOverride(null);
   }
   listeners.forEach((l) => l());
   try {

@@ -10,14 +10,15 @@
  */
 import { addDays, addYears, max as maxDate } from 'date-fns';
 
-import { BENEFIT_RATES, BenefitInputError, daysInclusive, endOfPeriod, parseIsoDate, roundMoney, toIsoDate } from './common';
+import { benefitRates, BenefitInputError, legal, daysInclusive, endOfPeriod, parseIsoDate, roundMoney, toIsoDate } from './common';
+import { DEFAULT_LEGAL_PARAMETERS } from '../legal/parameters';
 import { maternityLeaveWeeks } from './maternityLeave';
 
-export const ADOPTION_LEAVE_MIN_WEEKS = 9;
-export const ADOPTION_CHILD_AGE_LIMIT_YEARS = 14;
+export const ADOPTION_LEAVE_MIN_WEEKS = DEFAULT_LEGAL_PARAMETERS.adoptionMinWeeks;
+export const ADOPTION_CHILD_AGE_LIMIT_YEARS = DEFAULT_LEGAL_PARAMETERS.adoptionChildAgeLimitYears;
 /** Rodzina zastępcza (poza zawodową): dziecko do 7 lat, a przy odroczonym obowiązku szkolnym – do 10 lat (art. 183 § 3 KP). */
-export const FOSTER_CHILD_AGE_LIMIT_YEARS = 7;
-export const FOSTER_CHILD_AGE_LIMIT_DEFERRED_SCHOOL_YEARS = 10;
+export const FOSTER_CHILD_AGE_LIMIT_YEARS = DEFAULT_LEGAL_PARAMETERS.fosterChildAgeLimitYears;
+export const FOSTER_CHILD_AGE_LIMIT_DEFERRED_SCHOOL_YEARS = DEFAULT_LEGAL_PARAMETERS.fosterChildAgeLimitDeferredYears;
 
 export type AdoptionMaternityLeaveInput = {
   /** Pierwszy dzień urlopu (RRRR-MM-DD). */
@@ -57,7 +58,7 @@ export function calculateAdoptionMaternityLeave(input: AdoptionMaternityLeaveInp
     if (b > start) throw new BenefitInputError(`Dziecko ${i + 1} ma datę urodzenia po starcie urlopu.`, `childBirthDates[${i}]`);
   });
 
-  const limitYears = input.ageLimitYears ?? ADOPTION_CHILD_AGE_LIMIT_YEARS;
+  const limitYears = input.ageLimitYears ?? legal().adoptionChildAgeLimitYears;
   const notes: string[] = [];
   const eligible = births.filter((b) => addYears(b, limitYears) > start);
   if (eligible.length === 0) {
@@ -71,7 +72,7 @@ export function calculateAdoptionMaternityLeave(input: AdoptionMaternityLeaveInp
   const youngest = maxDate(eligible);
   const ageLimitDate = addDays(addYears(youngest, limitYears), -1);
   const daysUntilLimit = daysInclusive(start, ageLimitDate);
-  const minDays = ADOPTION_LEAVE_MIN_WEEKS * 7;
+  const minDays = legal().adoptionMinWeeks * 7;
 
   let days = tableWeeks * 7;
   const limitedByChildAge = daysUntilLimit < days;
@@ -80,7 +81,7 @@ export function calculateAdoptionMaternityLeave(input: AdoptionMaternityLeaveInp
   if (minimumApplied) days = minDays;
 
   if (limitedByChildAge) notes.push(`Urlop skrócony – kończy się dzień przed ${limitYears}. urodzinami najmłodszego dziecka.`);
-  if (minimumApplied) notes.push('Zastosowano minimalny wymiar 9 tygodni.');
+  if (minimumApplied) notes.push(`Zastosowano minimalny wymiar ${legal().adoptionMinWeeks} tygodni.`);
 
   const end = endOfPeriod(start, days);
   return {
@@ -94,7 +95,7 @@ export function calculateAdoptionMaternityLeave(input: AdoptionMaternityLeaveInp
     ageLimitDate: toIsoDate(ageLimitDate),
     limitedByChildAge,
     minimumApplied,
-    benefitRate: BENEFIT_RATES.full,
+    benefitRate: benefitRates().full,
     notes,
   };
 }

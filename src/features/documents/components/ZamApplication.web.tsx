@@ -6,7 +6,7 @@ import { openExternalLink } from '@/shared/lib/links';
 import { AppText, Button, Card } from '@/shared/ui';
 
 import { downloadPdf, loadPdfAssets } from '../pdfDownload';
-import { applicant, childDetails, zamLeave, zamSections, type ZamValues } from '../zamFields';
+import { applicant, childDetails, zamLeave, zamSections, type ZamValues } from '@/core/applications/forms/zamFields';
 import { fillZamPdf } from '../zamPdf';
 import { loadZamProfile, localZamChild, localZamParent, zamChildValuesFromForm, zamInitialValues, type ZamChild } from '../zamPrefill';
 import type { ZamApplicationProps } from './ZamApplication';

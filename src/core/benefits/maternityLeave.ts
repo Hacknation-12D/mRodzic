@@ -5,15 +5,17 @@
  */
 import { addDays } from 'date-fns';
 
-import { assertIntInRange, BENEFIT_RATES, endOfPeriod, parseIsoDate, toIsoDate } from './common';
+import { DEFAULT_LEGAL_PARAMETERS as D, maternityWeeksFor } from '../legal/parameters';
+import { assertIntInRange, benefitRates, endOfPeriod, parseIsoDate, toIsoDate } from './common';
 
 /** Liczba tygodni urlopu wg liczby dzieci (5 = 5 i więcej). */
-export const MATERNITY_LEAVE_WEEKS: Record<1 | 2 | 3 | 4 | 5, number> = { 1: 20, 2: 31, 3: 33, 4: 35, 5: 37 };
+/** Wartości domyślne (2026). Kalkulator używa aktywnego zestawu parametrów. */
+export const MATERNITY_LEAVE_WEEKS: Record<1 | 2 | 3 | 4 | 5, number> = { 1: D.maternityWeeks[0], 2: D.maternityWeeks[1], 3: D.maternityWeeks[2], 4: D.maternityWeeks[3], 5: D.maternityWeeks[4] };
 
 /** Wymiar urlopu macierzyńskiego (i na warunkach macierzyńskiego) w tygodniach. */
 export function maternityLeaveWeeks(childrenCount: number): number {
   assertIntInRange(childrenCount, 1, 50, 'childrenCount');
-  return MATERNITY_LEAVE_WEEKS[Math.min(childrenCount, 5) as 1 | 2 | 3 | 4 | 5];
+  return maternityWeeksFor(childrenCount);
 }
 
 export type MaternityLeaveInput = {
@@ -36,7 +38,7 @@ export type MaternityLeaveResult = {
 export function calculateMaternityLeave(input: MaternityLeaveInput): MaternityLeaveResult {
   const weeks = maternityLeaveWeeks(input.childrenCount);
   const days = weeks * 7;
-  const result: MaternityLeaveResult = { weeks, days, benefitRate: BENEFIT_RATES.full };
+  const result: MaternityLeaveResult = { weeks, days, benefitRate: benefitRates().full };
   if (input.startDate) {
     const start = parseIsoDate(input.startDate, 'startDate');
     const end = endOfPeriod(start, days);

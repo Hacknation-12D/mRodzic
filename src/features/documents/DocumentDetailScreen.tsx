@@ -6,7 +6,7 @@ import { goToAssistant } from '@/core/navigation/routes';
 import { getChildColor } from '@/core/profile/childColors';
 import { pl } from '@/shared/i18n/pl';
 import { useIsDark } from '@/shared/theme';
-import { AppText, Badge, Card, ChildChip, EmptyState, Markdown, Screen } from '@/shared/ui';
+import { AppText, Card, ChildChip, EmptyState, Markdown, Screen } from '@/shared/ui';
 
 import { DeadlineBadge } from './components/DeadlineBadge';
 import { DocumentActions } from './components/DocumentActions';
@@ -107,7 +107,6 @@ export function DocumentDetailScreen() {
         <AppText variant="small" tone="muted">
           {pl.documents.source(instance.source.name, instance.source.asOf)}
         </AppText>
-        {instance.needsReview ? <Badge label={pl.documents.needsReview} tone="warning" icon="construct-outline" /> : null}
       </View>
     </Screen>
   );
