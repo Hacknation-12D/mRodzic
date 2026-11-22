@@ -9,7 +9,7 @@ import type { DocumentInstance, DocumentStatus } from '@/core/types';
 import { pl } from '@/shared/i18n/pl';
 import { formatTime } from '@/shared/lib/date';
 import { useIsDark, useThemeColors } from '@/shared/theme';
-import { AppText, Button, Card, ChildChip, Sheet } from '@/shared/ui';
+import { AppText, Badge, Button, Card, ChildChip, Sheet } from '@/shared/ui';
 
 import { DeadlineBadge } from './DeadlineBadge';
 import { EligibilityBadge } from './EligibilityBadge';
@@ -38,8 +38,15 @@ export function DocumentCard({ instance, child, onOpen, onChangeStatus }: Props)
     // Card bez onPress: na web przycisk nie może zawierać innych przycisków (menu, „Przywróć”).
     <Card accentColor={accent}>
       <View className="flex-row items-start gap-2">
-        <Pressable onPress={onOpen} accessibilityRole="button" accessibilityLabel={a11y} className="flex-1 gap-2 active:opacity-80">
-          <AppText variant="subheading">{instance.title}</AppText>
+        <Pressable
+          onPress={onOpen}
+          accessibilityRole="button"
+          accessibilityLabel={instance.status === 'hidden' ? `${a11y}, ${pl.documents.hiddenBadge}` : a11y}
+          className={instance.status === 'hidden' ? 'flex-1 gap-2 opacity-60 active:opacity-40' : 'flex-1 gap-2 active:opacity-80'}>
+          <View className="flex-row flex-wrap items-center gap-2">
+            <AppText variant="subheading">{instance.title}</AppText>
+            {instance.status === 'hidden' ? <Badge label={pl.documents.hiddenBadge} tone="neutral" icon="eye-off-outline" /> : null}
+          </View>
           <View className="flex-row flex-wrap items-center gap-2">
             <ChildChip compact name={who} color={accent} />
             {instance.amountLabel ? (

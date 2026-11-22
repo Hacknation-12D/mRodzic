@@ -20,7 +20,8 @@ const SECTION_TITLES: Record<Urgency, string> = {
 };
 const SECTION_ORDER: Urgency[] = ['overdue', 'urgent', 'soon', 'later', 'none'];
 
-export function useDocumentList() {
+/** `showHidden` = ukryte dokumenty wracają na listy (oznaczone na karcie), zamiast znikać. */
+export function useDocumentList(showHidden = false) {
   const { bundle, profile, statuses, today, filter, setFilter } = useContentData();
   const setStatus = useDocumentStatusStore((s) => s.setStatus);
   const children = useChildViews(today);
@@ -34,13 +35,13 @@ export function useDocumentList() {
   const hidden = useMemo(() => instances.filter((d) => d.status === 'hidden'), [instances]);
 
   const byTab = useMemo(() => {
-    const visible = instances.filter((d) => d.status !== 'hidden');
+    const visible = showHidden ? instances : instances.filter((d) => d.status !== 'hidden');
     return {
       eligible: visible.filter((d) => d.eligibility === 'met'),
       ineligible: visible.filter((d) => d.eligibility === 'unmet'),
       missing: visible.filter((d) => d.eligibility === 'unknown'),
     };
-  }, [instances]);
+  }, [instances, showHidden]);
 
   const sections: TimelineSection[] = useMemo(
     () => [
