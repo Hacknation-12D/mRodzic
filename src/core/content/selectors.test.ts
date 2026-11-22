@@ -10,6 +10,7 @@ import {
   getSuggestedPrompts,
   getTipsFor,
   isInWindow,
+  overdueCountByChild,
 } from './selectors';
 import { getSeedBundle } from './seedRepository';
 
@@ -251,5 +252,20 @@ describe('seed bundle', () => {
     expect(ids).toContain('karta-duzej-rodziny');
     expect(ids).toContain('rekrutacja-przedszkole');
     expect(ids).toContain('aktywny-rodzic');
+  });
+});
+
+describe('overdueCountByChild', () => {
+  // Zosia urodzona 40 dni temu → PESEL (termin: 21 dni) jest 19 dni po terminie.
+  const late: Profile = { ...twoKids, children: [{ ...twoKids.children[0], birthDate: '2026-10-12' }, twoKids.children[1]] };
+
+  it('liczy zaległe dokumenty „do zrobienia” osobno dla każdego dziecka', () => {
+    expect(overdueCountByChild(bundle, late, {}, today)).toEqual({ zosia: 1 });
+  });
+
+  it('pomija dokumenty oznaczone jako wypełnione lub ukryte i dzieci bez zaległości', () => {
+    const statuses: StatusMap = { 'pesel:zosia': { status: 'done', updatedAt: '2026-11-01' } };
+    expect(overdueCountByChild(bundle, late, statuses, today)).toEqual({});
+    expect(overdueCountByChild(bundle, twoKids, {}, today)).toEqual({});
   });
 });

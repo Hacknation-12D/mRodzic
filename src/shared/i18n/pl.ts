@@ -121,6 +121,7 @@ export const pl = {
     benefitUnknown: 'Brakuje danych, żeby ocenić prawo do zasiłku. Uzupełnij je w kalkulatorze.',
     benefitNoProfile: 'Sprawdź, ile wyniesie zasiłek i jak długo potrwają urlopy.',
     openCalculator: 'Otwórz kalkulator',
+    overdue: (n: number) => `${n} ${plural(n, 'zaległy termin', 'zaległe terminy', 'zaległych terminów')}`,
     new: 'Nowe',
   },
 
