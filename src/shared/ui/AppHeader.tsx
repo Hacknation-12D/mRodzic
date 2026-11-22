@@ -1,7 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
 import { router, type Href } from 'expo-router';
-import { Pressable, View } from 'react-native';
+import { Pressable, Text, useWindowDimensions, View } from 'react-native';
 
 import { pl } from '../i18n/pl';
 import { useThemeColors, type ThemeColors } from '../theme';
@@ -29,6 +29,7 @@ export function appHeaderOptions(c: ThemeColors, { homeHref, showBack = true, ba
     headerStyle: { backgroundColor: c.base100 },
     headerTintColor: c.primary,
     headerTitleStyle: { color: c.baseContent, fontSize: 17, fontWeight: '600' as const },
+    headerTitle: ({ children }: { children: string }) => <HeaderTitle text={children} />,
     headerShadowVisible: true,
     headerBackVisible: false,
     headerLeft: () => (
@@ -55,7 +56,26 @@ function HeaderBack({ fallback }: { fallback: Href }) {
   );
 }
 
+/** Szerokość, poniżej której nagłówek jest „kompaktowy” (telefon): mniejsze logo, krótszy tytuł. */
+const COMPACT_WIDTH = 520;
+
+/** Tytuł ekranu: jedna linia z „…”, nigdy nie nachodzi na logo i ikonę profilu. */
+function HeaderTitle({ text }: { text: string }) {
+  const c = useThemeColors();
+  const { width } = useWindowDimensions();
+  // Lewa strona (Wstecz + logo) zajmuje ok. 120–150 pt, a tytuł jest wyśrodkowany – zostawiamy margines z obu stron.
+  const maxWidth = Math.max(0, width - 2 * (width < COMPACT_WIDTH ? 128 : 170));
+  if (!text || maxWidth < 80) return null;
+  return (
+    <Text numberOfLines={1} accessibilityRole="header" style={{ maxWidth, color: c.baseContent, fontSize: width < COMPACT_WIDTH ? 16 : 17, fontWeight: '600' }}>
+      {text}
+    </Text>
+  );
+}
+
 function HeaderLogo({ href }: { href: Href }) {
+  const { width } = useWindowDimensions();
+  const compact = width < COMPACT_WIDTH;
   return (
     <Pressable
       onPress={() => router.navigate(href)}
@@ -63,7 +83,7 @@ function HeaderLogo({ href }: { href: Href }) {
       accessibilityLabel={pl.header.home}
       hitSlop={6}
       style={({ pressed }) => [{ minHeight: 44, justifyContent: 'center', opacity: pressed ? 0.7 : 1 }]}>
-      <Image source={LOGO} contentFit="contain" accessibilityIgnoresInvertColors style={{ width: 96, height: 26 }} />
+      <Image source={LOGO} contentFit="contain" accessibilityIgnoresInvertColors style={compact ? { width: 74, height: 20 } : { width: 96, height: 26 }} />
     </Pressable>
   );
 }

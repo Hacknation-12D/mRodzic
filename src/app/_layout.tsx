@@ -56,6 +56,7 @@ export default function RootLayout() {
         <Stack screenOptions={{ headerBackTitle: pl.common.back, ...appHeaderOptions(c, { homeHref, showProfile: hasProfile }) }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false, title: pl.appName }} />
           <Stack.Screen name="document/[docId]" options={{ title: pl.documents.details }} />
+          <Stack.Screen name="calculator" options={{ title: pl.pageSwitcher.calculator }} />
           <Stack.Screen name="profile/index" options={{ title: pl.profile.title, ...appHeaderOptions(c, { homeHref }) }} />
           <Stack.Screen
             name="profile/child/[childId]"

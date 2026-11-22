@@ -5,8 +5,9 @@ import type { TextStyle } from 'react-native';
  * dynamicznej wielkości czcionki systemu (allowFontScaling = true).
  */
 export const typography = {
-  title: { fontSize: 24, lineHeight: 30, fontWeight: '700' },
-  heading: { fontSize: 19, lineHeight: 24, fontWeight: '700' },
+  display: { fontSize: 34, lineHeight: 40, fontWeight: '800', letterSpacing: -0.6 },
+  title: { fontSize: 26, lineHeight: 32, fontWeight: '800', letterSpacing: -0.5 },
+  heading: { fontSize: 20, lineHeight: 26, fontWeight: '700', letterSpacing: -0.3 },
   subheading: { fontSize: 16, lineHeight: 22, fontWeight: '600' },
   body: { fontSize: 15, lineHeight: 21, fontWeight: '400' },
   bodyStrong: { fontSize: 15, lineHeight: 21, fontWeight: '600' },

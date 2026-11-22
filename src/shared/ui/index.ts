@@ -19,6 +19,7 @@ export * from './Sheet';
 export * from './Stepper';
 export * from './ThemeSwitch';
 export * from './TextField';
+export * from './Tiles';
 export * from './ToggleRow';
 export * from './forms/ChildFields';
 export * from './forms/ParentFields';

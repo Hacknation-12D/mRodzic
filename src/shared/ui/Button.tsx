@@ -3,7 +3,7 @@ import type { ComponentProps } from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 
 import { cn } from '../lib/cn';
-import { useThemeColors } from '../theme';
+import { useElevation, useThemeColors } from '../theme';
 import { AppText } from './AppText';
 
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -25,7 +25,7 @@ type Props = {
 const BTN: Record<Variant, { box: string; text: 'inverse' | 'primary' | 'default' }> = {
   primary: { box: 'bg-primary', text: 'inverse' },
   secondary: { box: 'bg-primary-soft', text: 'primary' },
-  ghost: { box: 'bg-transparent border border-base-300', text: 'default' },
+  ghost: { box: 'bg-base-100 border border-base-300', text: 'default' },
   danger: { box: 'bg-error', text: 'inverse' },
 };
 
@@ -44,6 +44,7 @@ export function Button({
   const c = useThemeColors();
   const isDisabled = disabled || loading;
   const spec = BTN[variant];
+  const lift = useElevation(variant === 'primary' && !isDisabled ? 3 : 0);
   const iconColor = variant === 'primary' ? c.primaryContent : variant === 'danger' ? c.errorContent : variant === 'secondary' ? c.primary : c.baseContent;
 
   return (
@@ -56,12 +57,13 @@ export function Button({
       accessibilityState={{ disabled: isDisabled, busy: loading }}
       hitSlop={4}
       className={cn(
-        'min-h-11 items-center justify-center rounded-field py-2 active:opacity-80',
-        compact ? 'px-3' : 'px-4',
+        'items-center justify-center rounded-field py-2 active:opacity-80',
+        compact ? 'min-h-10 px-3' : 'min-h-12 px-5',
         spec.box,
         isDisabled && 'opacity-50',
         className,
-      )}>
+      )}
+      style={lift}>
       <View className="flex-row items-center gap-2">
         {loading ? <ActivityIndicator color={iconColor} /> : icon ? <Ionicons name={icon} size={18} color={iconColor} /> : null}
         <AppText variant="bodyStrong" tone={spec.text}>

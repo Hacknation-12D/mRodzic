@@ -16,3 +16,5 @@ export * from './supplementaryMaternityLeave';
 export * from './parentalLeave';
 export * from './paternityLeave';
 export * from './maternityBenefitAmount';
+export * from './scenario';
+export * from './scenarioDefaults';

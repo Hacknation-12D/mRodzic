@@ -22,6 +22,7 @@ const appPages: PageOption[] = [
     label: pl.pageSwitcher.documents,
     icon: 'document-text-outline',
   },
+  { href: '/calculator', label: pl.pageSwitcher.calculator, icon: 'calculator-outline' },
 ];
 
 const onboardingPages: PageOption[] = [

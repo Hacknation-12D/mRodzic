@@ -15,12 +15,17 @@ import { maternityLeaveWeeks } from './maternityLeave';
 
 export const ADOPTION_LEAVE_MIN_WEEKS = 9;
 export const ADOPTION_CHILD_AGE_LIMIT_YEARS = 14;
+/** Rodzina zastępcza (poza zawodową): dziecko do 7 lat, a przy odroczonym obowiązku szkolnym – do 10 lat (art. 183 § 3 KP). */
+export const FOSTER_CHILD_AGE_LIMIT_YEARS = 7;
+export const FOSTER_CHILD_AGE_LIMIT_DEFERRED_SCHOOL_YEARS = 10;
 
 export type AdoptionMaternityLeaveInput = {
   /** Pierwszy dzień urlopu (RRRR-MM-DD). */
   startDate: string;
   /** Daty urodzenia dzieci przyjętych jednocześnie (RRRR-MM-DD). */
   childBirthDates: string[];
+  /** Granica wieku dziecka w latach (domyślnie 14 – przysposobienie; rodzina zastępcza: 7 albo 10). */
+  ageLimitYears?: number;
 };
 
 export type AdoptionMaternityLeaveResult = {
@@ -52,18 +57,19 @@ export function calculateAdoptionMaternityLeave(input: AdoptionMaternityLeaveInp
     if (b > start) throw new BenefitInputError(`Dziecko ${i + 1} ma datę urodzenia po starcie urlopu.`, `childBirthDates[${i}]`);
   });
 
+  const limitYears = input.ageLimitYears ?? ADOPTION_CHILD_AGE_LIMIT_YEARS;
   const notes: string[] = [];
-  const eligible = births.filter((b) => addYears(b, ADOPTION_CHILD_AGE_LIMIT_YEARS) > start);
+  const eligible = births.filter((b) => addYears(b, limitYears) > start);
   if (eligible.length === 0) {
-    throw new BenefitInputError('Żadne dziecko nie spełnia warunku wieku (do ukończenia 14 lat).', 'childBirthDates');
+    throw new BenefitInputError(`Żadne dziecko nie spełnia warunku wieku (do ukończenia ${limitYears} lat).`, 'childBirthDates');
   }
   if (eligible.length < births.length) {
-    notes.push(`${births.length - eligible.length} dziecko/dzieci ukończyło 14 lat przed startem urlopu – nie są liczone.`);
+    notes.push(`${births.length - eligible.length} dziecko/dzieci ukończyło ${limitYears} lat przed startem urlopu – nie są liczone.`);
   }
 
   const tableWeeks = maternityLeaveWeeks(eligible.length);
   const youngest = maxDate(eligible);
-  const ageLimitDate = addDays(addYears(youngest, ADOPTION_CHILD_AGE_LIMIT_YEARS), -1);
+  const ageLimitDate = addDays(addYears(youngest, limitYears), -1);
   const daysUntilLimit = daysInclusive(start, ageLimitDate);
   const minDays = ADOPTION_LEAVE_MIN_WEEKS * 7;
 
@@ -73,7 +79,7 @@ export function calculateAdoptionMaternityLeave(input: AdoptionMaternityLeaveInp
   const minimumApplied = days < minDays;
   if (minimumApplied) days = minDays;
 
-  if (limitedByChildAge) notes.push('Urlop skrócony – kończy się dzień przed 14. urodzinami najmłodszego dziecka.');
+  if (limitedByChildAge) notes.push(`Urlop skrócony – kończy się dzień przed ${limitYears}. urodzinami najmłodszego dziecka.`);
   if (minimumApplied) notes.push('Zastosowano minimalny wymiar 9 tygodni.');
 
   const end = endOfPeriod(start, days);

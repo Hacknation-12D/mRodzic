@@ -16,8 +16,8 @@
 
 @theme {
   --radius-selector: 9999px;
-  --radius-field: 0.625rem;
-  --radius-box: 1rem;
+  --radius-field: 0.875rem;
+  --radius-box: 1.375rem;
   --color-base-content-muted: #5e564c;
   --color-neutral-soft: #ece7e0;
   --color-primary-soft: #dceae4;
