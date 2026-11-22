@@ -129,7 +129,7 @@ function MenuItem({ icon, label, onPress, danger }: MenuItemProps) {
 }
 
 /**
- * Awatar z inicjałem → menu konta: profil, ustawienia, wylogowanie (z potwierdzeniem w samym menu).
+ * Awatar z inicjałem → menu konta: ustawienia (profil rodziny), wylogowanie (z potwierdzeniem w samym menu).
  * Menu to Modal zakotwiczony pod awatarem – nie przycina go nagłówek, zamyka je dotknięcie poza nim.
  */
 function AccountMenu({ name, onLogout }: { name: string; onLogout?: () => void }) {
@@ -215,8 +215,7 @@ function AccountMenu({ name, onLogout }: { name: string; onLogout?: () => void }
                   </AppText>
                 </View>
               ) : null}
-              <MenuItem icon="person-circle-outline" label={pl.accountMenu.profile} onPress={() => go('/profile')} />
-              <MenuItem icon="settings-outline" label={pl.accountMenu.settings} onPress={() => go('/settings')} />
+              <MenuItem icon="settings-outline" label={pl.accountMenu.settings} onPress={() => go('/profile')} />
               {onLogout ? (
                 <>
                   <View className="mx-2 h-px bg-base-300" />

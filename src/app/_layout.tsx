@@ -65,7 +65,6 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false, title: pl.appName }} />
           <Stack.Screen name="document/[docId]" options={{ title: pl.documents.details }} />
           <Stack.Screen name="calculator" options={{ title: pl.pageSwitcher.calculator }} />
-          <Stack.Screen name="settings" options={{ title: pl.settings.title }} />
           <Stack.Screen name="profile/index" options={{ title: pl.profile.title, ...appHeaderOptions(c, { homeHref, showProfile: hasProfile, profileName, onLogout: logOut }) }} />
           <Stack.Screen
             name="profile/child/[childId]"
