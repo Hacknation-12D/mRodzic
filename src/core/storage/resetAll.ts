@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useApplicationStore } from '../applications/application.store';
 
 import { useClockStore } from '../clock/clock';
 import { useDocumentStatusStore } from '../documents/documentStatus.store';
@@ -21,6 +22,7 @@ export function onResetAll(listener: Listener): () => void {
 export async function resetAllData(options: { keepDevSettings?: boolean } = {}): Promise<void> {
   clearFamilySession();
   useProfileStore.getState().resetAll();
+  useApplicationStore.getState().clear();
   useDocumentStatusStore.getState().clearAll();
   useChildFilterStore.getState().setFilter('all');
   if (!options.keepDevSettings) {

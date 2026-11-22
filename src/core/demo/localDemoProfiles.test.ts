@@ -31,6 +31,33 @@ describe('local demo profiles', () => {
     }
   });
 
+  it('children follow the registry rules (raw database export)', () => {
+    for (const { profileId, profile } of demoProfiles) {
+      for (const c of profile.children as Record<string, unknown>[]) {
+        const who = `${profileId} ${String(c.id)}`;
+        if (c.status === 'expected') {
+          // An unborn child cannot be insured yet and has no PESEL / birth certificate.
+          expect(c.insured, `${who}: insured`).toBeUndefined();
+          expect(c.pesel, `${who}: pesel`).toBeUndefined();
+          expect(c.birthRegistry, `${who}: birthRegistry`).toBeUndefined();
+        } else if (c.loss) {
+          expect(c.insured, `${who}: a lost child is not insured`).toBeUndefined();
+        } else {
+          expect(c.pesel, `${who}: pesel`).toBeTruthy();
+          expect(c.birthRegistry, `${who}: birthRegistry`).toBeTruthy();
+        }
+      }
+    }
+  });
+
+  it('rejects a born child without a matching PESEL', () => {
+    const broken = structuredClone(demoProfiles);
+    (broken[0].profile.children[0] as { pesel?: string }).pesel = '26290331130';
+    registerLocalDemoProfiles(broken);
+    expect(() => localDemoProfiles()).toThrow(/PESEL/);
+    registerLocalDemoProfiles(demoProfiles);
+  });
+
   it('rejects a parent without the mandatory data', () => {
     const broken = structuredClone(demoProfiles);
     delete (broken[0].profile.me as { pesel?: string }).pesel;

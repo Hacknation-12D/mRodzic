@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useApplicationStore } from '../applications/application.store';
 
 import { useClockStore } from '../clock/clock';
 import { useDocumentStatusStore } from '../documents/documentStatus.store';
@@ -25,11 +26,11 @@ export function useAppBootstrap({ prepareProfile }: Options = {}): boolean {
     let cancelled = false;
     let stopTasks: (() => void) | undefined;
 
-    waitForHydration([useProfileStore, useDocumentStatusStore, useChildFilterStore, useClockStore, useSettingsStore])
+    waitForHydration([useProfileStore, useApplicationStore, useDocumentStatusStore, useChildFilterStore, useClockStore, useSettingsStore])
       .then(() => {
         if (cancelled) return;
-        const { profile, setProfile } = useProfileStore.getState();
-        const prepared = prepareProfile?.(profile);
+        const { profile, setProfile, demoProfileId } = useProfileStore.getState();
+        const prepared = demoProfileId ? null : prepareProfile?.(profile);
         if (prepared) setProfile(prepared);
         stopTasks = runStartupTasks();
       })

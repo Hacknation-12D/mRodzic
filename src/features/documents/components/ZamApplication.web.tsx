@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { goToProfile } from '@/core/navigation/routes';
+import { useProfileStore } from '@/core/profile/profile.store';
 import { openExternalLink } from '@/shared/lib/links';
 import { AppText, Button, Card } from '@/shared/ui';
 
@@ -47,7 +48,9 @@ function ZamEditor({ docId, profile, child }: ZamApplicationProps) {
   useEffect(() => {
     let active = true;
     async function load() {
-      const result = await loadZamProfile().catch(() => ({ status: 'error' } as const));
+      const result = useProfileStore.getState().demoProfileId
+        ? { status: 'offline' } as const
+        : await loadZamProfile().catch(() => ({ status: 'error' } as const));
       if (!active) return;
       setSource(result.status);
       if (result.status === 'loaded') {
@@ -119,7 +122,7 @@ function ZamEditor({ docId, profile, child }: ZamApplicationProps) {
       <div className="flex flex-wrap gap-2">
         <Button label={downloading ? 'Przygotowuję PDF…' : 'Pobierz ZAM (PDF)'} icon="download-outline"
           disabled={downloading} onPress={() => void download()} />
-        <Button label="Wyślij" icon="send-outline" variant="secondary" onPress={() => void openExternalLink(ezusUrl)} />
+        <Button label="Otwórz portal eZUS" icon="open-outline" variant="secondary" onPress={() => void openExternalLink(ezusUrl)} />
       </div>
       <AppText tone="muted">PDF zawiera aktualnie wczytane i wpisane dane. Brakujące pola pozostaną puste.</AppText>
       {message ? (
@@ -171,7 +174,7 @@ function ZamEditor({ docId, profile, child }: ZamApplicationProps) {
           </details>
         ))}
       </form>
-      <AppText tone="muted">„Wyślij” otwiera eZUS. Wybierz usługę „Złożenie dokumentu ZAM” i podpisz wniosek w eZUS.</AppText>
+      <AppText tone="muted">Portal eZUS otwiera się osobno. Ta aplikacja nie wysyła dokumentów do ZUS.</AppText>
     </Card>
   );
 }

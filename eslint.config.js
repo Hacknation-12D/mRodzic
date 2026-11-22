@@ -37,7 +37,7 @@ const featureBoundaries = FEATURES.map((feature) => {
 module.exports = defineConfig([
   expoConfig,
   {
-    ignores: ['dist/*', 'node_modules/*', '.expo/*', 'supabase/functions/**', 'ios/*', 'android/*'],
+    ignores: ['dist/**', 'node_modules/**', '.expo/**', 'public/ocr/**', 'private/**', 'tmp/**', 'supabase/functions/**', 'ios/*', 'android/*'],
   },
   ...featureBoundaries,
   {

@@ -27,17 +27,22 @@ type Props = {
   errors?: ChildFieldsErrors;
   /** Ukrywa przełącznik statusu (np. w MarkBornSheet). */
   hideStatus?: boolean;
+  /**
+   * Czy pozwolić wybrać „Już jest na świecie”. Domyślnie NIE: urodzone dzieci (PESEL, akt urodzenia, ubezpieczenie)
+   * pochodzą z rejestru (ZUS / USC, w demo – z bazy), a ręcznie dodaje się tylko dziecko w drodze.
+   */
+  allowBorn?: boolean;
 };
 
 type TriState = 'yes' | 'no' | 'unknown';
 const toTri = (v: boolean | undefined): TriState => (v === undefined ? 'unknown' : v ? 'yes' : 'no');
 const fromTri = (v: TriState): boolean | undefined => (v === 'unknown' ? undefined : v === 'yes');
 
-export function ChildFields({ value, onChange, errors, hideStatus }: Props) {
+export function ChildFields({ value, onChange, errors, hideStatus, allowBorn = false }: Props) {
   const isBorn = value.status === 'born';
   return (
     <View className="gap-4">
-      {hideStatus ? null : (
+      {hideStatus || !allowBorn ? null : (
         <SegmentedControl
           value={value.status}
           onChange={(status) => onChange({ ...value, status })}

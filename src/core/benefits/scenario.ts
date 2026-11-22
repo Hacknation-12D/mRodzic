@@ -17,7 +17,7 @@ import {
   FOSTER_CHILD_AGE_LIMIT_YEARS,
 } from './adoptionMaternityLeave';
 import { calculateBenefitBase, type BenefitBaseResult } from './benefitBase';
-import { BenefitInputError, daysInclusive, endOfPeriod, parseIsoDate, roundMoney, toIsoDate } from './common';
+import { BenefitInputError, daysInclusive, endOfPeriod, MINIMUM_WAGE_2026, parseIsoDate, roundMoney, toIsoDate } from './common';
 import { calculateMaternityBenefitAmount, LEAVE_KIND_LABELS, type LeaveKind, type MaternityBenefitAmountResult } from './maternityBenefitAmount';
 import { calculateMaternityLeave } from './maternityLeave';
 import { calculateParentalLeave, PARENTAL_NON_TRANSFERABLE_WEEKS, type ParentalLeaveResult } from './parentalLeave';
@@ -53,8 +53,12 @@ export type BenefitScenarioInput = {
   loss?: { kind: 'stillbirth' | 'death'; date: string };
   /** Kto wypłaca zasiłek (z PUE/eZUS); brak = nie wiemy. */
   benefitPayer?: BenefitPayer;
-  /** Zaległość w składkach (zł) – istotna przy dobrowolnym ubezpieczeniu. */
+  /** Zaległość w składkach (zł) – istotna przy działalności gospodarczej (art. 2a ustawy zasiłkowej). */
   arrearsAmount?: number;
+  /** Ustanie ubezpieczenia chorobowego przed porodem: ostatni dzień i przyczyna (art. 30 ustawy zasiłkowej). */
+  insuranceEnded?: { until: string; reason: 'liquidation' | 'bankruptcy' | 'employer_death' | 'unlawful_termination' | 'other' };
+  /** Dzień obliczeń – do sprawdzenia terminu 21 dni na wniosek o wariant 81,5%. */
+  asOf?: string;
 };
 
 export type Eligibility = {
@@ -95,17 +99,63 @@ export type BenefitScenarioResult = {
   notes: string[];
   /** Obliczenia po stracie dziecka (UI pomija wybór wariantu wniosku). */
   loss: boolean;
+  /** Ostatni dzień na wniosek o wariant 81,5% (21 dni po porodzie) i czy już minął. */
+  upfrontDeadline?: string;
+  upfrontDeadlinePassed: boolean;
 };
 
 const VOLUNTARY: Employment[] = ['self_employed', 'civil_contract'];
 
+/** Poradnik ZUS 2026: osoby bez prawa do zasiłku macierzyńskiego (np. bezrobotne, studenci, umowa o dzieło). */
 export const PARENTAL_BENEFIT_ALTERNATIVE =
-  'Świadczenie rodzicielskie (1000 zł miesięcznie, np. przez 52 tygodnie przy jednym dziecku) dla rodziców bez zasiłku macierzyńskiego – wniosek składasz w urzędzie gminy lub MOPS, nie w ZUS.';
+  'Świadczenie rodzicielskie – dla osób, które z powodu swojej sytuacji zawodowej nie mogą skorzystać z zasiłku macierzyńskiego (np. bezrobotnych, studentów, pracujących na umowę o dzieło). Wniosek nie trafia do ZUS – szczegóły na gov.pl (Ministerstwo Rodziny, Pracy i Polityki Społecznej).';
+
+/** Przyczyny ustania ubezpieczenia w ciąży, przy których zasiłek macierzyński przysługuje (art. 30 ust. 1 ustawy zasiłkowej). */
+const ART30_REASONS: Record<string, string> = {
+  liquidation: 'likwidacji pracodawcy',
+  bankruptcy: 'ogłoszenia upadłości pracodawcy',
+  employer_death: 'śmierci pracodawcy',
+  unlawful_termination: 'rozwiązania umowy z naruszeniem prawa (stwierdzonego prawomocnym wyrokiem sądu)',
+};
+/** Typowa długość ciąży – do sprawdzenia, czy ubezpieczenie ustało „w okresie ciąży”. */
+const PREGNANCY_DAYS = 280;
+/** Art. 2a ustawy zasiłkowej: zadłużenie > 1% minimalnego wynagrodzenia w dniu powstania prawa. */
+export const DEBT_THRESHOLD = roundMoney(MINIMUM_WAGE_2026 * 0.01);
 
 /** Ocena prawa do zasiłku macierzyńskiego na podstawie podanych danych (trzy stany, zawsze z uzasadnieniem). */
-export function assessEligibility(input: Pick<BenefitScenarioInput, 'kind' | 'employment' | 'sicknessInsurance' | 'arrearsAmount'>): Eligibility {
+export function assessEligibility(
+  input: Pick<BenefitScenarioInput, 'kind' | 'employment' | 'sicknessInsurance' | 'arrearsAmount' | 'insuranceEnded' | 'eventDate'>,
+): Eligibility {
   const result: Eligibility = { status: 'unknown', reasons: [], missing: [], warnings: [], alternatives: [] };
   const voluntary = VOLUNTARY.includes(input.employment);
+
+  // Ubezpieczenie ustało przed porodem (art. 30 ustawy zasiłkowej).
+  const ended = input.insuranceEnded;
+  if (ended && (input.kind === 'birth' || input.kind === 'pregnancy') && ended.until < input.eventDate) {
+    const pregnancyStart = toIsoDate(addDays(parseIsoDate(input.eventDate, 'eventDate'), -PREGNANCY_DAYS));
+    const why = ART30_REASONS[ended.reason];
+    if (why && ended.until >= pregnancyStart) {
+      result.status = 'eligible';
+      result.reasons.push(
+        `Ubezpieczenie chorobowe ustało w ciąży (${ended.until.split('-').reverse().join('.')}) wskutek ${why}. Zasiłek macierzyński przysługuje mimo to (art. 30 ust. 1 ustawy zasiłkowej) i wypłaca go ZUS.`,
+      );
+      if (ended.reason !== 'unlawful_termination') {
+        result.reasons.push(
+          'Do dnia porodu przysługuje też zasiłek w wysokości zasiłku macierzyńskiego, jeśli nie zapewniono Ci innego zatrudnienia (art. 30 ust. 3).',
+        );
+      } else {
+        result.warnings.push('Potrzebny jest prawomocny wyrok sądu stwierdzający naruszenie prawa przy rozwiązaniu umowy.');
+      }
+      result.warnings.push('Do wniosku: zaświadczenie lekarskie o ciąży w okresie zatrudnienia i świadectwo pracy z przyczyną ustania stosunku pracy.');
+      return result;
+    }
+    result.status = 'not_eligible';
+    result.reasons.push(
+      `Ubezpieczenie chorobowe ustało ${ended.until.split('-').reverse().join('.')}, przed porodem, z przyczyny, która nie daje prawa do zasiłku po ustaniu ubezpieczenia.`,
+    );
+    result.alternatives.push(PARENTAL_BENEFIT_ALTERNATIVE);
+    return result;
+  }
 
   if (input.employment === 'employment_contract') {
     result.status = 'eligible';
@@ -131,10 +181,22 @@ export function assessEligibility(input: Pick<BenefitScenarioInput, 'kind' | 'em
     result.missing.push('Wybierz formę zatrudnienia – od niej zależy, czy podlegasz ubezpieczeniu chorobowemu.');
   }
 
-  if (voluntary && (input.arrearsAmount ?? 0) > 0) {
-    result.warnings.push(
-      `Zaległość w składkach: ${formatAmount(input.arrearsAmount ?? 0)}. Przy dobrowolnym ubezpieczeniu nieopłacenie składki w terminie może oznaczać, że ubezpieczenie chorobowe ustało – sprawdź to w ZUS, zanim złożysz wniosek.`,
-    );
+  // Art. 2a: osoby, które same opłacają składki (działalność gospodarcza) – zadłużenie > 1% minimalnego wynagrodzenia
+  // w dniu powstania prawa wstrzymuje świadczenie do czasu spłaty całości; po 6 miesiącach bez spłaty prawo przedawnia się.
+  const debt = input.arrearsAmount ?? 0;
+  if (input.employment === 'self_employed' && result.status === 'eligible' && debt > DEBT_THRESHOLD) {
+    const fix = `Spłać całe zadłużenie w ciągu 6 miesięcy od dnia powstania prawa – wtedy zasiłek zostanie wypłacony (najpóźniej 60 dni od spłaty). Bez spłaty prawo się przedawni.`;
+    if (input.kind === 'pregnancy') {
+      result.warnings.push(
+        `Zaległość w składkach: ${formatAmount(debt)} (próg: ${formatAmount(DEBT_THRESHOLD)}). Jeśli w dniu porodu będzie wyższa niż próg, zasiłek nie zostanie wypłacony do czasu spłaty całości (art. 2a ustawy zasiłkowej). Spłać ją przed porodem.`,
+      );
+    } else {
+      result.status = 'not_eligible';
+      result.reasons.push(
+        `Zadłużenie składkowe ${formatAmount(debt)} przekracza 1% minimalnego wynagrodzenia (${formatAmount(DEBT_THRESHOLD)}) – zasiłek nie przysługuje do czasu spłaty całości (art. 2a ustawy zasiłkowej).`,
+      );
+      result.warnings.push(fix);
+    }
   }
   if (input.kind === 'pregnancy' && result.status !== 'not_eligible') {
     result.warnings.push('Prawo do zasiłku ocenia się w dniu porodu – ubezpieczenie musi wtedy trwać (np. umowa nie może wcześniej wygasnąć).');
@@ -147,7 +209,8 @@ function formatAmount(n: number): string {
 }
 
 function payerFor(input: BenefitScenarioInput): BenefitPayer | 'unknown' {
-  if (input.employment === 'self_employed') return 'zus';
+  // Działalność gospodarcza i zasiłki za okres po ustaniu ubezpieczenia wypłaca ZUS (art. 61 ustawy zasiłkowej).
+  if (input.employment === 'self_employed' || input.insuranceEnded) return 'zus';
   return input.benefitPayer ?? 'unknown';
 }
 
@@ -263,7 +326,18 @@ export function calculateBenefitScenario(input: BenefitScenarioInput): BenefitSc
     payer: payerFor(input),
     notes,
     loss: lossCase,
+    upfrontDeadlinePassed: false,
   };
+
+  // Wariant 81,5%: wniosek najpóźniej 21 dni po porodzie (art. 30a ustawy zasiłkowej).
+  if (!lossCase && (input.kind === 'birth' || input.kind === 'pregnancy')) {
+    const deadline = toIsoDate(addDays(parseIsoDate(input.eventDate, 'eventDate'), 21));
+    result.upfrontDeadline = deadline;
+    result.upfrontDeadlinePassed = Boolean(input.asOf && input.asOf > deadline);
+    if (result.upfrontDeadlinePassed && input.upfrontApplication) {
+      notes.push('Termin na wniosek o wariant 81,5% minął ' + deadline.split('-').reverse().join('.') + ' – ten wariant jest możliwy tylko, jeśli wniosek złożono w terminie.');
+    }
+  }
 
   // 4. Kwoty – wyłącznie przy ustalonym prawie (zadanie ZUS: nie pokazujemy kwoty, gdy prawo nie przysługuje).
   if (eligibility.status === 'eligible') {
@@ -271,7 +345,7 @@ export function calculateBenefitScenario(input: BenefitScenarioInput): BenefitSc
       throw new BenefitInputError('Podaj przeciętne miesięczne wynagrodzenie brutto.', 'averageMonthlyGross');
     }
     const base =
-      input.employment === 'employment_contract'
+      input.employment === 'employment_contract' || input.insuranceEnded
         ? calculateBenefitBase({
             insuredType: 'employee',
             months: Array.from({ length: 12 }, () => ({ fixedGross: input.averageMonthlyGross })),

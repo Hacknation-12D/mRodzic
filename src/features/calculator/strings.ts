@@ -55,6 +55,9 @@ export const t = {
 
   variantsTitle: 'Jak złożyć wniosek?',
   variantsBody: 'Wybór wpływa na wysokość zasiłku. Dotknij wariantu, aby zobaczyć jego wyliczenie.',
+  upfrontDeadline: (date: string) => `Wariant 81,5%: wniosek o zasiłek za cały okres trzeba złożyć najpóźniej ${date} (21 dni po porodzie).`,
+  upfrontDeadlinePassed: (date: string) =>
+    `Termin na wariant 81,5% minął ${date} (21 dni po porodzie). Ten wariant obowiązuje tylko, jeśli wniosek złożono w terminie – w przeciwnym razie 100% za macierzyński i 70% za rodzicielski.`,
   upfront: { title: 'Jeden wniosek w 21 dni', body: '81,5% podstawy przez cały urlop macierzyński i rodzicielski' },
   separate: { title: 'Osobne wnioski', body: '100% za urlop macierzyński, potem 70% za rodzicielski' },
   better: 'Korzystniej',

@@ -47,6 +47,21 @@ const RecordSchema = z
   .superRefine((r, ctx) => {
     checkParent(r.profile.me, 'me', ctx);
     checkParent(r.profile.partner, 'partner', ctx);
+    r.profile.children.forEach((c, i) => {
+      const path = ['children', i];
+      // Urodzone, żyjące dziecko pochodzi z rejestru USC: ma PESEL zgodny z datą urodzenia (i płcią) oraz akt urodzenia.
+      if (c.status === 'born' && !c.loss) {
+        const sex = c.sex === 'female' || c.sex === 'male' ? c.sex : undefined;
+        if (!c.pesel || !c.birthDate || !peselMatches(c.pesel, c.birthDate, sex)) {
+          ctx.addIssue({ code: 'custom', path: [...path, 'pesel'], message: `Dziecko ${c.id}: brak PESEL lub PESEL niezgodny z datą urodzenia` });
+        }
+        if (!c.birthRegistry) ctx.addIssue({ code: 'custom', path: [...path, 'birthRegistry'], message: `Dziecko ${c.id}: brak aktu urodzenia` });
+      }
+      // Dziecko martwo urodzone nie otrzymuje numeru PESEL.
+      if (c.loss?.kind === 'stillbirth' && c.pesel) {
+        ctx.addIssue({ code: 'custom', path: [...path, 'pesel'], message: `Dziecko ${c.id}: martwo urodzone dziecko nie ma PESEL` });
+      }
+    });
   });
 
 export type LocalDemoProfile = {

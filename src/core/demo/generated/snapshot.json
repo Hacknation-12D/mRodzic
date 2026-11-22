@@ -1,0 +1,2245 @@
+{
+  "version": "synthetic-2026.11.22-v2",
+  "asOf": "2026-11-21",
+  "profiles": [
+    {
+      "profileId": "P01",
+      "slug": "etat-duzy-platnik",
+      "version": "synthetic-2026.11.22-v2",
+      "source": "Generator syntetyczny mRodzic v2",
+      "asOf": "2026-11-21",
+      "synthetic": true,
+      "appProfileV1": {
+        "schemaVersion": 1,
+        "me": {
+          "id": "P01-M",
+          "firstName": "Anna",
+          "lastName": "Wiśniewska",
+          "birthDate": "1992-04-17",
+          "pesel": "92041710123",
+          "street": "Słoneczna",
+          "houseNumber": "14",
+          "apartmentNumber": "7",
+          "postalCode": "02-495",
+          "city": "Warszawa",
+          "gender": "female",
+          "employment": "employment_contract",
+          "work": {
+            "employedSince": "2021-03-01",
+            "fte": 1,
+            "employerInsuredCount": 46,
+            "benefitPayer": "employer",
+            "monthlyGross": 7200,
+            "monthlyNet": 5050,
+            "earnings": [
+              {
+                "month": "2025-09",
+                "gross": 7110
+              },
+              {
+                "month": "2025-10",
+                "gross": 7200
+              },
+              {
+                "month": "2025-11",
+                "gross": 7290
+              },
+              {
+                "month": "2025-12",
+                "gross": 7110
+              },
+              {
+                "month": "2026-01",
+                "gross": 7200
+              },
+              {
+                "month": "2026-02",
+                "gross": 7290
+              },
+              {
+                "month": "2026-03",
+                "gross": 7110
+              },
+              {
+                "month": "2026-04",
+                "gross": 7200
+              },
+              {
+                "month": "2026-05",
+                "gross": 7290
+              },
+              {
+                "month": "2026-06",
+                "gross": 7110
+              },
+              {
+                "month": "2026-07",
+                "gross": 7200
+              },
+              {
+                "month": "2026-08",
+                "gross": 7290
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 26,
+              "usedDays": 0
+            },
+            "maternityLeave": {
+              "startDate": "2026-09-03",
+              "endDate": "2027-01-20",
+              "weeks": 20
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "mandatory",
+                "since": "2021-03-01",
+                "titleCode": "0110"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "employment_contract",
+                  "from": "2021-03-01",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 7200,
+              "payer": {
+                "name": "Płatnik fikcyjny P01-M",
+                "nip": "0157642660",
+                "regon": "157642662",
+                "city": "Warszawa",
+                "paysBenefits": true
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        },
+        "children": [
+          {
+            "id": "P01-C1",
+            "name": "Zosia",
+            "pesel": "26290331129",
+            "birthRegistry": {
+              "actNumber": "1312/2026/DEMO",
+              "office": "Urząd Stanu Cywilnego w Warszawa (DEMO)"
+            },
+            "status": "born",
+            "sex": "female",
+            "premature": false,
+            "disability": false,
+            "colorKey": "coral",
+            "birthDate": "2026-09-03",
+            "insured": true
+          }
+        ],
+        "household": {
+          "size": 3,
+          "incomePerPersonNet": 4200,
+          "singleParent": false
+        },
+        "createdAt": "2026-11-21T12:00:00.000Z",
+        "updatedAt": "2026-11-21T12:00:00.000Z",
+        "partner": {
+          "id": "P01-P",
+          "firstName": "Tomasz",
+          "lastName": "Wiśniewski",
+          "birthDate": "1990-02-11",
+          "pesel": "90021110255",
+          "street": "Słoneczna",
+          "houseNumber": "14",
+          "apartmentNumber": "7",
+          "postalCode": "02-495",
+          "city": "Warszawa",
+          "gender": "male",
+          "employment": "self_employed",
+          "work": {
+            "employedSince": "2019-04-01",
+            "fte": 1,
+            "employerInsuredCount": 1,
+            "benefitPayer": "zus",
+            "monthlyGross": 9500,
+            "monthlyNet": 7550,
+            "earnings": [
+              {
+                "month": "2025-12",
+                "gross": 9500
+              },
+              {
+                "month": "2026-01",
+                "gross": 9500
+              },
+              {
+                "month": "2026-02",
+                "gross": 9500
+              },
+              {
+                "month": "2026-03",
+                "gross": 9500
+              },
+              {
+                "month": "2026-04",
+                "gross": 9500
+              },
+              {
+                "month": "2026-05",
+                "gross": 9500
+              },
+              {
+                "month": "2026-06",
+                "gross": 9500
+              },
+              {
+                "month": "2026-07",
+                "gross": 9500
+              },
+              {
+                "month": "2026-08",
+                "gross": 9500
+              },
+              {
+                "month": "2026-09",
+                "gross": 9500
+              },
+              {
+                "month": "2026-10",
+                "gross": 9500
+              },
+              {
+                "month": "2026-11",
+                "gross": 9500
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 0,
+              "usedDays": 0
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "voluntary",
+                "since": "2019-04-01",
+                "titleCode": "0510"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "self_employed",
+                  "from": "2019-04-01",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 9500,
+              "payer": {
+                "name": "Płatnik fikcyjny P01-P",
+                "nip": "0157642708",
+                "regon": "157642691",
+                "city": "Warszawa",
+                "paysBenefits": false
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        }
+      },
+      "ezla": [],
+      "hospitalizations": [],
+      "placement": null,
+      "zaZyciem": null,
+      "civilRegistry": [
+        {
+          "childId": "P01-C1",
+          "birthDate": "2026-09-03",
+          "office": "Urząd Stanu Cywilnego w Warszawa (DEMO)",
+          "recordId": "1312/2026/DEMO",
+          "source": "Generator syntetyczny mRodzic v2",
+          "asOf": "2026-11-21",
+          "synthetic": true
+        }
+      ],
+      "postInsuranceReason": null
+    },
+    {
+      "profileId": "P02",
+      "slug": "jdg-zadluzenie",
+      "version": "synthetic-2026.11.22-v2",
+      "source": "Generator syntetyczny mRodzic v2",
+      "asOf": "2026-11-21",
+      "synthetic": true,
+      "appProfileV1": {
+        "schemaVersion": 1,
+        "me": {
+          "id": "P02-M",
+          "firstName": "Marta",
+          "lastName": "Zielińska",
+          "birthDate": "1990-08-09",
+          "pesel": "90080910364",
+          "street": "Lipowa",
+          "houseNumber": "3",
+          "postalCode": "30-702",
+          "city": "Kraków",
+          "gender": "female",
+          "employment": "self_employed",
+          "work": {
+            "employedSince": "2021-02-01",
+            "fte": 1,
+            "employerInsuredCount": 1,
+            "benefitPayer": "zus",
+            "monthlyGross": 5652,
+            "monthlyNet": 4300,
+            "earnings": [
+              {
+                "month": "2025-11",
+                "gross": 5652
+              },
+              {
+                "month": "2025-12",
+                "gross": 5652
+              },
+              {
+                "month": "2026-01",
+                "gross": 5652
+              },
+              {
+                "month": "2026-02",
+                "gross": 5652
+              },
+              {
+                "month": "2026-03",
+                "gross": 5652
+              },
+              {
+                "month": "2026-04",
+                "gross": 5652
+              },
+              {
+                "month": "2026-05",
+                "gross": 5652
+              },
+              {
+                "month": "2026-06",
+                "gross": 5652
+              },
+              {
+                "month": "2026-07",
+                "gross": 5652
+              },
+              {
+                "month": "2026-08",
+                "gross": 5652
+              },
+              {
+                "month": "2026-09",
+                "gross": 5652
+              },
+              {
+                "month": "2026-10",
+                "gross": 5652
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 0,
+              "usedDays": 0
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "voluntary",
+                "since": "2021-02-01",
+                "titleCode": "0570 00 0"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "self_employed",
+                  "from": "2021-02-01",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 5652,
+              "payer": {
+                "name": "Marta Zielińska – działalność gospodarcza (DEMO)",
+                "nip": "6771203454",
+                "regon": "771203453",
+                "city": "Kraków",
+                "paysBenefits": false
+              },
+              "arrears": {
+                "amount": 725,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        },
+        "children": [
+          {
+            "id": "P02-C1",
+            "name": "Dziecko w drodze",
+            "status": "expected",
+            "sex": "unknown",
+            "premature": false,
+            "disability": false,
+            "colorKey": "coral",
+            "dueDate": "2027-02-18"
+          }
+        ],
+        "household": {
+          "size": 2,
+          "incomePerPersonNet": 3500,
+          "singleParent": false
+        },
+        "createdAt": "2026-11-21T12:00:00.000Z",
+        "updatedAt": "2026-11-21T12:00:00.000Z",
+        "partner": {
+          "id": "P02-P",
+          "firstName": "Karol",
+          "lastName": "Zieliński",
+          "birthDate": "1988-12-03",
+          "pesel": "88120310496",
+          "street": "Lipowa",
+          "houseNumber": "3",
+          "postalCode": "30-702",
+          "city": "Kraków",
+          "gender": "male",
+          "employment": "employment_contract",
+          "work": {
+            "employedSince": "2023-01-01",
+            "fte": 1,
+            "employerInsuredCount": 12,
+            "benefitPayer": "zus",
+            "monthlyGross": 5900,
+            "monthlyNet": 4200,
+            "earnings": [
+              {
+                "month": "2025-11",
+                "gross": 5900
+              },
+              {
+                "month": "2025-12",
+                "gross": 5900
+              },
+              {
+                "month": "2026-01",
+                "gross": 5900
+              },
+              {
+                "month": "2026-02",
+                "gross": 5900
+              },
+              {
+                "month": "2026-03",
+                "gross": 5900
+              },
+              {
+                "month": "2026-04",
+                "gross": 5900
+              },
+              {
+                "month": "2026-05",
+                "gross": 5900
+              },
+              {
+                "month": "2026-06",
+                "gross": 5900
+              },
+              {
+                "month": "2026-07",
+                "gross": 5900
+              },
+              {
+                "month": "2026-08",
+                "gross": 5900
+              },
+              {
+                "month": "2026-09",
+                "gross": 5900
+              },
+              {
+                "month": "2026-10",
+                "gross": 5900
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 26,
+              "usedDays": 0
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "mandatory",
+                "since": "2023-01-01",
+                "titleCode": "0110"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "employment_contract",
+                  "from": "2023-01-01",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 5900,
+              "payer": {
+                "name": "Płatnik fikcyjny P02-P",
+                "nip": "0157652316",
+                "regon": "157652301",
+                "city": "Kraków",
+                "paysBenefits": false
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        }
+      },
+      "ezla": [
+        {
+          "id": "P02-EZLA-1",
+          "personId": "P02-M",
+          "from": "2026-11-16",
+          "to": "2026-11-30",
+          "code": "B",
+          "source": "Generator syntetyczny mRodzic v2",
+          "asOf": "2026-11-21",
+          "synthetic": true
+        }
+      ],
+      "hospitalizations": [],
+      "placement": null,
+      "zaZyciem": null,
+      "civilRegistry": [],
+      "postInsuranceReason": null
+    },
+    {
+      "profileId": "P03",
+      "slug": "zlecenie-wyczekiwanie",
+      "version": "synthetic-2026.11.22-v2",
+      "source": "Generator syntetyczny mRodzic v2",
+      "asOf": "2026-11-21",
+      "synthetic": true,
+      "appProfileV1": {
+        "schemaVersion": 1,
+        "me": {
+          "id": "P03-M",
+          "firstName": "Julia",
+          "lastName": "Kamińska",
+          "birthDate": "1997-01-23",
+          "pesel": "97012310508",
+          "street": "Morska",
+          "houseNumber": "21",
+          "apartmentNumber": "12",
+          "postalCode": "80-288",
+          "city": "Gdańsk",
+          "gender": "female",
+          "employment": "civil_contract",
+          "work": {
+            "employedSince": "2026-10-01",
+            "fte": 1,
+            "employerInsuredCount": 34,
+            "benefitPayer": "employer",
+            "monthlyGross": 4200,
+            "monthlyNet": 3290,
+            "earnings": [
+              {
+                "month": "2026-10",
+                "gross": 4200
+              },
+              {
+                "month": "2026-11",
+                "gross": 4200
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 0,
+              "usedDays": 0
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "voluntary",
+                "since": "2026-10-01",
+                "titleCode": "0411 00 0"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "civil_contract",
+                  "from": "2026-10-01",
+                  "fixedTerm": true
+                }
+              ],
+              "contributionBase": 4200,
+              "payer": {
+                "name": "Pomorska Agencja Usługowa sp. z o.o. (DEMO)",
+                "nip": "5842001178",
+                "regon": "842001170",
+                "city": "Gdańsk",
+                "paysBenefits": true
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        },
+        "children": [
+          {
+            "id": "P03-C1",
+            "name": "Dziecko w drodze",
+            "status": "expected",
+            "sex": "unknown",
+            "premature": false,
+            "disability": false,
+            "colorKey": "coral",
+            "dueDate": "2027-04-15"
+          }
+        ],
+        "household": {
+          "size": 1,
+          "incomePerPersonNet": 3100,
+          "singleParent": true
+        },
+        "createdAt": "2026-11-21T12:00:00.000Z",
+        "updatedAt": "2026-11-21T12:00:00.000Z"
+      },
+      "ezla": [
+        {
+          "id": "P03-EZLA-1",
+          "personId": "P03-M",
+          "from": "2026-11-16",
+          "to": "2026-11-30",
+          "code": "B",
+          "source": "Generator syntetyczny mRodzic v2",
+          "asOf": "2026-11-21",
+          "synthetic": true
+        }
+      ],
+      "hospitalizations": [],
+      "placement": null,
+      "zaZyciem": null,
+      "civilRegistry": [],
+      "postInsuranceReason": null
+    },
+    {
+      "profileId": "P04",
+      "slug": "studentka-bez-chorobowego",
+      "version": "synthetic-2026.11.22-v2",
+      "source": "Generator syntetyczny mRodzic v2",
+      "asOf": "2026-11-21",
+      "synthetic": true,
+      "appProfileV1": {
+        "schemaVersion": 1,
+        "me": {
+          "id": "P04-M",
+          "firstName": "Alicja",
+          "lastName": "Lewandowska",
+          "birthDate": "2003-05-30",
+          "pesel": "03253010620",
+          "street": "Ogrodowa",
+          "houseNumber": "8",
+          "apartmentNumber": "4",
+          "postalCode": "60-337",
+          "city": "Poznań",
+          "gender": "female",
+          "employment": "student"
+        },
+        "children": [
+          {
+            "id": "P04-C1",
+            "name": "Dziecko w drodze",
+            "status": "expected",
+            "sex": "unknown",
+            "premature": false,
+            "disability": false,
+            "colorKey": "coral",
+            "dueDate": "2027-03-20"
+          }
+        ],
+        "household": {
+          "size": 2,
+          "incomePerPersonNet": 2400,
+          "singleParent": false
+        },
+        "createdAt": "2026-11-21T12:00:00.000Z",
+        "updatedAt": "2026-11-21T12:00:00.000Z",
+        "partner": {
+          "id": "P04-P",
+          "firstName": "Michał",
+          "lastName": "Nowicki",
+          "birthDate": "2001-09-17",
+          "pesel": "01291710751",
+          "street": "Ogrodowa",
+          "houseNumber": "8",
+          "apartmentNumber": "4",
+          "postalCode": "60-337",
+          "city": "Poznań",
+          "gender": "male",
+          "employment": "employment_contract",
+          "work": {
+            "employedSince": "2024-02-01",
+            "fte": 1,
+            "employerInsuredCount": 13,
+            "benefitPayer": "zus",
+            "monthlyGross": 5300,
+            "monthlyNet": 3800,
+            "earnings": [
+              {
+                "month": "2025-11",
+                "gross": 5200
+              },
+              {
+                "month": "2025-12",
+                "gross": 5300
+              },
+              {
+                "month": "2026-01",
+                "gross": 5400
+              },
+              {
+                "month": "2026-02",
+                "gross": 5200
+              },
+              {
+                "month": "2026-03",
+                "gross": 5300
+              },
+              {
+                "month": "2026-04",
+                "gross": 5400
+              },
+              {
+                "month": "2026-05",
+                "gross": 5200
+              },
+              {
+                "month": "2026-06",
+                "gross": 5300
+              },
+              {
+                "month": "2026-07",
+                "gross": 5400
+              },
+              {
+                "month": "2026-08",
+                "gross": 5200
+              },
+              {
+                "month": "2026-09",
+                "gross": 5300
+              },
+              {
+                "month": "2026-10",
+                "gross": 5400
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 26,
+              "usedDays": 0
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "mandatory",
+                "since": "2024-02-01",
+                "titleCode": "0110"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "employment_contract",
+                  "from": "2024-02-01",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 5300,
+              "payer": {
+                "name": "Płatnik fikcyjny P04-P",
+                "nip": "0157671526",
+                "regon": "157671528",
+                "city": "Poznań",
+                "paysBenefits": false
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        }
+      },
+      "ezla": [],
+      "hospitalizations": [],
+      "placement": null,
+      "zaZyciem": null,
+      "civilRegistry": [],
+      "postInsuranceReason": null
+    },
+    {
+      "profileId": "P05",
+      "slug": "bliznieta-wczesniaki",
+      "version": "synthetic-2026.11.22-v2",
+      "source": "Generator syntetyczny mRodzic v2",
+      "asOf": "2026-11-21",
+      "synthetic": true,
+      "appProfileV1": {
+        "schemaVersion": 1,
+        "me": {
+          "id": "P05-M",
+          "firstName": "Iga",
+          "lastName": "Dąbrowska",
+          "birthDate": "1994-11-02",
+          "pesel": "94110210864",
+          "street": "Kwiatowa",
+          "houseNumber": "27",
+          "apartmentNumber": "15",
+          "postalCode": "50-529",
+          "city": "Wrocław",
+          "gender": "female",
+          "employment": "employment_contract",
+          "work": {
+            "employedSince": "2022-07-01",
+            "fte": 1,
+            "employerInsuredCount": 18,
+            "benefitPayer": "zus",
+            "monthlyGross": 7700,
+            "monthlyNet": 5300,
+            "earnings": [
+              {
+                "month": "2025-10",
+                "gross": 7580
+              },
+              {
+                "month": "2025-11",
+                "gross": 7700
+              },
+              {
+                "month": "2025-12",
+                "gross": 7820
+              },
+              {
+                "month": "2026-01",
+                "gross": 7580
+              },
+              {
+                "month": "2026-02",
+                "gross": 7700
+              },
+              {
+                "month": "2026-03",
+                "gross": 7820
+              },
+              {
+                "month": "2026-04",
+                "gross": 7580
+              },
+              {
+                "month": "2026-05",
+                "gross": 7700
+              },
+              {
+                "month": "2026-06",
+                "gross": 7820
+              },
+              {
+                "month": "2026-07",
+                "gross": 7580
+              },
+              {
+                "month": "2026-08",
+                "gross": 7700
+              },
+              {
+                "month": "2026-09",
+                "gross": 7820
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 26,
+              "usedDays": 0
+            },
+            "maternityLeave": {
+              "startDate": "2026-10-15",
+              "endDate": "2027-05-19",
+              "weeks": 31
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "mandatory",
+                "since": "2022-07-01",
+                "titleCode": "0110"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "employment_contract",
+                  "from": "2022-07-01",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 7700,
+              "payer": {
+                "name": "Płatnik fikcyjny P05-M",
+                "nip": "0157681105",
+                "regon": "157681107",
+                "city": "Wrocław",
+                "paysBenefits": false
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        },
+        "children": [
+          {
+            "id": "P05-C1",
+            "name": "Lena",
+            "pesel": "26301531249",
+            "birthRegistry": {
+              "actNumber": "1313/2026/DEMO",
+              "office": "Urząd Stanu Cywilnego w Wrocław (DEMO)"
+            },
+            "status": "born",
+            "sex": "female",
+            "premature": true,
+            "disability": false,
+            "colorKey": "coral",
+            "birthDate": "2026-10-15",
+            "dueDate": "2026-12-25",
+            "multipleBirthGroupId": "P05-TWINS",
+            "insured": true
+          },
+          {
+            "id": "P05-C2",
+            "name": "Olek",
+            "pesel": "26301531379",
+            "birthRegistry": {
+              "actNumber": "1314/2026/DEMO",
+              "office": "Urząd Stanu Cywilnego w Wrocław (DEMO)"
+            },
+            "status": "born",
+            "sex": "male",
+            "premature": true,
+            "disability": false,
+            "colorKey": "teal",
+            "birthDate": "2026-10-15",
+            "dueDate": "2026-12-25",
+            "multipleBirthGroupId": "P05-TWINS",
+            "insured": true
+          }
+        ],
+        "household": {
+          "size": 4,
+          "incomePerPersonNet": 4500,
+          "singleParent": false
+        },
+        "createdAt": "2026-11-21T12:00:00.000Z",
+        "updatedAt": "2026-11-21T12:00:00.000Z",
+        "partner": {
+          "id": "P05-P",
+          "firstName": "Adam",
+          "lastName": "Dąbrowski",
+          "birthDate": "1992-07-24",
+          "pesel": "92072410995",
+          "street": "Kwiatowa",
+          "houseNumber": "27",
+          "apartmentNumber": "15",
+          "postalCode": "50-529",
+          "city": "Wrocław",
+          "gender": "male",
+          "employment": "employment_contract",
+          "work": {
+            "employedSince": "2020-01-10",
+            "fte": 1,
+            "employerInsuredCount": 37,
+            "benefitPayer": "employer",
+            "monthlyGross": 8500,
+            "monthlyNet": 6000,
+            "earnings": [
+              {
+                "month": "2025-11",
+                "gross": 8500
+              },
+              {
+                "month": "2025-12",
+                "gross": 8500
+              },
+              {
+                "month": "2026-01",
+                "gross": 8500
+              },
+              {
+                "month": "2026-02",
+                "gross": 8500
+              },
+              {
+                "month": "2026-03",
+                "gross": 8500
+              },
+              {
+                "month": "2026-04",
+                "gross": 8500
+              },
+              {
+                "month": "2026-05",
+                "gross": 8500
+              },
+              {
+                "month": "2026-06",
+                "gross": 8500
+              },
+              {
+                "month": "2026-07",
+                "gross": 8500
+              },
+              {
+                "month": "2026-08",
+                "gross": 8500
+              },
+              {
+                "month": "2026-09",
+                "gross": 8500
+              },
+              {
+                "month": "2026-10",
+                "gross": 8500
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 26,
+              "usedDays": 0
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "mandatory",
+                "since": "2020-01-10",
+                "titleCode": "0110"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "employment_contract",
+                  "from": "2020-01-10",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 8500,
+              "payer": {
+                "name": "Płatnik fikcyjny P05-P",
+                "nip": "0157681134",
+                "regon": "157681136",
+                "city": "Wrocław",
+                "paysBenefits": true
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        }
+      },
+      "ezla": [],
+      "hospitalizations": [
+        {
+          "childId": "P05-C1",
+          "from": "2026-10-15",
+          "to": "2026-11-10",
+          "birthWeightGrams": 980,
+          "gestationalWeek": 27,
+          "source": "Generator syntetyczny mRodzic v2",
+          "asOf": "2026-11-21",
+          "synthetic": true
+        },
+        {
+          "childId": "P05-C2",
+          "from": "2026-10-15",
+          "to": "2026-11-14",
+          "birthWeightGrams": 1200,
+          "gestationalWeek": 27,
+          "source": "Generator syntetyczny mRodzic v2",
+          "asOf": "2026-11-21",
+          "synthetic": true
+        }
+      ],
+      "placement": null,
+      "zaZyciem": null,
+      "civilRegistry": [
+        {
+          "childId": "P05-C1",
+          "birthDate": "2026-10-15",
+          "office": "Urząd Stanu Cywilnego w Wrocław (DEMO)",
+          "recordId": "1313/2026/DEMO",
+          "source": "Generator syntetyczny mRodzic v2",
+          "asOf": "2026-11-21",
+          "synthetic": true
+        },
+        {
+          "childId": "P05-C2",
+          "birthDate": "2026-10-15",
+          "office": "Urząd Stanu Cywilnego w Wrocław (DEMO)",
+          "recordId": "1314/2026/DEMO",
+          "source": "Generator syntetyczny mRodzic v2",
+          "asOf": "2026-11-21",
+          "synthetic": true
+        }
+      ],
+      "postInsuranceReason": null
+    },
+    {
+      "profileId": "P06",
+      "slug": "adopcja-wniosek",
+      "version": "synthetic-2026.11.22-v2",
+      "source": "Generator syntetyczny mRodzic v2",
+      "asOf": "2026-11-21",
+      "synthetic": true,
+      "appProfileV1": {
+        "schemaVersion": 1,
+        "me": {
+          "id": "P06-M",
+          "firstName": "Elżbieta",
+          "lastName": "Kozłowska",
+          "birthDate": "1985-03-14",
+          "pesel": "85031411001",
+          "street": "Klonowa",
+          "houseNumber": "5",
+          "postalCode": "90-541",
+          "city": "Łódź",
+          "gender": "female",
+          "employment": "employment_contract",
+          "work": {
+            "employedSince": "2019-04-01",
+            "fte": 1,
+            "employerInsuredCount": 90,
+            "benefitPayer": "employer",
+            "monthlyGross": 8300,
+            "monthlyNet": 5900,
+            "earnings": [
+              {
+                "month": "2025-11",
+                "gross": 8190
+              },
+              {
+                "month": "2025-12",
+                "gross": 8300
+              },
+              {
+                "month": "2026-01",
+                "gross": 8410
+              },
+              {
+                "month": "2026-02",
+                "gross": 8190
+              },
+              {
+                "month": "2026-03",
+                "gross": 8300
+              },
+              {
+                "month": "2026-04",
+                "gross": 8410
+              },
+              {
+                "month": "2026-05",
+                "gross": 8190
+              },
+              {
+                "month": "2026-06",
+                "gross": 8300
+              },
+              {
+                "month": "2026-07",
+                "gross": 8410
+              },
+              {
+                "month": "2026-08",
+                "gross": 8190
+              },
+              {
+                "month": "2026-09",
+                "gross": 8300
+              },
+              {
+                "month": "2026-10",
+                "gross": 8410
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 26,
+              "usedDays": 0
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "mandatory",
+                "since": "2019-04-01",
+                "titleCode": "0110"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "employment_contract",
+                  "from": "2019-04-01",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 8300,
+              "payer": {
+                "name": "Płatnik fikcyjny P06-M",
+                "nip": "0157690713",
+                "regon": "157690715",
+                "city": "Łódź",
+                "paysBenefits": true
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        },
+        "children": [
+          {
+            "id": "P06-C1",
+            "name": "Kuba",
+            "pesel": "20262031497",
+            "birthRegistry": {
+              "actNumber": "1315/2020/DEMO",
+              "office": "Urząd Stanu Cywilnego w Łodzi (DEMO)"
+            },
+            "status": "born",
+            "sex": "male",
+            "premature": false,
+            "disability": false,
+            "colorKey": "coral",
+            "birthDate": "2020-06-20",
+            "insured": true
+          }
+        ],
+        "household": {
+          "size": 3,
+          "incomePerPersonNet": 4700,
+          "singleParent": false
+        },
+        "createdAt": "2026-11-21T12:00:00.000Z",
+        "updatedAt": "2026-11-21T12:00:00.000Z",
+        "partner": {
+          "id": "P06-P",
+          "firstName": "Rafał",
+          "lastName": "Kozłowski",
+          "birthDate": "1983-01-30",
+          "pesel": "83013011135",
+          "street": "Klonowa",
+          "houseNumber": "5",
+          "postalCode": "90-541",
+          "city": "Łódź",
+          "gender": "male",
+          "employment": "employment_contract",
+          "work": {
+            "employedSince": "2021-07-01",
+            "fte": 1,
+            "employerInsuredCount": 8,
+            "benefitPayer": "zus",
+            "monthlyGross": 6200,
+            "monthlyNet": 4450,
+            "earnings": [
+              {
+                "month": "2025-11",
+                "gross": 6200
+              },
+              {
+                "month": "2025-12",
+                "gross": 6200
+              },
+              {
+                "month": "2026-01",
+                "gross": 6200
+              },
+              {
+                "month": "2026-02",
+                "gross": 6200
+              },
+              {
+                "month": "2026-03",
+                "gross": 6200
+              },
+              {
+                "month": "2026-04",
+                "gross": 6200
+              },
+              {
+                "month": "2026-05",
+                "gross": 6200
+              },
+              {
+                "month": "2026-06",
+                "gross": 6200
+              },
+              {
+                "month": "2026-07",
+                "gross": 6200
+              },
+              {
+                "month": "2026-08",
+                "gross": 6200
+              },
+              {
+                "month": "2026-09",
+                "gross": 6200
+              },
+              {
+                "month": "2026-10",
+                "gross": 6200
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 26,
+              "usedDays": 0
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "mandatory",
+                "since": "2021-07-01",
+                "titleCode": "0110"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "employment_contract",
+                  "from": "2021-07-01",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 6200,
+              "payer": {
+                "name": "Płatnik fikcyjny P06-P",
+                "nip": "0157690742",
+                "regon": "157690744",
+                "city": "Łódź",
+                "paysBenefits": false
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        }
+      },
+      "ezla": [],
+      "hospitalizations": [],
+      "placement": {
+        "kind": "adoption",
+        "childId": "P06-C1",
+        "date": "2026-11-01",
+        "courtApplicationDate": "2026-11-01",
+        "schoolDeferral": false,
+        "professional": false,
+        "source": "Generator syntetyczny mRodzic v2",
+        "asOf": "2026-11-21",
+        "synthetic": true
+      },
+      "zaZyciem": null,
+      "civilRegistry": [
+        {
+          "childId": "P06-C1",
+          "birthDate": "2020-06-20",
+          "office": "Urząd Stanu Cywilnego w Łodzi (DEMO)",
+          "recordId": "1315/2020/DEMO",
+          "source": "Generator syntetyczny mRodzic v2",
+          "asOf": "2026-11-21",
+          "synthetic": true
+        }
+      ],
+      "postInsuranceReason": null
+    },
+    {
+      "profileId": "P07",
+      "slug": "rodzina-zastepcza",
+      "version": "synthetic-2026.11.22-v2",
+      "source": "Generator syntetyczny mRodzic v2",
+      "asOf": "2026-11-21",
+      "synthetic": true,
+      "appProfileV1": {
+        "schemaVersion": 1,
+        "me": {
+          "id": "P07-M",
+          "firstName": "Piotr",
+          "lastName": "Jankowski",
+          "birthDate": "1981-07-08",
+          "pesel": "81070811259",
+          "street": "Brzozowa",
+          "houseNumber": "11",
+          "apartmentNumber": "2",
+          "postalCode": "40-158",
+          "city": "Katowice",
+          "gender": "male",
+          "employment": "employment_contract",
+          "work": {
+            "employedSince": "2018-03-01",
+            "fte": 1,
+            "employerInsuredCount": 22,
+            "benefitPayer": "employer",
+            "monthlyGross": 6800,
+            "monthlyNet": 4700,
+            "earnings": [
+              {
+                "month": "2025-11",
+                "gross": 6800
+              },
+              {
+                "month": "2025-12",
+                "gross": 6800
+              },
+              {
+                "month": "2026-01",
+                "gross": 6800
+              },
+              {
+                "month": "2026-02",
+                "gross": 6800
+              },
+              {
+                "month": "2026-03",
+                "gross": 6800
+              },
+              {
+                "month": "2026-04",
+                "gross": 6800
+              },
+              {
+                "month": "2026-05",
+                "gross": 6800
+              },
+              {
+                "month": "2026-06",
+                "gross": 6800
+              },
+              {
+                "month": "2026-07",
+                "gross": 6800
+              },
+              {
+                "month": "2026-08",
+                "gross": 6800
+              },
+              {
+                "month": "2026-09",
+                "gross": 6800
+              },
+              {
+                "month": "2026-10",
+                "gross": 6800
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 26,
+              "usedDays": 0
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "mandatory",
+                "since": "2018-03-01",
+                "titleCode": "0110"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "employment_contract",
+                  "from": "2018-03-01",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 6800,
+              "payer": {
+                "name": "Płatnik fikcyjny P07-M",
+                "nip": "0157700328",
+                "regon": "157700320",
+                "city": "Katowice",
+                "paysBenefits": true
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        },
+        "children": [
+          {
+            "id": "P07-C1",
+            "name": "Filip",
+            "pesel": "17251131517",
+            "birthRegistry": {
+              "actNumber": "1316/2017/DEMO",
+              "office": "Urząd Stanu Cywilnego w Katowice (DEMO)"
+            },
+            "status": "born",
+            "sex": "male",
+            "premature": false,
+            "disability": false,
+            "colorKey": "coral",
+            "birthDate": "2017-05-11",
+            "insured": true
+          }
+        ],
+        "household": {
+          "size": 3,
+          "incomePerPersonNet": 4100,
+          "singleParent": false
+        },
+        "createdAt": "2026-11-21T12:00:00.000Z",
+        "updatedAt": "2026-11-21T12:00:00.000Z",
+        "partner": {
+          "id": "P07-P",
+          "firstName": "Zofia",
+          "lastName": "Jankowska",
+          "birthDate": "1983-05-19",
+          "pesel": "83051911363",
+          "street": "Brzozowa",
+          "houseNumber": "11",
+          "apartmentNumber": "2",
+          "postalCode": "40-158",
+          "city": "Katowice",
+          "gender": "female",
+          "employment": "employment_contract",
+          "work": {
+            "employedSince": "2025-04-01",
+            "fte": 1,
+            "employerInsuredCount": 7,
+            "benefitPayer": "zus",
+            "monthlyGross": 5100,
+            "monthlyNet": 3700,
+            "earnings": [
+              {
+                "month": "2025-11",
+                "gross": 5100
+              },
+              {
+                "month": "2025-12",
+                "gross": 5100
+              },
+              {
+                "month": "2026-01",
+                "gross": 5100
+              },
+              {
+                "month": "2026-02",
+                "gross": 5100
+              },
+              {
+                "month": "2026-03",
+                "gross": 5100
+              },
+              {
+                "month": "2026-04",
+                "gross": 5100
+              },
+              {
+                "month": "2026-05",
+                "gross": 5100
+              },
+              {
+                "month": "2026-06",
+                "gross": 5100
+              },
+              {
+                "month": "2026-07",
+                "gross": 5100
+              },
+              {
+                "month": "2026-08",
+                "gross": 5100
+              },
+              {
+                "month": "2026-09",
+                "gross": 5100
+              },
+              {
+                "month": "2026-10",
+                "gross": 5100
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 26,
+              "usedDays": 0
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "mandatory",
+                "since": "2025-04-01",
+                "titleCode": "0110"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "employment_contract",
+                  "from": "2025-04-01",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 5100,
+              "payer": {
+                "name": "Płatnik fikcyjny P07-P",
+                "nip": "0157700357",
+                "regon": "157700359",
+                "city": "Katowice",
+                "paysBenefits": false
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        }
+      },
+      "ezla": [],
+      "hospitalizations": [],
+      "placement": {
+        "kind": "foster",
+        "childId": "P07-C1",
+        "date": "2026-11-01",
+        "courtApplicationDate": null,
+        "schoolDeferral": true,
+        "professional": false,
+        "source": "Generator syntetyczny mRodzic v2",
+        "asOf": "2026-11-21",
+        "synthetic": true
+      },
+      "zaZyciem": null,
+      "civilRegistry": [
+        {
+          "childId": "P07-C1",
+          "birthDate": "2017-05-11",
+          "office": "Urząd Stanu Cywilnego w Katowice (DEMO)",
+          "recordId": "1316/2017/DEMO",
+          "source": "Generator syntetyczny mRodzic v2",
+          "asOf": "2026-11-21",
+          "synthetic": true
+        }
+      ],
+      "postInsuranceReason": null
+    },
+    {
+      "profileId": "P08",
+      "slug": "martwe-urodzenie",
+      "version": "synthetic-2026.11.22-v2",
+      "source": "Generator syntetyczny mRodzic v2",
+      "asOf": "2026-11-21",
+      "synthetic": true,
+      "appProfileV1": {
+        "schemaVersion": 1,
+        "me": {
+          "id": "P08-M",
+          "firstName": "Monika",
+          "lastName": "Mazur",
+          "birthDate": "1993-02-26",
+          "pesel": "93022611480",
+          "street": "Polna",
+          "houseNumber": "19",
+          "apartmentNumber": "6",
+          "postalCode": "20-412",
+          "city": "Lublin",
+          "gender": "female",
+          "employment": "employment_contract",
+          "work": {
+            "employedSince": "2020-09-01",
+            "fte": 1,
+            "employerInsuredCount": 7,
+            "benefitPayer": "zus",
+            "monthlyGross": 5700,
+            "monthlyNet": 3900,
+            "earnings": [
+              {
+                "month": "2025-11",
+                "gross": 5700
+              },
+              {
+                "month": "2025-12",
+                "gross": 5700
+              },
+              {
+                "month": "2026-01",
+                "gross": 5700
+              },
+              {
+                "month": "2026-02",
+                "gross": 5700
+              },
+              {
+                "month": "2026-03",
+                "gross": 5700
+              },
+              {
+                "month": "2026-04",
+                "gross": 5700
+              },
+              {
+                "month": "2026-05",
+                "gross": 5700
+              },
+              {
+                "month": "2026-06",
+                "gross": 5700
+              },
+              {
+                "month": "2026-07",
+                "gross": 5700
+              },
+              {
+                "month": "2026-08",
+                "gross": 5700
+              },
+              {
+                "month": "2026-09",
+                "gross": 5700
+              },
+              {
+                "month": "2026-10",
+                "gross": 5700
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 26,
+              "usedDays": 0
+            },
+            "maternityLeave": {
+              "startDate": "2026-10-30",
+              "endDate": "2026-12-24",
+              "weeks": 8
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "mandatory",
+                "since": "2020-09-01",
+                "titleCode": "0110"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "employment_contract",
+                  "from": "2020-09-01",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 5700,
+              "payer": {
+                "name": "Płatnik fikcyjny P08-M",
+                "nip": "0157709938",
+                "regon": "157709930",
+                "city": "Lublin",
+                "paysBenefits": false
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        },
+        "children": [
+          {
+            "id": "P08-C1",
+            "name": "Dziecko",
+            "status": "born",
+            "sex": "unknown",
+            "premature": false,
+            "disability": false,
+            "colorKey": "coral",
+            "birthDate": "2026-10-30",
+            "loss": {
+              "kind": "stillbirth",
+              "date": "2026-10-30"
+            }
+          }
+        ],
+        "household": {
+          "size": 1,
+          "incomePerPersonNet": 3900,
+          "singleParent": true
+        },
+        "createdAt": "2026-11-21T12:00:00.000Z",
+        "updatedAt": "2026-11-21T12:00:00.000Z"
+      },
+      "ezla": [],
+      "hospitalizations": [],
+      "placement": null,
+      "zaZyciem": null,
+      "civilRegistry": [
+        {
+          "childId": "P08-C1",
+          "birthDate": "2026-10-30",
+          "office": "Urząd Stanu Cywilnego w Lublin (DEMO)",
+          "recordId": "DEMO-USC-P08-C1",
+          "source": "Generator syntetyczny mRodzic v2",
+          "asOf": "2026-11-21",
+          "synthetic": true
+        }
+      ],
+      "postInsuranceReason": null
+    },
+    {
+      "profileId": "P09",
+      "slug": "likwidacja-pracodawcy",
+      "version": "synthetic-2026.11.22-v2",
+      "source": "Generator syntetyczny mRodzic v2",
+      "asOf": "2026-11-21",
+      "synthetic": true,
+      "appProfileV1": {
+        "schemaVersion": 1,
+        "me": {
+          "id": "P09-M",
+          "firstName": "Weronika",
+          "lastName": "Krawczyk",
+          "birthDate": "1996-10-11",
+          "pesel": "96101111501",
+          "street": "Wiśniowa",
+          "houseNumber": "2",
+          "apartmentNumber": "9",
+          "postalCode": "70-781",
+          "city": "Szczecin",
+          "gender": "female",
+          "employment": "unemployed",
+          "work": {
+            "employedSince": "2022-03-01",
+            "fte": 1,
+            "employerInsuredCount": 15,
+            "benefitPayer": "zus",
+            "monthlyGross": 5200,
+            "monthlyNet": 3790,
+            "earnings": [
+              {
+                "month": "2025-11",
+                "gross": 5200
+              },
+              {
+                "month": "2025-12",
+                "gross": 5200
+              },
+              {
+                "month": "2026-01",
+                "gross": 5200
+              },
+              {
+                "month": "2026-02",
+                "gross": 5200
+              },
+              {
+                "month": "2026-03",
+                "gross": 5200
+              },
+              {
+                "month": "2026-04",
+                "gross": 5200
+              },
+              {
+                "month": "2026-05",
+                "gross": 5200
+              },
+              {
+                "month": "2026-06",
+                "gross": 5200
+              },
+              {
+                "month": "2026-07",
+                "gross": 5200
+              },
+              {
+                "month": "2026-08",
+                "gross": 5200
+              },
+              {
+                "month": "2026-09",
+                "gross": 5200
+              },
+              {
+                "month": "2026-10",
+                "gross": 5200
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 26,
+              "usedDays": 26
+            },
+            "zus": {
+              "sickness": {
+                "insured": false,
+                "kind": "mandatory",
+                "since": "2022-03-01",
+                "until": "2026-10-31",
+                "endReason": "liquidation",
+                "titleCode": "0110 00 0"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "employment_contract",
+                  "from": "2022-03-01",
+                  "to": "2026-10-31",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 5200,
+              "payer": {
+                "name": "Zachodniopomorska Hurtownia sp. z o.o. w likwidacji (DEMO)",
+                "nip": "8513004421",
+                "regon": "513004423",
+                "city": "Szczecin",
+                "paysBenefits": false
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        },
+        "children": [
+          {
+            "id": "P09-C1",
+            "name": "Dziecko w drodze",
+            "status": "expected",
+            "sex": "unknown",
+            "premature": false,
+            "disability": false,
+            "colorKey": "coral",
+            "dueDate": "2027-01-10"
+          }
+        ],
+        "household": {
+          "size": 1,
+          "incomePerPersonNet": 2600,
+          "singleParent": true
+        },
+        "createdAt": "2026-11-21T12:00:00.000Z",
+        "updatedAt": "2026-11-21T12:00:00.000Z"
+      },
+      "ezla": [],
+      "hospitalizations": [],
+      "placement": null,
+      "zaZyciem": null,
+      "civilRegistry": [],
+      "postInsuranceReason": "liquidation"
+    },
+    {
+      "profileId": "P10",
+      "slug": "za-zyciem-praca",
+      "version": "synthetic-2026.11.22-v2",
+      "source": "Generator syntetyczny mRodzic v2",
+      "asOf": "2026-11-21",
+      "synthetic": true,
+      "appProfileV1": {
+        "schemaVersion": 1,
+        "me": {
+          "id": "P10-M",
+          "firstName": "Natalia",
+          "lastName": "Piotrowska",
+          "birthDate": "1991-06-05",
+          "pesel": "91060511621",
+          "street": "Leśna",
+          "houseNumber": "33",
+          "postalCode": "35-318",
+          "city": "Rzeszów",
+          "gender": "female",
+          "employment": "employment_contract",
+          "work": {
+            "employedSince": "2017-06-01",
+            "fte": 1,
+            "employerInsuredCount": 100,
+            "benefitPayer": "employer",
+            "monthlyGross": 9200,
+            "monthlyNet": 6600,
+            "earnings": [
+              {
+                "month": "2025-05",
+                "gross": 9030
+              },
+              {
+                "month": "2025-06",
+                "gross": 9200
+              },
+              {
+                "month": "2025-07",
+                "gross": 9370
+              },
+              {
+                "month": "2025-08",
+                "gross": 9030
+              },
+              {
+                "month": "2025-09",
+                "gross": 9200
+              },
+              {
+                "month": "2025-10",
+                "gross": 9370
+              },
+              {
+                "month": "2025-11",
+                "gross": 9030
+              },
+              {
+                "month": "2025-12",
+                "gross": 9200
+              },
+              {
+                "month": "2026-01",
+                "gross": 9370
+              },
+              {
+                "month": "2026-02",
+                "gross": 9030
+              },
+              {
+                "month": "2026-03",
+                "gross": 9200
+              },
+              {
+                "month": "2026-04",
+                "gross": 9370
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 26,
+              "usedDays": 0
+            },
+            "maternityLeave": {
+              "startDate": "2026-05-19",
+              "endDate": "2026-10-05",
+              "weeks": 20
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "mandatory",
+                "since": "2017-06-01",
+                "titleCode": "0110"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "employment_contract",
+                  "from": "2017-06-01",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 9200,
+              "payer": {
+                "name": "Płatnik fikcyjny P10-M",
+                "nip": "0157930962",
+                "regon": "157930964",
+                "city": "Rzeszów",
+                "paysBenefits": true
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        },
+        "children": [
+          {
+            "id": "P10-C1",
+            "name": "Emilka",
+            "pesel": "26251931621",
+            "birthRegistry": {
+              "actNumber": "1317/2026/DEMO",
+              "office": "Urząd Stanu Cywilnego w Rzeszów (DEMO)"
+            },
+            "status": "born",
+            "sex": "female",
+            "premature": false,
+            "disability": true,
+            "colorKey": "coral",
+            "birthDate": "2026-05-19",
+            "insured": true
+          }
+        ],
+        "household": {
+          "size": 3,
+          "incomePerPersonNet": 5100,
+          "singleParent": false
+        },
+        "createdAt": "2026-11-21T12:00:00.000Z",
+        "updatedAt": "2026-11-21T12:00:00.000Z",
+        "partner": {
+          "id": "P10-P",
+          "firstName": "Dawid",
+          "lastName": "Piotrowski",
+          "birthDate": "1989-03-08",
+          "pesel": "89030811756",
+          "street": "Leśna",
+          "houseNumber": "33",
+          "postalCode": "35-318",
+          "city": "Rzeszów",
+          "gender": "male",
+          "employment": "employment_contract",
+          "work": {
+            "employedSince": "2023-01-01",
+            "fte": 1,
+            "employerInsuredCount": 9,
+            "benefitPayer": "zus",
+            "monthlyGross": 6600,
+            "monthlyNet": 4700,
+            "earnings": [
+              {
+                "month": "2025-11",
+                "gross": 6600
+              },
+              {
+                "month": "2025-12",
+                "gross": 6600
+              },
+              {
+                "month": "2026-01",
+                "gross": 6600
+              },
+              {
+                "month": "2026-02",
+                "gross": 6600
+              },
+              {
+                "month": "2026-03",
+                "gross": 6600
+              },
+              {
+                "month": "2026-04",
+                "gross": 6600
+              },
+              {
+                "month": "2026-05",
+                "gross": 6600
+              },
+              {
+                "month": "2026-06",
+                "gross": 6600
+              },
+              {
+                "month": "2026-07",
+                "gross": 6600
+              },
+              {
+                "month": "2026-08",
+                "gross": 6600
+              },
+              {
+                "month": "2026-09",
+                "gross": 6600
+              },
+              {
+                "month": "2026-10",
+                "gross": 6600
+              }
+            ],
+            "vacation": {
+              "entitlementDays": 26,
+              "usedDays": 0
+            },
+            "zus": {
+              "sickness": {
+                "insured": true,
+                "kind": "mandatory",
+                "since": "2023-01-01",
+                "titleCode": "0110"
+              },
+              "gaps": [],
+              "periods": [
+                {
+                  "kind": "employment_contract",
+                  "from": "2023-01-01",
+                  "fixedTerm": false
+                }
+              ],
+              "contributionBase": 6600,
+              "payer": {
+                "name": "Płatnik fikcyjny P10-P",
+                "nip": "0157930991",
+                "regon": "157930993",
+                "city": "Rzeszów",
+                "paysBenefits": false
+              },
+              "arrears": {
+                "amount": 0,
+                "checkedAt": "2026-11-21"
+              },
+              "benefitHistory": [],
+              "leaveHistory": []
+            }
+          }
+        }
+      },
+      "ezla": [],
+      "hospitalizations": [],
+      "placement": null,
+      "zaZyciem": {
+        "childId": "P10-C1",
+        "issuedOn": "2026-11-01",
+        "source": "Generator syntetyczny mRodzic v2",
+        "asOf": "2026-11-21",
+        "synthetic": true
+      },
+      "civilRegistry": [
+        {
+          "childId": "P10-C1",
+          "birthDate": "2026-05-19",
+          "office": "Urząd Stanu Cywilnego w Rzeszów (DEMO)",
+          "recordId": "1317/2026/DEMO",
+          "source": "Generator syntetyczny mRodzic v2",
+          "asOf": "2026-11-21",
+          "synthetic": true
+        }
+      ],
+      "postInsuranceReason": null
+    }
+  ]
+}
