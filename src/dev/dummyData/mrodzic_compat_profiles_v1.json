@@ -1107,7 +1107,10 @@
           "disability": false,
           "colorKey": "coral",
           "birthDate": "2026-10-30",
-          "insured": true
+          "loss": {
+            "kind": "stillbirth",
+            "date": "2026-10-30"
+          }
         }
       ],
       "household": {

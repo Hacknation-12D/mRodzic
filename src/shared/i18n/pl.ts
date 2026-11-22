@@ -84,6 +84,16 @@ export const pl = {
   header: {
     home: 'Strona główna',
   },
+  loss: {
+    label: (kind: 'stillbirth' | 'death', date: string) => (kind === 'stillbirth' ? `Martwe urodzenie · ${date}` : `Zmarło ${date}`),
+    title: 'Bardzo nam przykro z powodu Twojej straty',
+    body: 'Nie pokazujemy już dokumentów, terminów i porad dotyczących opieki nad dzieckiem.',
+    rightsTitle: 'Co nadal Ci przysługuje',
+    maternity: 'Urlop i zasiłek macierzyński – 8 tygodni po porodzie, a przy zgonie dziecka nie krócej niż 7 dni od dnia zgonu.',
+    funeral: 'Zasiłek pogrzebowy z ZUS – również po martwym urodzeniu (potrzebny akt urodzenia z adnotacją).',
+    openMaternity: 'Urlop i zasiłek macierzyński',
+    support: 'Jeśli potrzebujesz rozmowy, poproś w szpitalu o kontakt z psychologiem lub skorzystaj z pomocy organizacji wspierających rodziców po stracie dziecka.',
+  },
   accountMenu: {
     open: 'Menu konta',
     profile: 'Twój profil',

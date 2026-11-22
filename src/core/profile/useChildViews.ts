@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 
+import { pl } from '../../shared/i18n/pl';
+import { isoToPolishDate } from '../../shared/lib/date';
 import { useIsDark } from '../../shared/theme/colors';
 import { getStage } from '../stage/getStage';
 import { stageLabel } from '../stage/stageLabel';
@@ -16,6 +18,8 @@ export type ChildView = {
   stage: Stage;
   stageLabel: string;
   insured?: boolean;
+  /** Martwe urodzenie / zgon – zamiast wieku pokazujemy datę. */
+  loss?: Child['loss'];
 };
 
 export function toChildViews(profile: Profile | null, date: Date, isDark: boolean): ChildView[] {
@@ -29,8 +33,9 @@ export function toChildViews(profile: Profile | null, date: Date, isDark: boolea
       colorKey: c.colorKey,
       color: getChildColor(c.colorKey, isDark),
       stage,
-      stageLabel: stageLabel(stage),
-      insured: c.insured,
+      stageLabel: c.loss ? pl.loss.label(c.loss.kind, isoToPolishDate(c.loss.date)) : stageLabel(stage),
+      insured: c.loss ? undefined : c.insured,
+      loss: c.loss,
     };
   });
 }

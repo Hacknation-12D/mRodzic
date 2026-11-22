@@ -39,6 +39,7 @@ export function buildFacts(profile: Profile, child: Child | null, today: Date): 
     set(facts, 'child.premature', child.status === 'born' ? (child.premature ?? false) : child.premature);
     set(facts, 'child.disability', child.disability);
     set(facts, 'child.isMultipleBirth', isMultipleBirth(profile, child));
+    set(facts, 'child.loss', Boolean(child.loss));
   }
 
   set(facts, 'me.gender', profile.me.gender);

@@ -117,7 +117,7 @@ export function CalculatorScreen() {
             <>
               <EligibilityCard eligibility={result.eligibility} />
               <SummaryStats result={result} />
-              <VariantCard result={result} upfront={input.upfrontApplication} onChange={(upfrontApplication) => patch({ upfrontApplication })} />
+              {result.loss ? null : <VariantCard result={result} upfront={input.upfrontApplication} onChange={(upfrontApplication) => patch({ upfrontApplication })} />}
               <TimelineCard result={result} />
               <BreakdownCard result={result} />
               <WhereCard result={result} upfront={input.upfrontApplication} />

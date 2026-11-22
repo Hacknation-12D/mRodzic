@@ -45,6 +45,7 @@ export function scenarioDefaultsFromProfile(profile: Profile | null, today: Date
     upfrontApplication: true,
     benefitPayer: work?.benefitPayer,
     arrearsAmount: work?.zus?.arrears.amount,
+    loss: child?.loss,
   };
 }
 

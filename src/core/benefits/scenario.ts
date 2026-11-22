@@ -49,6 +49,8 @@ export type BenefitScenarioInput = {
   partnerParentalWeeks: number;
   /** Wniosek o cały urlop w ciągu 21 dni od porodu (81,5%) zamiast osobnych wniosków (100% + 70%). */
   upfrontApplication: boolean;
+  /** Utrata dziecka (martwe urodzenie / zgon) – skraca urlop macierzyński, wyłącza rodzicielski i ojcowski. */
+  loss?: { kind: 'stillbirth' | 'death'; date: string };
   /** Kto wypłaca zasiłek (z PUE/eZUS); brak = nie wiemy. */
   benefitPayer?: BenefitPayer;
   /** Zaległość w składkach (zł) – istotna przy dobrowolnym ubezpieczeniu. */
@@ -91,6 +93,8 @@ export type BenefitScenarioResult = {
   amounts?: MaternityBenefitAmountResult;
   payer: BenefitPayer | 'unknown';
   notes: string[];
+  /** Obliczenia po stracie dziecka (UI pomija wybór wariantu wniosku). */
+  loss: boolean;
 };
 
 const VOLUNTARY: Employment[] = ['self_employed', 'civil_contract'];
@@ -179,19 +183,34 @@ export function calculateBenefitScenario(input: BenefitScenarioInput): BenefitSc
     if (input.kind === 'pregnancy') {
       notes.push('Urlop policzono od przewidywanego terminu porodu. Możesz go zacząć do 6 tygodni wcześniej – wtedy wcześniej się skończy.');
     }
+    if (input.loss) {
+      // Art. 180 § 4–5 KP: martwe urodzenie lub zgon przed 8. tygodniem życia → 8 tygodni po porodzie, nie krócej niż
+      // 7 dni od zgonu; zgon po 8. tygodniu → urlop trwa jeszcze 7 dni od zgonu. Nigdy dłużej niż zwykły wymiar.
+      const birth = parseIsoDate(input.eventDate, 'eventDate');
+      const death = parseIsoDate(input.loss.date, 'loss.date');
+      if (death < birth) throw new BenefitInputError('Data zgonu nie może być wcześniejsza niż data porodu.', 'loss.date');
+      const sevenDaysAfterDeath = addDays(death, 7);
+      const eightWeeksEnd = endOfPeriod(birth, 8 * 7);
+      const lossEnd = death < addDays(birth, 8 * 7) && sevenDaysAfterDeath < eightWeeksEnd ? eightWeeksEnd : sevenDaysAfterDeath;
+      const regularEnd = parseIsoDate(first.end, 'eventDate');
+      const end = lossEnd < regularEnd ? lossEnd : regularEnd;
+      first = { ...first, end: toIsoDate(end), next: toIsoDate(addDays(end, 1)), weeks: roundMoney(daysInclusive(birth, end) / 7) };
+      notes.push('Po stracie dziecka urlop macierzyński trwa 8 tygodni po porodzie (nie krócej niż 7 dni od dnia zgonu). Urlop rodzicielski i ojcowski nie przysługują.');
+    }
   }
+  const lossCase = Boolean(input.loss) && !adopting;
 
-  // 2. Urlop rodzicielski: 9 tygodni należy wyłącznie do drugiego rodzica.
+  // 2. Urlop rodzicielski: 9 tygodni należy wyłącznie do drugiego rodzica. Po stracie dziecka – brak.
   const totalParental = calculateParentalLeave({ childrenCount: input.childrenCount, zaZyciem: input.zaZyciem }).totalWeeks;
   const maxOne = totalParental - PARENTAL_NON_TRANSFERABLE_WEEKS;
-  const partnerWeeks = Math.max(0, Math.min(Math.round(input.partnerParentalWeeks), maxOne));
-  const myWeeks = totalParental - Math.max(PARENTAL_NON_TRANSFERABLE_WEEKS, partnerWeeks);
+  const partnerWeeks = lossCase ? 0 : Math.max(0, Math.min(Math.round(input.partnerParentalWeeks), maxOne));
+  const myWeeks = lossCase ? 0 : totalParental - Math.max(PARENTAL_NON_TRANSFERABLE_WEEKS, partnerWeeks);
   const parental = calculateParentalLeave({
     childrenCount: input.childrenCount,
     zaZyciem: input.zaZyciem,
     plan: { firstParentWeeks: myWeeks, secondParentWeeks: partnerWeeks },
   });
-  const unusedParentalWeeks = parental.plan?.unusedWeeks ?? 0;
+  const unusedParentalWeeks = lossCase ? 0 : (parental.plan?.unusedWeeks ?? 0);
   if (unusedParentalWeeks > 0) {
     notes.push(`${unusedParentalWeeks} tyg. urlopu rodzicielskiego przepada, jeśli drugi rodzic ich nie wykorzysta (część nieprzenoszalna).`);
   }
@@ -227,7 +246,7 @@ export function calculateBenefitScenario(input: BenefitScenarioInput): BenefitSc
 
   // 3. Urlop ojcowski drugiego rodzica (2 tyg. do ukończenia przez dziecko 12 miesięcy).
   const paternity =
-    input.kind === 'birth' || input.kind === 'pregnancy'
+    !lossCase && (input.kind === 'birth' || input.kind === 'pregnancy')
       ? (() => {
           const r = calculatePaternityLeave({ mode: 'birth', childBirthDate: input.eventDate });
           return { weeks: r.totalWeeks, deadline: r.deadline };
@@ -243,6 +262,7 @@ export function calculateBenefitScenario(input: BenefitScenarioInput): BenefitSc
     paternity,
     payer: payerFor(input),
     notes,
+    loss: lossCase,
   };
 
   // 4. Kwoty – wyłącznie przy ustalonym prawie (zadanie ZUS: nie pokazujemy kwoty, gdy prawo nie przysługuje).
@@ -264,7 +284,8 @@ export function calculateBenefitScenario(input: BenefitScenarioInput): BenefitSc
         { leave: first.kind, weeks: first.weeks },
         ...(myParentalWeeks > 0 ? [{ leave: 'parental' as const, weeks: myParentalWeeks }] : []),
       ],
-      upfrontApplication: input.upfrontApplication,
+      // Po stracie dziecka nie ma wniosku o urlop rodzicielski, więc wariant 81,5% nie ma zastosowania.
+      upfrontApplication: lossCase ? false : input.upfrontApplication,
     });
     notes.push(...base.notes);
   }

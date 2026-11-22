@@ -110,6 +110,11 @@ const ChildBaseSchema = z.object({
   birthRegistry: z.object({ actNumber: z.string().min(1), office: z.string().min(1) }).optional(),
   /** Nadchodzące szczepienia (z rejestru). */
   vaccinations: z.array(z.object({ name: z.string().min(1), dueDate: IsoDateSchema })).optional(),
+  /**
+   * Utrata dziecka: martwe urodzenie albo zgon (z rejestru USC). Dokumenty, wskazówki i terminy
+   * dotyczące wychowania dziecka przestają się pokazywać; zostaje urlop macierzyński (art. 180 § 4–5 KP).
+   */
+  loss: z.object({ kind: z.enum(['stillbirth', 'death']), date: IsoDateSchema }).optional(),
   colorKey: ChildColorKeySchema,
 });
 
@@ -120,6 +125,9 @@ export const ChildSchema = ChildBaseSchema.superRefine((child, ctx) => {
   }
   if (child.status === 'born' && !child.birthDate) {
     ctx.addIssue({ code: 'custom', path: ['birthDate'], message: 'Urodzone dziecko wymaga birthDate' });
+  }
+  if (child.loss && child.status !== 'born') {
+    ctx.addIssue({ code: 'custom', path: ['loss'], message: 'Utrata dotyczy dziecka urodzonego (także martwo urodzonego)' });
   }
 });
 

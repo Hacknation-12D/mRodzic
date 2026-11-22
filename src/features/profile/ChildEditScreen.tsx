@@ -19,7 +19,7 @@ import type { Child } from '@/core/types';
 import { pl } from '@/shared/i18n/pl';
 import { isoToPolishDate } from '@/shared/lib/date';
 import { useIsDark } from '@/shared/theme';
-import { AppText, Badge, Button, ChildDot, EmptyState, Screen, ToggleRow } from '@/shared/ui';
+import { AppText, Badge, Button, Card, ChildDot, EmptyState, Screen, ToggleRow } from '@/shared/ui';
 
 
 import { MarkBornSheet } from './components/MarkBornSheet';
@@ -28,7 +28,49 @@ export function ChildEditScreen() {
   const { childId } = useLocalSearchParams<{ childId: string }>();
   const child = useProfileStore((s) => s.profile?.children.find((c) => c.id === childId));
   if (!child) return <EmptyState title={pl.common.notFoundTitle} />;
+  if (child.loss) return <LossDetails child={child} loss={child.loss} />;
   return <ChildDetails key={`${child.id}:${child.status}`} child={child} />;
+}
+
+/** Dziecko utracone (martwe urodzenie / zgon): spokojny widok bez wieku, szczepień i dokumentów o opiece nad dzieckiem. */
+function LossDetails({ child, loss }: { child: Child; loss: NonNullable<Child['loss']> }) {
+  const isDark = useIsDark();
+  const t = pl.loss;
+  return (
+    <Screen>
+      <View className="flex-row items-center gap-3">
+        <ChildDot name={child.name} color={getChildColor(child.colorKey, isDark)} size={32} />
+        <View className="flex-1">
+          <AppText variant="title">{child.name}</AppText>
+          <AppText variant="small" tone="muted">
+            {t.label(loss.kind, isoToPolishDate(loss.date))}
+          </AppText>
+        </View>
+      </View>
+      <Card className="gap-3 p-5">
+        <AppText variant="subheading" accessibilityRole="header">
+          {t.title}
+        </AppText>
+        <AppText tone="muted">{t.body}</AppText>
+      </Card>
+      <Card className="gap-3 p-5">
+        <AppText variant="subheading" accessibilityRole="header">
+          {t.rightsTitle}
+        </AppText>
+        <AppText>• {t.maternity}</AppText>
+        <AppText>• {t.funeral}</AppText>
+        <Button
+          label={pl.loss.openMaternity}
+          variant="secondary"
+          icon="document-text-outline"
+          onPress={() => goToDocument('urlop-macierzynski', child.id)}
+        />
+      </Card>
+      <Card tone="tinted" elevation={0} className="p-5">
+        <AppText>{t.support}</AppText>
+      </Card>
+    </Screen>
+  );
 }
 
 function insuranceText(insured: Child['insured']) {
