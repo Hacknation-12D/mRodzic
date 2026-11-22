@@ -52,9 +52,9 @@ export function StepHousehold() {
   };
 
   return (
-    <Screen keyboard contentClassName="grow justify-center">
-      <View className="w-full gap-4 self-center md:max-w-xl">
-        <StepProgress step={total} total={total} title={pl.onboarding.household.title} intro={pl.onboarding.household.intro} center />
+    <Screen keyboard>
+      <Card className="w-full gap-5 self-center p-5 md:max-w-4xl md:p-6">
+        <StepProgress step={total} total={total} title={pl.onboarding.household.title} intro={pl.onboarding.household.intro} />
         <TextField
           label={pl.onboarding.household.city}
           optional
@@ -109,7 +109,7 @@ export function StepHousehold() {
           {pl.onboarding.household.privacy}
         </AppText>
         <Button label={pl.onboarding.household.start} icon="checkmark" onPress={finish} />
-      </View>
+      </Card>
     </Screen>
   );
 }

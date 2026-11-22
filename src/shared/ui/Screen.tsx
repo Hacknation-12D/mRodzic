@@ -19,6 +19,9 @@ type Props = {
   keyboard?: boolean;
 };
 
+/** Szerokość treści na wszystkich ekranach (jak strona główna i onboarding): pełna na telefonie, wyśrodkowana na komputerze. */
+export const PAGE_WIDTH = 'w-full self-center md:max-w-4xl';
+
 /** Tło strony = base-200, karty = base-100 (jak w motywach DaisyUI). */
 export function Screen({
   children,
@@ -31,13 +34,13 @@ export function Screen({
   keyboard = false,
 }: Props) {
   const body = scroll ? (
-    <ScrollView
-      contentContainerClassName={cn('gap-4 pb-8', padded && 'p-4', contentClassName)}
-      keyboardShouldPersistTaps="handled">
-      {children}
+    <ScrollView contentContainerClassName={cn('grow pb-8', padded && 'p-4', contentClassName)} keyboardShouldPersistTaps="handled">
+      <View className={cn(PAGE_WIDTH, 'gap-4')}>{children}</View>
     </ScrollView>
   ) : (
-    <View className={cn('flex-1', padded && 'p-4', contentClassName)}>{children}</View>
+    <View className={cn('flex-1', padded && 'p-4', contentClassName)}>
+      <View className={cn(PAGE_WIDTH, 'flex-1')}>{children}</View>
+    </View>
   );
 
   return (
