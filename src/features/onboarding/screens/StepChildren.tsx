@@ -5,7 +5,7 @@ import { useToday } from '@/core/clock/useToday';
 import { goToOnboardingStep } from '@/core/navigation/routes';
 import { childFormErrors, hasErrors } from '@/core/profile/childValidation';
 import { pl } from '@/shared/i18n/pl';
-import { AppText, Button, Screen, Stepper } from '@/shared/ui';
+import { AppText, Button, Card, Screen, Stepper } from '@/shared/ui';
 
 import { ChildForm } from '../components/ChildForm';
 import { StepProgress } from '../components/StepProgress';
@@ -38,42 +38,44 @@ export function StepChildren() {
 
   return (
     <Screen keyboard>
-      <StepProgress step={2} total={total} title={pl.onboarding.children.title} />
-      <Stepper
-        label={pl.onboarding.me.childrenCount}
-        hint={pl.onboarding.me.childrenCountHint}
-        value={childrenCount}
-        min={1}
-        max={MAX_CHILDREN}
-        onChange={setChildrenCount}
-      />
-      <AppText variant="heading" accessibilityRole="header">
-        {pl.onboarding.children.childOf(index + 1, children.length)}
-      </AppText>
-      <ChildForm
-        key={child.key}
-        index={index}
-        value={child}
-        onChange={(patch) => updateChild(index, patch)}
-        onAddTwin={() => addTwin(index)}
-        errors={showErrors ? errors : undefined}
-        canAddTwin={children.length < MAX_CHILDREN}
-      />
-      <View className="mt-3 flex-row gap-3">
-        {index > 0 ? (
-          <Button
-            label={pl.onboarding.children.prevChild}
-            variant="ghost"
-            icon="arrow-back"
-            onPress={() => {
-              setShowErrors(false);
-              setIndex(index - 1);
-            }}
-            className="flex-1"
-          />
-        ) : null}
-        <Button label={isLast ? pl.common.next : pl.onboarding.children.nextChild} icon="arrow-forward" onPress={next} className="flex-1" />
-      </View>
+      <Card className="w-full gap-5 self-center p-5 md:max-w-4xl md:p-6">
+        <StepProgress step={2} total={total} title={pl.onboarding.children.title} />
+        <Stepper
+          label={pl.onboarding.me.childrenCount}
+          hint={pl.onboarding.me.childrenCountHint}
+          value={childrenCount}
+          min={1}
+          max={MAX_CHILDREN}
+          onChange={setChildrenCount}
+        />
+        <AppText variant="heading" accessibilityRole="header">
+          {pl.onboarding.children.childOf(index + 1, children.length)}
+        </AppText>
+        <ChildForm
+          key={child.key}
+          index={index}
+          value={child}
+          onChange={(patch) => updateChild(index, patch)}
+          onAddTwin={() => addTwin(index)}
+          errors={showErrors ? errors : undefined}
+          canAddTwin={children.length < MAX_CHILDREN}
+        />
+        <View className="mt-3 flex-row gap-3">
+          {index > 0 ? (
+            <Button
+              label={pl.onboarding.children.prevChild}
+              variant="ghost"
+              icon="arrow-back"
+              onPress={() => {
+                setShowErrors(false);
+                setIndex(index - 1);
+              }}
+              className="flex-1"
+            />
+          ) : null}
+          <Button label={isLast ? pl.common.next : pl.onboarding.children.nextChild} icon="arrow-forward" onPress={next} className="flex-1" />
+        </View>
+      </Card>
     </Screen>
   );
 }

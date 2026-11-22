@@ -7,7 +7,7 @@ import { goToOnboardingStep } from '@/core/navigation/routes';
 import { pl } from '@/shared/i18n/pl';
 import { cn } from '@/shared/lib/cn';
 import { useThemeColors } from '@/shared/theme';
-import { AppText, Button, Screen } from '@/shared/ui';
+import { AppText, Button, Card, Screen } from '@/shared/ui';
 
 import { isParentValid, ParentForm } from '../components/ParentForm';
 import { StepProgress } from '../components/StepProgress';
@@ -71,9 +71,9 @@ export function StepPartner() {
   };
 
   return (
-    <Screen keyboard contentClassName="grow justify-center">
-      <View className="w-full gap-5 self-center md:max-w-xl">
-        <StepProgress step={1} total={total} title={t.title} intro={t.intro} center />
+    <Screen keyboard>
+      <Card className="w-full gap-5 self-center p-5 md:max-w-4xl md:p-6">
+        <StepProgress step={1} total={total} title={t.title} intro={t.intro} />
         <View className="flex-row gap-3" accessibilityRole="radiogroup">
           <Choice label={t.yes} hint={t.yesHint} icon="people-outline" selected={enabled} onPress={() => setEnabled(true)} />
           <Choice label={t.no} hint={t.noHint} icon="person-outline" selected={false} onPress={chooseNo} />
@@ -84,7 +84,7 @@ export function StepPartner() {
             <Button label={pl.common.next} icon="arrow-forward" onPress={next} />
           </>
         ) : null}
-      </View>
+      </Card>
     </Screen>
   );
 }

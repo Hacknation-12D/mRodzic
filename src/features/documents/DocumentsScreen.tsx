@@ -24,28 +24,31 @@ export function DocumentsScreen() {
 
   return (
     <SafeAreaView edges={[]} className="flex-1 bg-base-200">
-      <ChildFilterBar items={children} value={filter} onChange={setFilter} />
-      <View className="px-4 pt-2">
-        <DocumentTabs value={tab} onChange={setTab} counts={counts} />
+      {/* Ta sama szerokość treści co na pozostałych ekranach (Screen → PAGE_WIDTH). */}
+      <View className="w-full flex-1 self-center md:max-w-4xl">
+        <ChildFilterBar items={children} value={filter} onChange={setFilter} />
+        <View className="px-4 pt-2">
+          <DocumentTabs value={tab} onChange={setTab} counts={counts} />
+        </View>
+        {tab === 'upcoming' ? (
+          <DocumentTimeline sections={sections} childById={childById} onChangeStatus={changeStatus} empty={empty} />
+        ) : (
+          <FlatList
+            data={byTab[tab]}
+            keyExtractor={(item) => item.key}
+            contentContainerClassName="gap-3 p-4 pb-8"
+            ListEmptyComponent={empty}
+            renderItem={({ item }) => (
+              <DocumentCard
+                instance={item}
+                child={item.childId ? childById.get(item.childId) : undefined}
+                onOpen={() => goToDocument(item.id, item.childId)}
+                onChangeStatus={(status) => changeStatus(item, status)}
+              />
+            )}
+          />
+        )}
       </View>
-      {tab === 'upcoming' ? (
-        <DocumentTimeline sections={sections} childById={childById} onChangeStatus={changeStatus} empty={empty} />
-      ) : (
-        <FlatList
-          data={byTab[tab]}
-          keyExtractor={(item) => item.key}
-          contentContainerClassName="gap-3 p-4 pb-8"
-          ListEmptyComponent={empty}
-          renderItem={({ item }) => (
-            <DocumentCard
-              instance={item}
-              child={item.childId ? childById.get(item.childId) : undefined}
-              onOpen={() => goToDocument(item.id, item.childId)}
-              onChangeStatus={(status) => changeStatus(item, status)}
-            />
-          )}
-        />
-      )}
     </SafeAreaView>
   );
 }

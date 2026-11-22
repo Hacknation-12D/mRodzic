@@ -196,99 +196,102 @@ export function AssistantScreen() {
 
   return (
     <SafeAreaView edges={[]} className="flex-1 bg-base-200">
-      <KeyboardAvoidingView
-        className="flex-1"
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        keyboardVerticalOffset={100}
-      >
-        <View className="gap-2 px-4 pt-2">
-          <View className="flex-row items-center gap-2">
-            <View className="min-w-0 flex-1">
-              <ChildContextPicker
-                kids={kids}
-                value={validChildId}
-                onChange={setChildId}
-              />
-            </View>
-          </View>
-          {banner}
-        </View>
-
-        <MessageList
-          messages={items}
-          pending={chat.pending}
-          humanButtonId={humanButtonId}
-          onAskHuman={() => setSheetOpen(true)}
-          footer={
-            <View className="gap-2">
-              {chat.error ? (
-                <View className="flex-row items-center gap-2">
-                  <AppText tone="danger" variant="small" className="flex-1">
-                    {chat.error}
-                  </AppText>
-                  {chat.canRetry ? (
-                    <Button
-                      label={pl.common.retry}
-                      variant="secondary"
-                      compact
-                      icon="refresh"
-                      onPress={chat.retry}
-                    />
-                  ) : null}
-                </View>
-              ) : null}
-            </View>
-          }
-        />
-        <Disclaimer />
-        {handoff ? (
-          <View className="px-3 pb-2 pt-1">
-            <Alert tone="info" icon="time-outline">
-              <View className="flex-row items-center gap-3">
-                <AppText variant="small" className="flex-1">
-                  {t.waitingBar(handoff.email)}
-                </AppText>
-                <Button
-                  label={t.backToAi}
-                  variant="secondary"
-                  compact
-                  icon="sparkles-outline"
-                  onPress={() => setHandoff(null)}
+      {/* Ta sama szerokość treści co na pozostałych ekranach (Screen → PAGE_WIDTH). */}
+      <View className="w-full flex-1 self-center md:max-w-4xl">
+        <KeyboardAvoidingView
+          className="flex-1"
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          keyboardVerticalOffset={100}
+        >
+          <View className="gap-2 px-4 pt-2">
+            <View className="flex-row items-center gap-2">
+              <View className="min-w-0 flex-1">
+                <ChildContextPicker
+                  kids={kids}
+                  value={validChildId}
+                  onChange={setChildId}
                 />
               </View>
-            </Alert>
-          </View>
-        ) : chat.pending || !inputFocused || suggestionsHidden ? null : (
-          // Zerowa wysokość + absolutne pozycjonowanie: propozycje nachodzą na wiadomości, więc lista nie skacze przy zmianie ich liczby.
-          <View className="z-10 h-0" style={{ elevation: 10 }}>
-            <View className="absolute inset-x-0 bottom-0">
-              <SuggestionList items={suggestions} onPick={pick} />
             </View>
+            {banner}
           </View>
-        )}
-        <Composer
-          value={draft}
-          onChange={(text) => {
-            setDraft(text);
-            if (text.length > 0) setSuggestionsHidden(false);
-          }}
-          pending={chat.pending}
-          onSend={sendDraft}
-          onStop={chat.stop}
-          onFocusChange={(focused) => {
-            setInputFocused(focused);
-            if (focused) setSuggestionsHidden(false);
-          }}
-          placeholder={handoff ? t.humanPlaceholder : undefined}
-        />
-        <HandoffSheet
-          key={sheetOpen ? "open" : "closed"}
-          visible={sheetOpen}
-          initialEmail={savedEmail}
-          onClose={() => setSheetOpen(false)}
-          onConfirm={confirmHandoff}
-        />
-      </KeyboardAvoidingView>
+
+          <MessageList
+            messages={items}
+            pending={chat.pending}
+            humanButtonId={humanButtonId}
+            onAskHuman={() => setSheetOpen(true)}
+            footer={
+              <View className="gap-2">
+                {chat.error ? (
+                  <View className="flex-row items-center gap-2">
+                    <AppText tone="danger" variant="small" className="flex-1">
+                      {chat.error}
+                    </AppText>
+                    {chat.canRetry ? (
+                      <Button
+                        label={pl.common.retry}
+                        variant="secondary"
+                        compact
+                        icon="refresh"
+                        onPress={chat.retry}
+                      />
+                    ) : null}
+                  </View>
+                ) : null}
+              </View>
+            }
+          />
+          <Disclaimer />
+          {handoff ? (
+            <View className="px-3 pb-2 pt-1">
+              <Alert tone="info" icon="time-outline">
+                <View className="flex-row items-center gap-3">
+                  <AppText variant="small" className="flex-1">
+                    {t.waitingBar(handoff.email)}
+                  </AppText>
+                  <Button
+                    label={t.backToAi}
+                    variant="secondary"
+                    compact
+                    icon="sparkles-outline"
+                    onPress={() => setHandoff(null)}
+                  />
+                </View>
+              </Alert>
+            </View>
+          ) : chat.pending || !inputFocused || suggestionsHidden ? null : (
+            // Zerowa wysokość + absolutne pozycjonowanie: propozycje nachodzą na wiadomości, więc lista nie skacze przy zmianie ich liczby.
+            <View className="z-10 h-0" style={{ elevation: 10 }}>
+              <View className="absolute inset-x-0 bottom-0">
+                <SuggestionList items={suggestions} onPick={pick} />
+              </View>
+            </View>
+          )}
+          <Composer
+            value={draft}
+            onChange={(text) => {
+              setDraft(text);
+              if (text.length > 0) setSuggestionsHidden(false);
+            }}
+            pending={chat.pending}
+            onSend={sendDraft}
+            onStop={chat.stop}
+            onFocusChange={(focused) => {
+              setInputFocused(focused);
+              if (focused) setSuggestionsHidden(false);
+            }}
+            placeholder={handoff ? t.humanPlaceholder : undefined}
+          />
+          <HandoffSheet
+            key={sheetOpen ? "open" : "closed"}
+            visible={sheetOpen}
+            initialEmail={savedEmail}
+            onClose={() => setSheetOpen(false)}
+            onConfirm={confirmHandoff}
+          />
+        </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 }
