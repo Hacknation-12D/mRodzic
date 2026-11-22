@@ -2,6 +2,10 @@
   {
     "profileId": "P01",
     "slug": "etat-duzy-platnik",
+    "mobywatel": {
+      "lastName": "Wiśniewska",
+      "birthDate": "1992-04-17"
+    },
     "profile": {
       "schemaVersion": 1,
       "me": {
@@ -109,6 +113,10 @@
   {
     "profileId": "P02",
     "slug": "jdg-zadluzenie",
+    "mobywatel": {
+      "lastName": "Zielińska",
+      "birthDate": "1990-08-09"
+    },
     "profile": {
       "schemaVersion": 1,
       "me": {
@@ -211,6 +219,10 @@
   {
     "profileId": "P03",
     "slug": "zlecenie-wyczekiwanie",
+    "mobywatel": {
+      "lastName": "Kamińska",
+      "birthDate": "1997-01-23"
+    },
     "profile": {
       "schemaVersion": 1,
       "me": {
@@ -245,6 +257,10 @@
   {
     "profileId": "P04",
     "slug": "studentka-bez-chorobowego",
+    "mobywatel": {
+      "lastName": "Lewandowska",
+      "birthDate": "2003-05-30"
+    },
     "profile": {
       "schemaVersion": 1,
       "me": {
@@ -347,6 +363,10 @@
   {
     "profileId": "P05",
     "slug": "bliznieta-wczesniaki",
+    "mobywatel": {
+      "lastName": "Dąbrowska",
+      "birthDate": "1994-11-02"
+    },
     "profile": {
       "schemaVersion": 1,
       "me": {
@@ -531,6 +551,10 @@
   {
     "profileId": "P06",
     "slug": "adopcja-wniosek",
+    "mobywatel": {
+      "lastName": "Kozłowska",
+      "birthDate": "1985-03-14"
+    },
     "profile": {
       "schemaVersion": 1,
       "me": {
@@ -695,6 +719,10 @@
   {
     "profileId": "P07",
     "slug": "rodzina-zastepcza",
+    "mobywatel": {
+      "lastName": "Jankowski",
+      "birthDate": "1981-07-08"
+    },
     "profile": {
       "schemaVersion": 1,
       "me": {
@@ -859,6 +887,10 @@
   {
     "profileId": "P08",
     "slug": "martwe-urodzenie",
+    "mobywatel": {
+      "lastName": "Mazur",
+      "birthDate": "1993-02-26"
+    },
     "profile": {
       "schemaVersion": 1,
       "me": {
@@ -960,6 +992,10 @@
   {
     "profileId": "P09",
     "slug": "likwidacja-pracodawcy",
+    "mobywatel": {
+      "lastName": "Krawczyk",
+      "birthDate": "1996-10-11"
+    },
     "profile": {
       "schemaVersion": 1,
       "me": {
@@ -994,6 +1030,10 @@
   {
     "profileId": "P10",
     "slug": "za-zyciem-praca",
+    "mobywatel": {
+      "lastName": "Piotrowska",
+      "birthDate": "1991-06-05"
+    },
     "profile": {
       "schemaVersion": 1,
       "me": {

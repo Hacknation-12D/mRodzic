@@ -19,7 +19,12 @@ const catalog = z.object({
 });
 const snapshot = z.object({ profileId: caseId, appProfileV1: ProfileSchema });
 const login = snapshot.extend({
-  mobywatel: z.object({ firstName: z.string().min(1), city: z.string().min(1) }),
+  mobywatel: z.object({
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+    birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    city: z.string().min(1),
+  }),
 });
 
 /** Symulowany czas „logowania” w trybie lokalnym – żeby stan ładowania i „Anuluj” działały jak przy API. */
@@ -70,7 +75,7 @@ export async function loginDemoProfile(profileId: string | undefined, signal: Ab
         return {
           profileId: picked.profileId,
           appProfileV1: picked.profile,
-          mobywatel: { firstName: picked.profile.me.firstName, city: picked.profile.household.city },
+          mobywatel: picked.identity,
         };
       }, signal);
   const result = login.parse(response);

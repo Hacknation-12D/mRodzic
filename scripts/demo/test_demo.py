@@ -49,7 +49,10 @@ class DemoIntegrationTest(unittest.TestCase):
             self.assertEqual(status, 200)
             self.assertEqual(login["profileId"], profile_id)
             self.assertEqual(login["appProfileV1"], profile)
-            self.assertEqual(login["mobywatel"], {"firstName": profile["me"]["firstName"], "city": profile["household"]["city"]})
+            self.assertEqual(login["mobywatel"], {
+                "firstName": profile["me"]["firstName"], "lastName": record["mobywatel"]["lastName"],
+                "birthDate": record["mobywatel"]["birthDate"], "city": profile["household"]["city"],
+            })
             status, snapshot = self.request(f"/api/demo-snapshot/{profile_id}")
             self.assertEqual(status, 200)
             self.assertEqual(snapshot["appProfileV1"], profile)

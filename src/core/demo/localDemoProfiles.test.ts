@@ -13,7 +13,7 @@ describe('local demo profiles', () => {
     const all = localDemoProfiles();
     expect(all).toHaveLength(10);
     expect(all.filter((p) => p.sensitive).map((p) => p.profileId)).toEqual(['P08']);
-    expect(all[0].label).toBe('Anna – Etat i duży płatnik');
+    expect(all[0].label).toBe('Anna – Etat, zasiłek wypłaca pracodawca');
   });
 
   it('picks randomly among the 9 non-sensitive profiles', () => {
@@ -35,7 +35,7 @@ describe('local demo profiles', () => {
     const result = await pending;
     vi.useRealTimers();
     expect(result.profileId).toBe('P05');
-    expect(result.mobywatel).toEqual({ firstName: 'Iga', city: 'Wrocław' });
+    expect(result.mobywatel).toEqual({ firstName: 'Iga', lastName: 'Dąbrowska', birthDate: '1994-11-02', city: 'Wrocław' });
     expect(result.appProfileV1.children).toHaveLength(2);
   });
 });

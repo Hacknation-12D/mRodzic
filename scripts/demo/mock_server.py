@@ -12,8 +12,8 @@ from urllib.parse import urlsplit
 from build_db import build_db, DEFAULT_DB, DEFAULT_SOURCE
 
 
-def identity(profile):
-    return {"firstName": profile["me"]["firstName"], "city": profile["household"]["city"]}
+def identity(row):
+    return json.loads(row["mobywatel_json"])
 
 
 class DemoHandler(BaseHTTPRequestHandler):
@@ -58,7 +58,7 @@ class DemoHandler(BaseHTTPRequestHandler):
                 if row:
                     profile = json.loads(row["profile_json"])
                     if match[1] == "mock/mobywatel":
-                        return self.respond(200, identity(profile))
+                        return self.respond(200, identity(row))
                     return self.respond(200, {
                         "profileId": row["profile_id"], "slug": row["slug"], "appProfileV1": profile,
                     })
@@ -94,7 +94,7 @@ class DemoHandler(BaseHTTPRequestHandler):
             return self.respond(404, {"error": "No matching demo profile"})
         profile = json.loads(row["profile_json"])
         self.respond(200, {
-            "profileId": row["profile_id"], "appProfileV1": profile, "mobywatel": identity(profile),
+            "profileId": row["profile_id"], "appProfileV1": profile, "mobywatel": identity(row),
         })
 
 

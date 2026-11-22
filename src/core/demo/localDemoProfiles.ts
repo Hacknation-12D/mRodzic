@@ -10,16 +10,16 @@ import type { Profile } from '../types';
  * (tak samo jak w `build_db.py`).
  */
 const SCENARIOS: Record<string, string> = {
-  P01: 'Etat i duży płatnik',
-  P02: 'JDG i zaległości',
-  P03: 'Umowa zlecenia',
-  P04: 'Studia',
-  P05: 'Wcześniacze bliźnięta',
-  P06: 'Adopcja',
+  P01: 'Etat, zasiłek wypłaca pracodawca',
+  P02: 'Własna firma z zaległościami w ZUS',
+  P03: 'Umowa zlecenie od niedawna',
+  P04: 'Studentka bez ubezpieczenia',
+  P05: 'Bliźnięta urodzone przedwcześnie',
+  P06: 'Adopcja 6-latka',
   P07: 'Rodzina zastępcza',
   P08: 'Utrata dziecka',
-  P09: 'Likwidacja pracodawcy',
-  P10: 'Za życiem',
+  P09: 'Utrata pracy w ciąży (firma zamknięta)',
+  P10: 'Dziecko z ciężką chorobą (program „Za życiem”)',
 };
 /** Scenariusz wrażliwy – nie bierze udziału w losowaniu, można go wybrać tylko ręcznie. */
 const SENSITIVE = new Set(['P08']);
@@ -27,6 +27,11 @@ const SENSITIVE = new Set(['P08']);
 const RecordSchema = z.object({
   profileId: z.string().regex(/^P\d{2}$/),
   slug: z.string().min(1),
+  /** Dane „z mObywatela” pokazywane tylko przy logowaniu – nie trafiają do profilu (nazwiska i daty urodzenia rodzica nie zapisujemy). */
+  mobywatel: z.object({
+    lastName: z.string().min(1),
+    birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  }),
   profile: ProfileSchema,
 });
 
@@ -35,8 +40,11 @@ export type LocalDemoProfile = {
   slug: string;
   label: string;
   sensitive: boolean;
+  identity: DemoIdentity;
   profile: Profile;
 };
+
+export type DemoIdentity = { firstName: string; lastName: string; birthDate: string; city: string };
 
 let records: unknown = null;
 let cache: LocalDemoProfile[] | null = null;
@@ -55,6 +63,12 @@ export function localDemoProfiles(): LocalDemoProfile[] {
     slug: r.slug,
     label: `${r.profile.me.firstName} – ${SCENARIOS[r.profileId] ?? r.slug}`,
     sensitive: SENSITIVE.has(r.profileId),
+    identity: {
+      firstName: r.profile.me.firstName,
+      lastName: r.mobywatel.lastName,
+      birthDate: r.mobywatel.birthDate,
+      city: r.profile.household.city ?? '',
+    },
     profile: r.profile,
   }));
   return cache;

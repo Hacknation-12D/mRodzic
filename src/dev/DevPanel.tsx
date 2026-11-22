@@ -65,7 +65,7 @@ export function DevPanel() {
           <Button
             key={p.profileId}
             variant="secondary"
-            label={p.sensitive ? pl.demo.sensitiveLabel(p.label) : p.label}
+            label={p.label}
             onPress={() => loadDemoProfile(p.profileId)}
           />
         ))}
