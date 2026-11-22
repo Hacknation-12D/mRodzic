@@ -50,12 +50,20 @@ class DemoIntegrationTest(unittest.TestCase):
             self.assertEqual(login["profileId"], profile_id)
             self.assertEqual(login["appProfileV1"], profile)
             self.assertEqual(login["mobywatel"], {
-                "firstName": profile["me"]["firstName"], "lastName": record["mobywatel"]["lastName"],
-                "birthDate": record["mobywatel"]["birthDate"], "city": profile["household"]["city"],
+                "firstName": profile["me"]["firstName"], "lastName": profile["me"]["lastName"],
+                "birthDate": profile["me"]["birthDate"], "city": profile["me"]["city"],
             })
             status, snapshot = self.request(f"/api/demo-snapshot/{profile_id}")
             self.assertEqual(status, 200)
             self.assertEqual(snapshot["appProfileV1"], profile)
+
+    def test_parent_identity_is_mandatory(self):
+        for change in ({"pesel": None}, {"street": ""}, {"pesel": "92041710124"}):
+            broken = json.loads(json.dumps(self.records[:1]))
+            broken[0]["profile"]["me"].update(change)
+            self.source.write_text(json.dumps(broken), encoding="utf-8")
+            with self.assertRaises(ValueError):
+                build_db(self.source, self.db)
 
     def test_sensitive_profile_requires_explicit_opt_in(self):
         sensitive = next(r for r in self.records if r["profileId"] == "P08")

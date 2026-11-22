@@ -64,7 +64,8 @@ export function buildFacts(profile: Profile, child: Child | null, today: Date): 
     'household.childrenUnder18Count',
     bornChildren(profile).filter((c) => c.birthDate && differenceInYears(today, parseISO(c.birthDate)) < 18).length,
   );
-  set(facts, 'household.city', h.city?.trim() || undefined);
+  // Miejscowość gospodarstwa = miejscowość z adresu zamieszkania (starsze profile: pole household.city).
+  set(facts, 'household.city', profile.me.city?.trim() || h.city?.trim() || undefined);
 
   return facts;
 }

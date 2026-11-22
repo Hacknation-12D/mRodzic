@@ -1,72 +1,103 @@
-import { useState } from 'react';
-import { View } from 'react-native';
+import { useState, type ReactNode } from 'react';
+import { Pressable, View } from 'react-native';
 
-import { parentIdentityErrors } from '@/core/profile/parentIdentity';
-import { ParentSchema } from '@/core/schemas/profile';
+import { maskPesel } from '@/core/profile/childDetails';
 import type { Parent } from '@/core/types';
 import { pl } from '@/shared/i18n/pl';
-import { createId } from '@/shared/lib/id';
-import { AppText, Button, Card, ParentFields, type ParentFieldsValue } from '@/shared/ui';
+import { isoToPolishDate } from '@/shared/lib/date';
+import { AppText, Card } from '@/shared/ui';
 
 type Props = {
   title: string;
   parent: Parent | undefined;
-  onSave: (parent: Parent) => void;
-  onRemove?: () => void;
-  addLabel?: string;
   emptyLabel?: string;
-  showIdentity?: boolean;
 };
 
-export function ParentCard({ title, parent, onSave, onRemove, addLabel, emptyLabel, showIdentity }: Props) {
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState<ParentFieldsValue>(parent ?? { firstName: '', gender: 'male' });
-  const [showErrors, setShowErrors] = useState(false);
+const t = pl.profile;
 
-  const startEdit = () => {
-    setDraft(parent ?? { firstName: '', gender: 'male' });
-    setShowErrors(false);
-    setEditing(true);
-  };
-  const save = () => {
-    const parsed = ParentSchema.safeParse({ ...draft, id: parent?.id ?? createId('parent_') });
-    if (!parsed.success || Object.keys(parentIdentityErrors(draft)).length > 0) return setShowErrors(true);
-    onSave(parsed.data);
-    setEditing(false);
-  };
+/** Adres w jednej linii: „Słoneczna 14/7, 02-495 Warszawa”. */
+export function formatAddress(p: Pick<Parent, 'street' | 'houseNumber' | 'apartmentNumber' | 'postalCode' | 'city'>): string | undefined {
+  if (!p.street && !p.city) return undefined;
+  const line1 = [p.street, [p.houseNumber, p.apartmentNumber].filter(Boolean).join('/')].filter(Boolean).join(' ');
+  const line2 = [p.postalCode, p.city].filter(Boolean).join(' ');
+  return [line1, line2].filter(Boolean).join(', ');
+}
 
+function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <Card>
-      <AppText variant="subheading" accessibilityRole="header">
+    <View className="flex-row items-baseline justify-between gap-3 border-b border-base-300 py-2">
+      <AppText variant="small" tone="muted">
+        {label}
+      </AppText>
+      <View className="shrink items-end">{children}</View>
+    </View>
+  );
+}
+
+/**
+ * Dane rodzica – tylko do odczytu. Pochodzą z mObywatela / bazy (SQLite), więc nie edytuje się ich w aplikacji.
+ */
+export function ParentCard({ title, parent, emptyLabel }: Props) {
+  const [showPesel, setShowPesel] = useState(false);
+  const address = parent ? formatAddress(parent) : undefined;
+  return (
+    <Card className="gap-1 p-5">
+      <AppText variant="subheading" accessibilityRole="header" className="mb-1">
         {title}
       </AppText>
-      {editing ? (
-        <View className="gap-3">
-          <ParentFields value={draft} onChange={setDraft} nameError={showErrors && !draft.firstName.trim() ? pl.common.required : undefined} showIdentity={showIdentity} identityErrors={showErrors ? parentIdentityErrors(draft) : undefined} />
-          <View className="flex-row gap-2">
-            <Button label={pl.common.cancel} variant="ghost" onPress={() => setEditing(false)} className="flex-1" />
-            <Button label={pl.common.save} onPress={save} className="flex-1" />
-          </View>
-        </View>
-      ) : parent ? (
+      {parent ? (
         <>
-          <AppText variant="bodyStrong">{[parent.firstName, parent.lastName].filter(Boolean).join(' ')}</AppText>
-          <AppText tone="muted">
-            {pl.gender[parent.gender]}
-            {parent.employment ? ` · ${pl.employment[parent.employment]}` : ''}
+          <Row label={t.nameLabel}>
+            <AppText variant="bodyStrong" className="text-right">
+              {[parent.firstName, parent.lastName].filter(Boolean).join(' ')}
+            </AppText>
+          </Row>
+          {parent.birthDate ? (
+            <Row label={t.birthDateLabel}>
+              <AppText variant="bodyStrong">{isoToPolishDate(parent.birthDate)}</AppText>
+            </Row>
+          ) : null}
+          {parent.pesel ? (
+            <Row label={t.peselLabel}>
+              <View className="flex-row items-center gap-2">
+                <AppText variant="bodyStrong">{showPesel ? parent.pesel : maskPesel(parent.pesel)}</AppText>
+                <Pressable
+                  onPress={() => setShowPesel((v) => !v)}
+                  accessibilityRole="button"
+                  accessibilityLabel={showPesel ? t.parentPeselHideA11y : t.parentPeselShowA11y}
+                  hitSlop={8}
+                  className="min-h-8 justify-center active:opacity-70">
+                  <AppText variant="small" tone="primary">
+                    {showPesel ? t.peselHide : t.peselShow}
+                  </AppText>
+                </Pressable>
+              </View>
+            </Row>
+          ) : null}
+          {address ? (
+            <Row label={t.addressLabel}>
+              <AppText variant="bodyStrong" className="text-right">
+                {address}
+              </AppText>
+            </Row>
+          ) : null}
+          <Row label={t.genderLabel}>
+            <AppText variant="bodyStrong">{pl.gender[parent.gender]}</AppText>
+          </Row>
+          {parent.employment ? (
+            <Row label={pl.parentForm.employment}>
+              <AppText variant="bodyStrong" className="text-right">
+                {pl.employment[parent.employment]}
+              </AppText>
+            </Row>
+          ) : null}
+          <AppText variant="caption" tone="muted" className="pt-2">
+            {t.readOnlyNote}
           </AppText>
-          <View className="flex-row gap-2">
-            <Button label={pl.common.edit} variant="secondary" icon="create-outline" onPress={startEdit} compact className="flex-1" />
-            {onRemove ? <Button label={pl.common.delete} variant="ghost" icon="trash-outline" onPress={onRemove} compact className="flex-1" /> : null}
-          </View>
         </>
       ) : (
-        <>
-          {emptyLabel ? <AppText tone="muted">{emptyLabel}</AppText> : null}
-          {addLabel ? <Button label={addLabel} variant="secondary" icon="person-add-outline" onPress={startEdit} /> : null}
-        </>
+        <AppText tone="muted">{emptyLabel}</AppText>
       )}
     </Card>
   );
 }
-

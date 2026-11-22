@@ -82,7 +82,7 @@ export function ParentFields({ value, onChange, nameError, showIdentity, identit
           accessibilityLabel={pl.parentForm.gender}
           value={value.gender}
           onChange={(gender) => onChange({ ...value, gender })}
-          segments={(['female', 'male', 'undisclosed'] as const).map((g) => ({ value: g, label: pl.gender[g] }))}
+          segments={(['female', 'male'] as const).map((g) => ({ value: g, label: pl.gender[g] }))}
         />
       </View>
       <Select

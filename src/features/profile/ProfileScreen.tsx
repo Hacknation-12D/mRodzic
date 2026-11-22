@@ -21,9 +21,6 @@ import { ZusSection } from './components/ZusSection';
 export function ProfileScreen() {
   const today = useToday();
   const profile = useProfileStore((s) => s.profile);
-  const updateMe = useProfileStore((s) => s.updateMe);
-  const setPartner = useProfileStore((s) => s.setPartner);
-  const removePartner = useProfileStore((s) => s.removePartner);
   const updateHousehold = useProfileStore((s) => s.updateHousehold);
   const children = useChildViews(today);
   const [markBornChild, setMarkBornChild] = useState<Child | null>(null);
@@ -49,16 +46,9 @@ export function ProfileScreen() {
 
   return (
     <Screen keyboard>
-      <ParentCard title={pl.profile.me} parent={profile.me} showIdentity onSave={({ id: _id, ...rest }) => updateMe(rest)} />
+      <ParentCard title={pl.profile.me} parent={profile.me} />
       {profile.me.work ? <ZusSection work={profile.me.work} today={today} /> : null}
-      <ParentCard
-        title={pl.profile.partner}
-        parent={profile.partner}
-        onSave={setPartner}
-        onRemove={profile.partner ? removePartner : undefined}
-        addLabel={pl.profile.addPartner}
-        emptyLabel={pl.profile.noPartner}
-      />
+      <ParentCard title={pl.profile.partner} parent={profile.partner} emptyLabel={pl.profile.noPartner} />
 
       <Card>
         <AppText variant="subheading" accessibilityRole="header">

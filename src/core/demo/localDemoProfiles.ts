@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { peselMatches } from '../profile/pesel';
 import { ProfileSchema } from '../schemas/profile';
 import type { Profile } from '../types';
 
@@ -24,16 +25,29 @@ const SCENARIOS: Record<string, string> = {
 /** Scenariusz wrażliwy – nie bierze udziału w losowaniu, można go wybrać tylko ręcznie. */
 const SENSITIVE = new Set(['P08']);
 
-const RecordSchema = z.object({
-  profileId: z.string().regex(/^P\d{2}$/),
-  slug: z.string().min(1),
-  /** Dane „z mObywatela” pokazywane tylko przy logowaniu – nie trafiają do profilu (nazwiska i daty urodzenia rodzica nie zapisujemy). */
-  mobywatel: z.object({
-    lastName: z.string().min(1),
-    birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  }),
-  profile: ProfileSchema,
-});
+/** Pola obowiązkowe dla każdego rodzica w bazie DEMO: nazwisko, data urodzenia, PESEL i pełny adres zamieszkania. */
+const REQUIRED_IDENTITY = ['lastName', 'birthDate', 'pesel', 'street', 'houseNumber', 'postalCode', 'city'] as const;
+
+function checkParent(parent: Profile['me'] | undefined, path: string, ctx: z.RefinementCtx) {
+  if (!parent) return;
+  for (const key of REQUIRED_IDENTITY) {
+    if (!parent[key]) ctx.addIssue({ code: 'custom', path: [path, key], message: `Brak pola ${key}` });
+  }
+  if (parent.pesel && parent.birthDate && !peselMatches(parent.pesel, parent.birthDate, parent.gender)) {
+    ctx.addIssue({ code: 'custom', path: [path, 'pesel'], message: 'PESEL niezgodny z datą urodzenia lub płcią' });
+  }
+}
+
+const RecordSchema = z
+  .object({
+    profileId: z.string().regex(/^P\d{2}$/),
+    slug: z.string().min(1),
+    profile: ProfileSchema,
+  })
+  .superRefine((r, ctx) => {
+    checkParent(r.profile.me, 'me', ctx);
+    checkParent(r.profile.partner, 'partner', ctx);
+  });
 
 export type LocalDemoProfile = {
   profileId: string;
@@ -65,9 +79,9 @@ export function localDemoProfiles(): LocalDemoProfile[] {
     sensitive: SENSITIVE.has(r.profileId),
     identity: {
       firstName: r.profile.me.firstName,
-      lastName: r.mobywatel.lastName,
-      birthDate: r.mobywatel.birthDate,
-      city: r.profile.household.city ?? '',
+      lastName: r.profile.me.lastName ?? '',
+      birthDate: r.profile.me.birthDate ?? '',
+      city: r.profile.me.city ?? '',
     },
     profile: r.profile,
   }));

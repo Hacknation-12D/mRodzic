@@ -5,8 +5,12 @@ import { goBack } from '@/core/navigation/routes';
 import { childFormErrors, hasErrors } from '@/core/profile/childValidation';
 import { useProfileStore } from '@/core/profile/profile.store';
 import { pl } from '@/shared/i18n/pl';
-import { Button, ChildFields, Screen, type ChildFieldsValue } from '@/shared/ui';
+import { Alert, Button, ChildFields, Screen, type ChildFieldsValue } from '@/shared/ui';
 
+/**
+ * Nowe dziecko – tylko „w drodze”. Urodzone dzieci pochodzą z rejestru (mObywatel / USC),
+ * a dziecko w drodze po porodzie oznacza się jako urodzone na ekranie dziecka.
+ */
 export function ChildNewScreen() {
   const today = useToday();
   const addChild = useProfileStore((s) => s.addChild);
@@ -16,21 +20,19 @@ export function ChildNewScreen() {
 
   const save = () => {
     if (hasErrors(errors)) return setShowErrors(true);
-    const born = value.status === 'born';
     addChild({
       name: value.name.trim() || pl.childForm.defaultExpectedName,
-      status: value.status,
-      ...(born ? { birthDate: value.birthDate } : { dueDate: value.dueDate }),
+      status: 'expected',
+      dueDate: value.dueDate,
       sex: value.sex,
-      premature: born ? (value.premature ?? false) : undefined,
-      disability: born ? value.disability : undefined,
     });
     goBack();
   };
 
   return (
     <Screen keyboard>
-      <ChildFields value={value} onChange={setValue} errors={showErrors ? errors : undefined} />
+      <Alert tone="info">{pl.profile.newChildExpectedOnly}</Alert>
+      <ChildFields value={{ ...value, status: 'expected' }} onChange={(v) => setValue({ ...v, status: 'expected' })} errors={showErrors ? errors : undefined} hideStatus />
       <Button label={pl.common.save} icon="checkmark" onPress={save} />
     </Screen>
   );

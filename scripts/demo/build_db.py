@@ -28,6 +28,34 @@ SCENARIOS = {
 }
 
 
+# Obowiązkowe dane każdego rodzica: nazwisko, data urodzenia, PESEL i pełny adres zamieszkania.
+REQUIRED_IDENTITY = ("firstName", "lastName", "birthDate", "pesel", "street", "houseNumber", "postalCode", "city")
+PESEL_WEIGHTS = (1, 3, 7, 9, 1, 3, 7, 9, 1, 3)
+
+
+def pesel_birth_date(pesel):
+    yy, mm, dd = int(pesel[0:2]), int(pesel[2:4]), pesel[4:6]
+    for offset, century in ((80, 1800), (0, 1900), (20, 2000), (40, 2100), (60, 2200)):
+        if offset < mm <= offset + 12:
+            return f"{century + yy}-{mm - offset:02d}-{dd}"
+    return None
+
+
+def check_identity(parent, who):
+    missing = [key for key in REQUIRED_IDENTITY if not (isinstance(parent.get(key), str) and parent[key].strip())]
+    if missing:
+        raise ValueError(f"{who}: missing {', '.join(missing)}")
+    pesel = parent["pesel"]
+    if not re.fullmatch(r"[0-9]{11}", pesel):
+        raise ValueError(f"{who}: PESEL must have 11 digits")
+    checksum = (10 - sum(w * int(d) for w, d in zip(PESEL_WEIGHTS, pesel)) % 10) % 10
+    female = int(pesel[9]) % 2 == 0
+    if checksum != int(pesel[10]) or pesel_birth_date(pesel) != parent["birthDate"] or female != (parent.get("gender") == "female"):
+        raise ValueError(f"{who}: PESEL does not match the checksum, date of birth or sex")
+    if not re.fullmatch(r"[0-9]{2}-[0-9]{3}", parent["postalCode"]):
+        raise ValueError(f"{who}: postal code must be 00-000")
+
+
 def read_rows(source):
     records = json.loads(source.read_text(encoding="utf-8-sig"))
     if not isinstance(records, list) or not records:
@@ -41,15 +69,14 @@ def read_rows(source):
             raise ValueError(f"Invalid demo profile identifier or slug: {profile_id}")
         if profile.get("schemaVersion") != 1 or not profile.get("children"):
             raise ValueError(f"Invalid v1 profile: {profile_id}")
-        first_name = profile["me"]["firstName"]
-        city = profile["household"]["city"]
-        identity = record["mobywatel"]
-        if not all(isinstance(value, str) and value.strip() for value in (first_name, city, identity.get("lastName"))):
-            raise ValueError(f"Missing demo login data for {profile_id}")
-        if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", str(identity.get("birthDate"))):
-            raise ValueError(f"Missing demo login data for {profile_id}")
+        me = profile["me"]
+        for role, parent in (("me", me), ("partner", profile.get("partner"))):
+            if parent is not None:
+                check_identity(parent, f"{profile_id} {role}")
+        first_name = me["firstName"]
         label = f"{first_name} – {SCENARIOS.get(profile_id, slug)}"
-        mobywatel = {"firstName": first_name, "lastName": identity["lastName"], "birthDate": identity["birthDate"], "city": city}
+        # Dane „z mObywatela” pokazywane przy logowaniu pochodzą z profilu (adres zamieszkania → miejscowość).
+        mobywatel = {"firstName": first_name, "lastName": me["lastName"], "birthDate": me["birthDate"], "city": me["city"]}
         yield (profile_id, slug, label, profile_id == "P08",
                json.dumps(profile, ensure_ascii=False, allow_nan=False), json.dumps(mobywatel, ensure_ascii=False))
 
