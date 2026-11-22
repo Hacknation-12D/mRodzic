@@ -86,7 +86,7 @@ export const pl = {
   },
   accountMenu: {
     open: 'Menu konta',
-    settings: 'Ustawienia',
+    profile: 'Twój profil',
     logout: 'Wyloguj się',
     logoutTitle: 'Wylogować się?',
     logoutBody: 'Profil, statusy dokumentów i historia czatu zostaną usunięte z tego urządzenia.',
