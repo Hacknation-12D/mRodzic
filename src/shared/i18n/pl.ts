@@ -330,8 +330,6 @@ export const pl = {
     newChildExpectedOnly: 'Tu dodasz dziecko, które jest w drodze. Urodzone dzieci pobieramy z rejestru (mObywatel), a po porodzie oznaczysz dziecko jako urodzone na jego stronie.',
     version: (v: string) => `Wersja ${v}`,
     privacy: 'Zmiany zapisują się na tym urządzeniu. Zapis na koncie uruchamiasz osobno.',
-    resetAll: 'Usuń dane z urządzenia',
-    resetAllBody: 'Usuniemy profil, statusy dokumentów i historię czatu z tego urządzenia.',
     zus: {
       title: 'Dane z PUE/eZUS',
       simulated: 'Symulacja',

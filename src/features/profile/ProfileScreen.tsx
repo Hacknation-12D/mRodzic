@@ -1,12 +1,11 @@
 import Constants from 'expo-constants';
 import { useRef, useState } from 'react';
-import { Alert, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
 
 import { useToday } from '@/core/clock/useToday';
 import { goToChildEdit, goToChildNew, goToDevPanel } from '@/core/navigation/routes';
 import { useProfileStore } from '@/core/profile/profile.store';
 import { useChildViews } from '@/core/profile/useChildViews';
-import { resetAllData } from '@/core/storage/resetAll';
 import type { Child } from '@/core/types';
 import { pl } from '@/shared/i18n/pl';
 import { AppText, Button, Card, Screen } from '@/shared/ui';
@@ -38,12 +37,6 @@ export function ProfileScreen() {
     }
   };
 
-  const confirmReset = () =>
-    Alert.alert(pl.profile.resetAll, pl.profile.resetAllBody, [
-      { text: pl.common.cancel, style: 'cancel' },
-      { text: pl.common.delete, style: 'destructive', onPress: () => void resetAllData() },
-    ]);
-
   return (
     <Screen keyboard>
       <ParentCard title={pl.profile.me} parent={profile.me} />
@@ -71,7 +64,6 @@ export function ProfileScreen() {
       <AppText variant="small" tone="muted" className="text-center">
         {pl.profile.privacy}
       </AppText>
-      <Button label={pl.profile.resetAll} variant="ghost" icon="trash-outline" onPress={confirmReset} />
       <Pressable onPress={onVersionTap} accessibilityRole="text" className="min-h-11 self-center p-3">
         <AppText variant="caption" tone="muted">
           {pl.profile.version(version)}
