@@ -5,7 +5,7 @@ import { withUniwind } from 'uniwind';
 
 import { goToDocument } from '@/core/navigation/routes';
 import { pl } from '@/shared/i18n/pl';
-import { AppText, ChildFilterBar, EmptyState, ToggleRow } from '@/shared/ui';
+import { AppText, Button, ChildFilterBar, EmptyState } from '@/shared/ui';
 
 import { DocumentCard } from './components/DocumentCard';
 import { DocumentTabs } from './components/DocumentTabs';
@@ -17,10 +17,10 @@ const SafeAreaView = withUniwind(RNSafeAreaView);
 export function DocumentsScreen() {
   const [tab, setTab] = useState<DocumentTab>('eligible');
   const [showHidden, setShowHidden] = useState(false);
-  const { children, childById, filter, setFilter, byTab, hidden, sections, changeStatus } = useDocumentList(showHidden);
+  const { children, childById, filter, setFilter, byTab, hidden, sections, changeStatus } = useDocumentList();
 
   const counts = { eligible: byTab.eligible.length, ineligible: byTab.ineligible.length };
-  const emptyText = tab === 'eligible' ? pl.documents.emptyEligible : pl.documents.emptyIneligible;
+  const emptyText = showHidden ? pl.documents.emptyHidden : tab === 'eligible' ? pl.documents.emptyEligible : pl.documents.emptyIneligible;
   const empty = <EmptyState icon="document-text-outline" title={emptyText} />;
 
   return (
@@ -29,15 +29,17 @@ export function DocumentsScreen() {
       <View className="w-full flex-1 self-center md:max-w-4xl">
         <ChildFilterBar items={children} value={filter} onChange={setFilter} />
         <View className="gap-2 px-4 pt-2">
-          <DocumentTabs value={tab} onChange={setTab} counts={counts} />
-          <AppText variant="small" tone="muted">{pl.documents.eligibilityHint}</AppText>
-          <ToggleRow label={pl.documents.showHidden} hint={pl.documents.showHiddenHint(hidden.length)} value={showHidden} onChange={setShowHidden} />
+          {showHidden ? null : <DocumentTabs value={tab} onChange={setTab} counts={counts} />}
+          {showHidden ? null : <AppText variant="small" tone="muted">{pl.documents.eligibilityHint}</AppText>}
+          {showHidden || hidden.length > 0 ? (
+            <Button compact variant="ghost" label={showHidden ? pl.documents.backToList : pl.documents.tabHidden} onPress={() => setShowHidden(!showHidden)} />
+          ) : null}
         </View>
-        {tab === 'eligible' ? (
+        {!showHidden && tab === 'eligible' ? (
           <DocumentTimeline sections={sections} childById={childById} onChangeStatus={changeStatus} empty={empty} />
         ) : (
           <FlatList
-            data={byTab.ineligible}
+            data={showHidden ? hidden : byTab.ineligible}
             keyExtractor={(item) => item.key}
             contentContainerClassName="gap-3 p-4 pb-8"
             ListEmptyComponent={empty}
