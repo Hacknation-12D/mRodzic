@@ -72,7 +72,6 @@ export function ProfileScreen() {
         {pl.profile.privacy}
       </AppText>
       <Button label={pl.profile.resetAll} variant="ghost" icon="trash-outline" onPress={confirmReset} />
-      {__DEV__ ? <Button label={pl.profile.devPanel} variant="ghost" icon="construct-outline" onPress={goToDevPanel} /> : null}
       <Pressable onPress={onVersionTap} accessibilityRole="text" className="min-h-11 self-center p-3">
         <AppText variant="caption" tone="muted">
           {pl.profile.version(version)}

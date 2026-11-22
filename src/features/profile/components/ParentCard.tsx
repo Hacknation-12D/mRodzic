@@ -91,9 +91,6 @@ export function ParentCard({ title, parent, emptyLabel }: Props) {
               </AppText>
             </Row>
           ) : null}
-          <AppText variant="caption" tone="muted" className="pt-2">
-            {t.readOnlyNote}
-          </AppText>
         </>
       ) : (
         <AppText tone="muted">{emptyLabel}</AppText>
