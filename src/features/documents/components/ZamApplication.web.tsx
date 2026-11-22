@@ -13,6 +13,28 @@ import type { ZamApplicationProps } from './ZamApplication';
 const ezusUrl = 'https://www.zus.pl/ezus/logowanie';
 const inputClass = 'w-full min-h-11 rounded-field border border-base-300 bg-base-100 px-3 py-2 text-base-content';
 
+/** Pola „(od–do)” trafiają do PDF jako tekst „DD.MM.RRRR – DD.MM.RRRR”; w formularzu wybiera się dwie daty z kalendarza. */
+const RANGE_SEPARATOR = ' – ';
+const toIso = (pl: string) => (/^\d{2}\.\d{2}\.\d{4}$/.test(pl) ? pl.split('.').reverse().join('-') : '');
+const toPl = (iso: string) => (iso ? iso.split('-').reverse().join('.') : '');
+
+function DateRangeInput({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  const [from = '', to = ''] = value.split(/\s*–\s*/);
+  const set = (nextFrom: string, nextTo: string) =>
+    onChange(nextFrom || nextTo ? `${toPl(nextFrom)}${RANGE_SEPARATOR}${toPl(nextTo)}`.trim() : '');
+  return (
+    <fieldset className="grid gap-1 text-base-content">
+      <legend>{label}</legend>
+      <div className="grid grid-cols-2 gap-2">
+        <input className={inputClass} type="date" aria-label={`${label}: od`} value={toIso(from)} max={toIso(to) || undefined}
+          onChange={(event) => set(event.currentTarget.value, toIso(to))} />
+        <input className={inputClass} type="date" aria-label={`${label}: do`} value={toIso(to)} min={toIso(from) || undefined}
+          onChange={(event) => set(toIso(from), event.currentTarget.value)} />
+      </div>
+    </fieldset>
+  );
+}
+
 function ZamEditor({ docId, profile, child }: ZamApplicationProps) {
   const [values, setValues] = useState<ZamValues>();
   const [children, setChildren] = useState<ZamChild[]>([]);
@@ -135,11 +157,12 @@ function ZamEditor({ docId, profile, child }: ZamApplicationProps) {
                     onChange={(event) => setField(field.id, event.currentTarget.checked ? '1' : '')} />
                   {field.label}
                 </label>
+              ) : field.label.includes('(od–do)') ? (
+                <DateRangeInput key={field.id} label={field.label} value={values[field.id] ?? ''} onChange={(v) => setField(field.id, v)} />
               ) : (
                 <label key={field.id} className="grid gap-1 text-base-content">
                   {field.label}
                   <input className={inputClass} type={field.type} value={values[field.id] ?? ''} maxLength={field.maxLength ?? 150}
-                    placeholder={field.label.includes('od–do') ? 'DD.MM.RRRR – DD.MM.RRRR' : undefined}
                     inputMode={field.maxLength ? 'numeric' : undefined}
                     onChange={(event) => setField(field.id, event.currentTarget.value)} />
                 </label>

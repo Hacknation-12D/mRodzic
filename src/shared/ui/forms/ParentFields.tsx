@@ -1,6 +1,8 @@
 import { View } from 'react-native';
 
 import { pl } from '../../i18n/pl';
+import { toISODate } from '../../lib/date';
+import { DateField } from '../DateField';
 import { SegmentedControl } from '../SegmentedControl';
 import { Select } from '../Select';
 import { TextField } from '../TextField';
@@ -23,7 +25,7 @@ export type ParentFieldsValue = {
 
 const identityFields = [
   { key: 'lastName', label: 'Nazwisko', maxLength: 80 },
-  { key: 'birthDate', label: 'Data urodzenia', maxLength: 10, hint: 'RRRR-MM-DD' },
+  { key: 'birthDate', label: 'Data urodzenia', maxLength: 10 },
   { key: 'pesel', label: 'PESEL', maxLength: 11, inputMode: 'numeric' },
   { key: 'street', label: 'Ulica', maxLength: 100 },
   { key: 'houseNumber', label: 'Numer domu', maxLength: 15 },
@@ -54,7 +56,16 @@ export function ParentFields({ value, onChange, nameError, showIdentity, identit
         maxLength={60}
         error={nameError}
       />
-      {showIdentity ? identityFields.map(({ key, ...field }) => (
+      {showIdentity ? identityFields.map(({ key, ...field }) => key === 'birthDate' ? (
+        <DateField
+          key={key}
+          label={`${field.label} ${pl.common.optional}`}
+          value={value.birthDate}
+          maxDate={toISODate(new Date())}
+          onChange={(birthDate) => onChange({ ...value, birthDate })}
+          error={identityErrors?.birthDate}
+        />
+      ) : (
         <TextField
           key={key}
           {...field}
