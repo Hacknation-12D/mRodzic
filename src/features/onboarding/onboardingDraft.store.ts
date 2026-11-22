@@ -1,13 +1,19 @@
 import { create } from 'zustand';
 
 import { CHILD_COLOR_KEYS } from '@/core/profile/childColors';
-import type { Child, ChildColorKey, Employment, Gender, Profile } from '@/core/types';
+import type { Child, ChildColorKey, Employment, Gender, Profile, Work } from '@/core/types';
 import { pl } from '@/shared/i18n/pl';
 import { createId } from '@/shared/lib/id';
 
-import type { MObywatelIdentity } from './mobywatel/mObywatelService';
+import type { MObywatelData } from './mobywatel/mObywatelService';
 
-export type DraftParent = { firstName: string; gender: Gender; employment?: Employment };
+export type DraftParent = {
+  firstName: string;
+  gender: Gender;
+  employment?: Employment;
+  /** Dane z PUE/eZUS (symulacja). */
+  work?: Work;
+};
 
 export type DraftChild = {
   key: string;
@@ -18,6 +24,10 @@ export type DraftChild = {
   sex?: Child['sex'];
   premature?: boolean;
   disability?: boolean;
+  insured?: boolean;
+  pesel?: Child['pesel'];
+  birthRegistry?: Child['birthRegistry'];
+  vaccinations?: Child['vaccinations'];
   multipleBirthGroupId?: string;
   /** Czy użytkownik coś już wpisał (przy „Dodaj bliźniaka” nie nadpisujemy wypełnionego dziecka). */
   touched: boolean;
@@ -27,7 +37,6 @@ export type DraftHousehold = {
   city: string;
   /** undefined = wartość wyliczona automatycznie. */
   size?: number;
-  incomeText: string;
   /** undefined = wyliczone z braku partnera. */
   singleParent?: boolean;
 };
@@ -37,6 +46,8 @@ export type IdentitySource = 'manual' | 'mobywatel';
 type State = {
   /** Skąd pochodzą dane rodzica – steruje komunikatem w kroku „Twoje dane”. */
   identitySource: IdentitySource;
+  /** Skąd pochodzą dzieci. 'mobywatel' = pobrane po zalogowaniu → krok „Dzieci” jest pomijany. */
+  childrenSource: IdentitySource;
   me: DraftParent;
   childrenCount: number;
   partnerEnabled: boolean;
@@ -45,8 +56,11 @@ type State = {
   currentChild: number;
   household: DraftHousehold;
   setMe: (me: DraftParent) => void;
-  /** Uzupełnia dane rodzica i miejscowość z (symulowanego) mObywatela. Nazwisko i data urodzenia NIE trafiają do szkicu. */
-  applyMObywatelIdentity: (identity: MObywatelIdentity) => void;
+  /**
+   * Uzupełnia dane rodzica, miejscowość i dzieci z (symulowanego) mObywatela.
+   * Nazwisko i data urodzenia rodzica NIE trafiają do szkicu. Brak dzieci = ręczne wpisywanie.
+   */
+  applyMObywatelData: (data: MObywatelData) => void;
   setChildrenCount: (n: number) => void;
   setPartnerEnabled: (enabled: boolean) => void;
   setPartner: (partner: DraftParent) => void;
@@ -63,7 +77,12 @@ export const colorForIndex = (index: number): ChildColorKey => CHILD_COLOR_KEYS[
 
 function blankChild(index: number, count: number): DraftChild {
   // Ostatnie dziecko domyślnie „w drodze” – najczęstszy przypadek przy pierwszym uruchomieniu.
-  return { key: createId('draft_'), name: '', status: index === count - 1 ? 'expected' : 'born', touched: false };
+  return {
+    key: createId('draft_'),
+    name: '',
+    status: index === count - 1 ? 'expected' : 'born',
+    touched: false,
+  };
 }
 
 function resize(children: DraftChild[], n: number): DraftChild[] {
@@ -75,34 +94,79 @@ function resize(children: DraftChild[], n: number): DraftChild[] {
 
 const initial = () => ({
   identitySource: 'manual' as IdentitySource,
+  childrenSource: 'manual' as IdentitySource,
   me: { firstName: '', gender: 'female' as Gender },
   childrenCount: 1,
   partnerEnabled: false,
   partner: { firstName: '', gender: 'male' as Gender },
   children: resize([], 1),
   currentChild: 0,
-  household: { city: '', incomeText: '' },
+  household: { city: '' },
 });
 
 /** Szkic onboardingu – NIE persistowany. Zapisywany do profilu dopiero po kroku 4. */
 export const useOnboardingDraft = create<State>()((set) => ({
   ...initial(),
   setMe: (me) => set({ me }),
-  applyMObywatelIdentity: (identity) =>
-    set((s) => ({
-      identitySource: 'mobywatel',
-      me: { ...s.me, firstName: identity.firstName, gender: identity.gender },
-      household: { ...s.household, city: identity.city },
-    })),
+  applyMObywatelData: ({ identity, children, pue }) =>
+    set((s) => {
+      const base = {
+        identitySource: 'mobywatel' as IdentitySource,
+        me: {
+          ...s.me,
+          firstName: identity.firstName,
+          gender: identity.gender,
+          ...(pue ? { work: pue.work, employment: 'employment_contract' as Employment } : {}),
+        },
+        household: { ...s.household, city: identity.city },
+      };
+      if (children.length === 0) {
+        // Nic nie pobrano → zostaje ręczne wpisywanie (poprzednio pobrane dzieci odrzucamy).
+        return s.childrenSource === 'mobywatel'
+          ? {
+              ...base,
+              childrenSource: 'manual' as IdentitySource,
+              childrenCount: 1,
+              children: resize([], 1),
+              currentChild: 0,
+            }
+          : base;
+      }
+      const imported: DraftChild[] = children.slice(0, MAX_CHILDREN).map((c) => ({
+        key: createId('draft_'),
+        name: c.firstName,
+        status: 'born',
+        birthDate: c.birthDate,
+        sex: c.sex,
+        insured: c.insured,
+        pesel: c.pesel,
+        birthRegistry: c.birthRegistry,
+        vaccinations: c.vaccinations,
+        touched: true,
+      }));
+      return {
+        ...base,
+        childrenSource: 'mobywatel' as IdentitySource,
+        childrenCount: imported.length,
+        children: imported,
+        currentChild: 0,
+      };
+    }),
   setChildrenCount: (n) =>
     set((s) => {
       const count = Math.max(1, Math.min(MAX_CHILDREN, n));
-      return { childrenCount: count, children: resize(s.children, count), currentChild: Math.min(s.currentChild, count - 1) };
+      return {
+        childrenCount: count,
+        children: resize(s.children, count),
+        currentChild: Math.min(s.currentChild, count - 1),
+      };
     }),
   setPartnerEnabled: (partnerEnabled) => set({ partnerEnabled }),
   setPartner: (partner) => set({ partner }),
   updateChild: (index, patch) =>
-    set((s) => ({ children: s.children.map((c, i) => (i === index ? { ...c, ...patch, touched: true } : c)) })),
+    set((s) => ({
+      children: s.children.map((c, i) => (i === index ? { ...c, ...patch, touched: true } : c)),
+    })),
   setCurrentChild: (currentChild) => set({ currentChild }),
   addTwin: (index) =>
     set((s) => {
@@ -123,19 +187,34 @@ export const useOnboardingDraft = create<State>()((set) => ({
       const nextChild = children[index + 1];
       if (nextChild && !nextChild.touched) children[index + 1] = twin;
       else children.splice(index + 1, 0, twin);
-      return { children, childrenCount: Math.max(s.childrenCount, children.length), currentChild: index + 1 };
+      return {
+        children,
+        childrenCount: Math.max(s.childrenCount, children.length),
+        currentChild: index + 1,
+      };
     }),
   setHousehold: (patch) => set((s) => ({ household: { ...s.household, ...patch } })),
   reset: () => set(initial()),
 }));
 
+/** Liczba kroków kreatora: bez kroku „Dzieci”, gdy dzieci pobrano z mObywatela. */
+export function onboardingStepsTotal(draft: Pick<State, 'childrenSource'>): number {
+  return draft.childrenSource === 'mobywatel' ? 2 : 3;
+}
+
 export function computedHouseholdSize(draft: Pick<State, 'partnerEnabled' | 'children'>): number {
   return 1 + (draft.partnerEnabled ? 1 : 0) + draft.children.filter((c) => c.status === 'born').length;
 }
 
-export function parseIncome(text: string): number | undefined {
-  const n = Number(text.replace(/\s/g, '').replace(',', '.'));
-  return text.trim() && Number.isFinite(n) && n >= 0 ? Math.round(n) : undefined;
+/**
+ * Dochód netto na osobę wyliczony z danych z PUE/eZUS (wynagrodzenie netto rodzica / liczba osób).
+ * Przy partnerze nie znamy jego dochodu, więc nie zgadujemy (można uzupełnić w profilu).
+ */
+export function derivedIncomePerPerson(draft: Pick<State, 'me' | 'partnerEnabled' | 'children' | 'household'>): number | undefined {
+  const net = draft.me.work?.monthlyNet;
+  if (net === undefined || draft.partnerEnabled) return undefined;
+  const size = draft.household.size ?? computedHouseholdSize(draft);
+  return Math.round(net / size);
 }
 
 /** Zamienia szkic w Profile (walidacja dat odbywa się w krokach). */
@@ -151,16 +230,31 @@ export function buildProfileFromDraft(draft: State, nowIso: string): Profile {
       sex: c.sex,
       premature: born ? (c.premature ?? false) : undefined,
       disability: born ? c.disability : undefined,
+      insured: c.insured,
+      pesel: c.pesel,
+      birthRegistry: c.birthRegistry,
+      vaccinations: c.vaccinations,
       multipleBirthGroupId: c.multipleBirthGroupId,
       colorKey: colorForIndex(i),
     };
   });
-  const income = parseIncome(draft.household.incomeText);
+  const income = derivedIncomePerPerson(draft);
   return {
     schemaVersion: 1,
-    me: { id: createId('parent_'), firstName: draft.me.firstName.trim(), gender: draft.me.gender, employment: draft.me.employment },
+    me: {
+      id: createId('parent_'),
+      firstName: draft.me.firstName.trim(),
+      gender: draft.me.gender,
+      employment: draft.me.employment,
+      work: draft.me.work,
+    },
     partner: draft.partnerEnabled
-      ? { id: createId('parent_'), firstName: draft.partner.firstName.trim(), gender: draft.partner.gender, employment: draft.partner.employment }
+      ? {
+          id: createId('parent_'),
+          firstName: draft.partner.firstName.trim(),
+          gender: draft.partner.gender,
+          employment: draft.partner.employment,
+        }
       : undefined,
     children,
     household: {

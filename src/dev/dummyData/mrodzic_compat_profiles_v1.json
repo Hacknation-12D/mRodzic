@@ -1,0 +1,1203 @@
+[
+  {
+    "profileId": "P01",
+    "slug": "etat-duzy-platnik",
+    "mobywatel": {
+      "lastName": "Wiśniewska",
+      "birthDate": "1992-04-17"
+    },
+    "profile": {
+      "schemaVersion": 1,
+      "me": {
+        "id": "P01-M",
+        "firstName": "Anna",
+        "gender": "female",
+        "employment": "employment_contract",
+        "work": {
+          "employedSince": "2021-03-01",
+          "fte": 1.0,
+          "employerInsuredCount": 46,
+          "benefitPayer": "employer",
+          "monthlyGross": 7200.0,
+          "monthlyNet": 5050.0,
+          "earnings": [
+            {
+              "month": "2025-09",
+              "gross": 7110.0
+            },
+            {
+              "month": "2025-10",
+              "gross": 7200.0
+            },
+            {
+              "month": "2025-11",
+              "gross": 7290.0
+            },
+            {
+              "month": "2025-12",
+              "gross": 7110.0
+            },
+            {
+              "month": "2026-01",
+              "gross": 7200.0
+            },
+            {
+              "month": "2026-02",
+              "gross": 7290.0
+            },
+            {
+              "month": "2026-03",
+              "gross": 7110.0
+            },
+            {
+              "month": "2026-04",
+              "gross": 7200.0
+            },
+            {
+              "month": "2026-05",
+              "gross": 7290.0
+            },
+            {
+              "month": "2026-06",
+              "gross": 7110.0
+            },
+            {
+              "month": "2026-07",
+              "gross": 7200.0
+            },
+            {
+              "month": "2026-08",
+              "gross": 7290.0
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 26,
+            "usedDays": 0
+          },
+          "maternityLeave": {
+            "startDate": "2026-09-03",
+            "endDate": "2027-01-20",
+            "weeks": 20
+          }
+        }
+      },
+      "children": [
+        {
+          "id": "P01-C1",
+          "name": "Zosia",
+          "status": "born",
+          "sex": "female",
+          "premature": false,
+          "disability": false,
+          "colorKey": "coral",
+          "birthDate": "2026-09-03",
+          "insured": true
+        }
+      ],
+      "household": {
+        "city": "Warszawa",
+        "size": 3,
+        "incomePerPersonNet": 4200.0,
+        "singleParent": false
+      },
+      "createdAt": "2026-11-21T12:00:00.000Z",
+      "updatedAt": "2026-11-21T12:00:00.000Z",
+      "partner": {
+        "id": "P01-P",
+        "firstName": "Tomasz",
+        "gender": "male",
+        "employment": "self_employed"
+      }
+    }
+  },
+  {
+    "profileId": "P02",
+    "slug": "jdg-zadluzenie",
+    "mobywatel": {
+      "lastName": "Zielińska",
+      "birthDate": "1990-08-09"
+    },
+    "profile": {
+      "schemaVersion": 1,
+      "me": {
+        "id": "P02-M",
+        "firstName": "Marta",
+        "gender": "female",
+        "employment": "self_employed"
+      },
+      "children": [
+        {
+          "id": "P02-C1",
+          "name": "Dziecko w drodze",
+          "status": "expected",
+          "sex": "unknown",
+          "premature": false,
+          "disability": false,
+          "colorKey": "coral",
+          "dueDate": "2027-02-18",
+          "insured": true
+        }
+      ],
+      "household": {
+        "city": "Kraków",
+        "size": 2,
+        "incomePerPersonNet": 3500.0,
+        "singleParent": false
+      },
+      "createdAt": "2026-11-21T12:00:00.000Z",
+      "updatedAt": "2026-11-21T12:00:00.000Z",
+      "partner": {
+        "id": "P02-P",
+        "firstName": "Karol",
+        "gender": "male",
+        "employment": "employment_contract",
+        "work": {
+          "employedSince": "2023-01-01",
+          "fte": 1.0,
+          "employerInsuredCount": 12,
+          "benefitPayer": "zus",
+          "monthlyGross": 5900.0,
+          "monthlyNet": 4200.0,
+          "earnings": [
+            {
+              "month": "2025-11",
+              "gross": 5900.0
+            },
+            {
+              "month": "2025-12",
+              "gross": 5900.0
+            },
+            {
+              "month": "2026-01",
+              "gross": 5900.0
+            },
+            {
+              "month": "2026-02",
+              "gross": 5900.0
+            },
+            {
+              "month": "2026-03",
+              "gross": 5900.0
+            },
+            {
+              "month": "2026-04",
+              "gross": 5900.0
+            },
+            {
+              "month": "2026-05",
+              "gross": 5900.0
+            },
+            {
+              "month": "2026-06",
+              "gross": 5900.0
+            },
+            {
+              "month": "2026-07",
+              "gross": 5900.0
+            },
+            {
+              "month": "2026-08",
+              "gross": 5900.0
+            },
+            {
+              "month": "2026-09",
+              "gross": 5900.0
+            },
+            {
+              "month": "2026-10",
+              "gross": 5900.0
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 26,
+            "usedDays": 0
+          }
+        }
+      }
+    }
+  },
+  {
+    "profileId": "P03",
+    "slug": "zlecenie-wyczekiwanie",
+    "mobywatel": {
+      "lastName": "Kamińska",
+      "birthDate": "1997-01-23"
+    },
+    "profile": {
+      "schemaVersion": 1,
+      "me": {
+        "id": "P03-M",
+        "firstName": "Julia",
+        "gender": "female",
+        "employment": "civil_contract"
+      },
+      "children": [
+        {
+          "id": "P03-C1",
+          "name": "Dziecko w drodze",
+          "status": "expected",
+          "sex": "unknown",
+          "premature": false,
+          "disability": false,
+          "colorKey": "coral",
+          "dueDate": "2027-04-15",
+          "insured": true
+        }
+      ],
+      "household": {
+        "city": "Gdańsk",
+        "size": 1,
+        "incomePerPersonNet": 3100.0,
+        "singleParent": true
+      },
+      "createdAt": "2026-11-21T12:00:00.000Z",
+      "updatedAt": "2026-11-21T12:00:00.000Z"
+    }
+  },
+  {
+    "profileId": "P04",
+    "slug": "studentka-bez-chorobowego",
+    "mobywatel": {
+      "lastName": "Lewandowska",
+      "birthDate": "2003-05-30"
+    },
+    "profile": {
+      "schemaVersion": 1,
+      "me": {
+        "id": "P04-M",
+        "firstName": "Alicja",
+        "gender": "female",
+        "employment": "student"
+      },
+      "children": [
+        {
+          "id": "P04-C1",
+          "name": "Dziecko w drodze",
+          "status": "expected",
+          "sex": "unknown",
+          "premature": false,
+          "disability": false,
+          "colorKey": "coral",
+          "dueDate": "2027-03-20",
+          "insured": true
+        }
+      ],
+      "household": {
+        "city": "Poznań",
+        "size": 2,
+        "incomePerPersonNet": 2400.0,
+        "singleParent": false
+      },
+      "createdAt": "2026-11-21T12:00:00.000Z",
+      "updatedAt": "2026-11-21T12:00:00.000Z",
+      "partner": {
+        "id": "P04-P",
+        "firstName": "Michał",
+        "gender": "male",
+        "employment": "employment_contract",
+        "work": {
+          "employedSince": "2024-02-01",
+          "fte": 1.0,
+          "employerInsuredCount": 13,
+          "benefitPayer": "zus",
+          "monthlyGross": 5300.0,
+          "monthlyNet": 3800.0,
+          "earnings": [
+            {
+              "month": "2025-11",
+              "gross": 5200.0
+            },
+            {
+              "month": "2025-12",
+              "gross": 5300.0
+            },
+            {
+              "month": "2026-01",
+              "gross": 5400.0
+            },
+            {
+              "month": "2026-02",
+              "gross": 5200.0
+            },
+            {
+              "month": "2026-03",
+              "gross": 5300.0
+            },
+            {
+              "month": "2026-04",
+              "gross": 5400.0
+            },
+            {
+              "month": "2026-05",
+              "gross": 5200.0
+            },
+            {
+              "month": "2026-06",
+              "gross": 5300.0
+            },
+            {
+              "month": "2026-07",
+              "gross": 5400.0
+            },
+            {
+              "month": "2026-08",
+              "gross": 5200.0
+            },
+            {
+              "month": "2026-09",
+              "gross": 5300.0
+            },
+            {
+              "month": "2026-10",
+              "gross": 5400.0
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 26,
+            "usedDays": 0
+          }
+        }
+      }
+    }
+  },
+  {
+    "profileId": "P05",
+    "slug": "bliznieta-wczesniaki",
+    "mobywatel": {
+      "lastName": "Dąbrowska",
+      "birthDate": "1994-11-02"
+    },
+    "profile": {
+      "schemaVersion": 1,
+      "me": {
+        "id": "P05-M",
+        "firstName": "Iga",
+        "gender": "female",
+        "employment": "employment_contract",
+        "work": {
+          "employedSince": "2022-07-01",
+          "fte": 1.0,
+          "employerInsuredCount": 18,
+          "benefitPayer": "zus",
+          "monthlyGross": 7700.0,
+          "monthlyNet": 5300.0,
+          "earnings": [
+            {
+              "month": "2025-10",
+              "gross": 7580.0
+            },
+            {
+              "month": "2025-11",
+              "gross": 7700.0
+            },
+            {
+              "month": "2025-12",
+              "gross": 7820.0
+            },
+            {
+              "month": "2026-01",
+              "gross": 7580.0
+            },
+            {
+              "month": "2026-02",
+              "gross": 7700.0
+            },
+            {
+              "month": "2026-03",
+              "gross": 7820.0
+            },
+            {
+              "month": "2026-04",
+              "gross": 7580.0
+            },
+            {
+              "month": "2026-05",
+              "gross": 7700.0
+            },
+            {
+              "month": "2026-06",
+              "gross": 7820.0
+            },
+            {
+              "month": "2026-07",
+              "gross": 7580.0
+            },
+            {
+              "month": "2026-08",
+              "gross": 7700.0
+            },
+            {
+              "month": "2026-09",
+              "gross": 7820.0
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 26,
+            "usedDays": 0
+          },
+          "maternityLeave": {
+            "startDate": "2026-10-15",
+            "endDate": "2027-05-19",
+            "weeks": 31
+          }
+        }
+      },
+      "children": [
+        {
+          "id": "P05-C1",
+          "name": "Lena",
+          "status": "born",
+          "sex": "female",
+          "premature": true,
+          "disability": false,
+          "colorKey": "coral",
+          "birthDate": "2026-10-15",
+          "dueDate": "2026-12-25",
+          "multipleBirthGroupId": "P05-TWINS",
+          "insured": true
+        },
+        {
+          "id": "P05-C2",
+          "name": "Olek",
+          "status": "born",
+          "sex": "male",
+          "premature": true,
+          "disability": false,
+          "colorKey": "teal",
+          "birthDate": "2026-10-15",
+          "dueDate": "2026-12-25",
+          "multipleBirthGroupId": "P05-TWINS",
+          "insured": true
+        }
+      ],
+      "household": {
+        "city": "Wrocław",
+        "size": 4,
+        "incomePerPersonNet": 4500.0,
+        "singleParent": false
+      },
+      "createdAt": "2026-11-21T12:00:00.000Z",
+      "updatedAt": "2026-11-21T12:00:00.000Z",
+      "partner": {
+        "id": "P05-P",
+        "firstName": "Adam",
+        "gender": "male",
+        "employment": "employment_contract",
+        "work": {
+          "employedSince": "2020-01-10",
+          "fte": 1.0,
+          "employerInsuredCount": 37,
+          "benefitPayer": "employer",
+          "monthlyGross": 8500.0,
+          "monthlyNet": 6000.0,
+          "earnings": [
+            {
+              "month": "2025-11",
+              "gross": 8500.0
+            },
+            {
+              "month": "2025-12",
+              "gross": 8500.0
+            },
+            {
+              "month": "2026-01",
+              "gross": 8500.0
+            },
+            {
+              "month": "2026-02",
+              "gross": 8500.0
+            },
+            {
+              "month": "2026-03",
+              "gross": 8500.0
+            },
+            {
+              "month": "2026-04",
+              "gross": 8500.0
+            },
+            {
+              "month": "2026-05",
+              "gross": 8500.0
+            },
+            {
+              "month": "2026-06",
+              "gross": 8500.0
+            },
+            {
+              "month": "2026-07",
+              "gross": 8500.0
+            },
+            {
+              "month": "2026-08",
+              "gross": 8500.0
+            },
+            {
+              "month": "2026-09",
+              "gross": 8500.0
+            },
+            {
+              "month": "2026-10",
+              "gross": 8500.0
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 26,
+            "usedDays": 0
+          }
+        }
+      }
+    }
+  },
+  {
+    "profileId": "P06",
+    "slug": "adopcja-wniosek",
+    "mobywatel": {
+      "lastName": "Kozłowska",
+      "birthDate": "1985-03-14"
+    },
+    "profile": {
+      "schemaVersion": 1,
+      "me": {
+        "id": "P06-M",
+        "firstName": "Elżbieta",
+        "gender": "female",
+        "employment": "employment_contract",
+        "work": {
+          "employedSince": "2019-04-01",
+          "fte": 1.0,
+          "employerInsuredCount": 90,
+          "benefitPayer": "employer",
+          "monthlyGross": 8300.0,
+          "monthlyNet": 5900.0,
+          "earnings": [
+            {
+              "month": "2025-11",
+              "gross": 8190.0
+            },
+            {
+              "month": "2025-12",
+              "gross": 8300.0
+            },
+            {
+              "month": "2026-01",
+              "gross": 8410.0
+            },
+            {
+              "month": "2026-02",
+              "gross": 8190.0
+            },
+            {
+              "month": "2026-03",
+              "gross": 8300.0
+            },
+            {
+              "month": "2026-04",
+              "gross": 8410.0
+            },
+            {
+              "month": "2026-05",
+              "gross": 8190.0
+            },
+            {
+              "month": "2026-06",
+              "gross": 8300.0
+            },
+            {
+              "month": "2026-07",
+              "gross": 8410.0
+            },
+            {
+              "month": "2026-08",
+              "gross": 8190.0
+            },
+            {
+              "month": "2026-09",
+              "gross": 8300.0
+            },
+            {
+              "month": "2026-10",
+              "gross": 8410.0
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 26,
+            "usedDays": 0
+          }
+        }
+      },
+      "children": [
+        {
+          "id": "P06-C1",
+          "name": "Kuba",
+          "status": "born",
+          "sex": "male",
+          "premature": false,
+          "disability": false,
+          "colorKey": "coral",
+          "birthDate": "2020-06-20",
+          "insured": true
+        }
+      ],
+      "household": {
+        "city": "Łódź",
+        "size": 3,
+        "incomePerPersonNet": 4700.0,
+        "singleParent": false
+      },
+      "createdAt": "2026-11-21T12:00:00.000Z",
+      "updatedAt": "2026-11-21T12:00:00.000Z",
+      "partner": {
+        "id": "P06-P",
+        "firstName": "Rafał",
+        "gender": "male",
+        "employment": "employment_contract",
+        "work": {
+          "employedSince": "2021-07-01",
+          "fte": 1.0,
+          "employerInsuredCount": 8,
+          "benefitPayer": "zus",
+          "monthlyGross": 6200.0,
+          "monthlyNet": 4450.0,
+          "earnings": [
+            {
+              "month": "2025-11",
+              "gross": 6200.0
+            },
+            {
+              "month": "2025-12",
+              "gross": 6200.0
+            },
+            {
+              "month": "2026-01",
+              "gross": 6200.0
+            },
+            {
+              "month": "2026-02",
+              "gross": 6200.0
+            },
+            {
+              "month": "2026-03",
+              "gross": 6200.0
+            },
+            {
+              "month": "2026-04",
+              "gross": 6200.0
+            },
+            {
+              "month": "2026-05",
+              "gross": 6200.0
+            },
+            {
+              "month": "2026-06",
+              "gross": 6200.0
+            },
+            {
+              "month": "2026-07",
+              "gross": 6200.0
+            },
+            {
+              "month": "2026-08",
+              "gross": 6200.0
+            },
+            {
+              "month": "2026-09",
+              "gross": 6200.0
+            },
+            {
+              "month": "2026-10",
+              "gross": 6200.0
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 26,
+            "usedDays": 0
+          }
+        }
+      }
+    }
+  },
+  {
+    "profileId": "P07",
+    "slug": "rodzina-zastepcza",
+    "mobywatel": {
+      "lastName": "Jankowski",
+      "birthDate": "1981-07-08"
+    },
+    "profile": {
+      "schemaVersion": 1,
+      "me": {
+        "id": "P07-M",
+        "firstName": "Piotr",
+        "gender": "male",
+        "employment": "employment_contract",
+        "work": {
+          "employedSince": "2018-03-01",
+          "fte": 1.0,
+          "employerInsuredCount": 22,
+          "benefitPayer": "employer",
+          "monthlyGross": 6800.0,
+          "monthlyNet": 4700.0,
+          "earnings": [
+            {
+              "month": "2025-11",
+              "gross": 6800.0
+            },
+            {
+              "month": "2025-12",
+              "gross": 6800.0
+            },
+            {
+              "month": "2026-01",
+              "gross": 6800.0
+            },
+            {
+              "month": "2026-02",
+              "gross": 6800.0
+            },
+            {
+              "month": "2026-03",
+              "gross": 6800.0
+            },
+            {
+              "month": "2026-04",
+              "gross": 6800.0
+            },
+            {
+              "month": "2026-05",
+              "gross": 6800.0
+            },
+            {
+              "month": "2026-06",
+              "gross": 6800.0
+            },
+            {
+              "month": "2026-07",
+              "gross": 6800.0
+            },
+            {
+              "month": "2026-08",
+              "gross": 6800.0
+            },
+            {
+              "month": "2026-09",
+              "gross": 6800.0
+            },
+            {
+              "month": "2026-10",
+              "gross": 6800.0
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 26,
+            "usedDays": 0
+          }
+        }
+      },
+      "children": [
+        {
+          "id": "P07-C1",
+          "name": "Filip",
+          "status": "born",
+          "sex": "male",
+          "premature": false,
+          "disability": false,
+          "colorKey": "coral",
+          "birthDate": "2017-05-11",
+          "insured": true
+        }
+      ],
+      "household": {
+        "city": "Katowice",
+        "size": 3,
+        "incomePerPersonNet": 4100.0,
+        "singleParent": false
+      },
+      "createdAt": "2026-11-21T12:00:00.000Z",
+      "updatedAt": "2026-11-21T12:00:00.000Z",
+      "partner": {
+        "id": "P07-P",
+        "firstName": "Zofia",
+        "gender": "female",
+        "employment": "employment_contract",
+        "work": {
+          "employedSince": "2025-04-01",
+          "fte": 1.0,
+          "employerInsuredCount": 7,
+          "benefitPayer": "zus",
+          "monthlyGross": 5100.0,
+          "monthlyNet": 3700.0,
+          "earnings": [
+            {
+              "month": "2025-11",
+              "gross": 5100.0
+            },
+            {
+              "month": "2025-12",
+              "gross": 5100.0
+            },
+            {
+              "month": "2026-01",
+              "gross": 5100.0
+            },
+            {
+              "month": "2026-02",
+              "gross": 5100.0
+            },
+            {
+              "month": "2026-03",
+              "gross": 5100.0
+            },
+            {
+              "month": "2026-04",
+              "gross": 5100.0
+            },
+            {
+              "month": "2026-05",
+              "gross": 5100.0
+            },
+            {
+              "month": "2026-06",
+              "gross": 5100.0
+            },
+            {
+              "month": "2026-07",
+              "gross": 5100.0
+            },
+            {
+              "month": "2026-08",
+              "gross": 5100.0
+            },
+            {
+              "month": "2026-09",
+              "gross": 5100.0
+            },
+            {
+              "month": "2026-10",
+              "gross": 5100.0
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 26,
+            "usedDays": 0
+          }
+        }
+      }
+    }
+  },
+  {
+    "profileId": "P08",
+    "slug": "martwe-urodzenie",
+    "mobywatel": {
+      "lastName": "Mazur",
+      "birthDate": "1993-02-26"
+    },
+    "profile": {
+      "schemaVersion": 1,
+      "me": {
+        "id": "P08-M",
+        "firstName": "Monika",
+        "gender": "female",
+        "employment": "employment_contract",
+        "work": {
+          "employedSince": "2020-09-01",
+          "fte": 1.0,
+          "employerInsuredCount": 7,
+          "benefitPayer": "zus",
+          "monthlyGross": 5700.0,
+          "monthlyNet": 3900.0,
+          "earnings": [
+            {
+              "month": "2025-11",
+              "gross": 5700.0
+            },
+            {
+              "month": "2025-12",
+              "gross": 5700.0
+            },
+            {
+              "month": "2026-01",
+              "gross": 5700.0
+            },
+            {
+              "month": "2026-02",
+              "gross": 5700.0
+            },
+            {
+              "month": "2026-03",
+              "gross": 5700.0
+            },
+            {
+              "month": "2026-04",
+              "gross": 5700.0
+            },
+            {
+              "month": "2026-05",
+              "gross": 5700.0
+            },
+            {
+              "month": "2026-06",
+              "gross": 5700.0
+            },
+            {
+              "month": "2026-07",
+              "gross": 5700.0
+            },
+            {
+              "month": "2026-08",
+              "gross": 5700.0
+            },
+            {
+              "month": "2026-09",
+              "gross": 5700.0
+            },
+            {
+              "month": "2026-10",
+              "gross": 5700.0
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 26,
+            "usedDays": 0
+          },
+          "maternityLeave": {
+            "startDate": "2026-10-30",
+            "endDate": "2026-12-24",
+            "weeks": 8
+          }
+        }
+      },
+      "children": [
+        {
+          "id": "P08-C1",
+          "name": "Dziecko",
+          "status": "born",
+          "sex": "unknown",
+          "premature": false,
+          "disability": false,
+          "colorKey": "coral",
+          "birthDate": "2026-10-30",
+          "insured": true
+        }
+      ],
+      "household": {
+        "city": "Lublin",
+        "size": 1,
+        "incomePerPersonNet": 3900.0,
+        "singleParent": true
+      },
+      "createdAt": "2026-11-21T12:00:00.000Z",
+      "updatedAt": "2026-11-21T12:00:00.000Z"
+    }
+  },
+  {
+    "profileId": "P09",
+    "slug": "likwidacja-pracodawcy",
+    "mobywatel": {
+      "lastName": "Krawczyk",
+      "birthDate": "1996-10-11"
+    },
+    "profile": {
+      "schemaVersion": 1,
+      "me": {
+        "id": "P09-M",
+        "firstName": "Weronika",
+        "gender": "female",
+        "employment": "unemployed"
+      },
+      "children": [
+        {
+          "id": "P09-C1",
+          "name": "Dziecko w drodze",
+          "status": "expected",
+          "sex": "unknown",
+          "premature": false,
+          "disability": false,
+          "colorKey": "coral",
+          "dueDate": "2027-01-10",
+          "insured": true
+        }
+      ],
+      "household": {
+        "city": "Szczecin",
+        "size": 1,
+        "incomePerPersonNet": 2600.0,
+        "singleParent": true
+      },
+      "createdAt": "2026-11-21T12:00:00.000Z",
+      "updatedAt": "2026-11-21T12:00:00.000Z"
+    }
+  },
+  {
+    "profileId": "P10",
+    "slug": "za-zyciem-praca",
+    "mobywatel": {
+      "lastName": "Piotrowska",
+      "birthDate": "1991-06-05"
+    },
+    "profile": {
+      "schemaVersion": 1,
+      "me": {
+        "id": "P10-M",
+        "firstName": "Natalia",
+        "gender": "female",
+        "employment": "employment_contract",
+        "work": {
+          "employedSince": "2017-06-01",
+          "fte": 1.0,
+          "employerInsuredCount": 100,
+          "benefitPayer": "employer",
+          "monthlyGross": 9200.0,
+          "monthlyNet": 6600.0,
+          "earnings": [
+            {
+              "month": "2025-05",
+              "gross": 9030.0
+            },
+            {
+              "month": "2025-06",
+              "gross": 9200.0
+            },
+            {
+              "month": "2025-07",
+              "gross": 9370.0
+            },
+            {
+              "month": "2025-08",
+              "gross": 9030.0
+            },
+            {
+              "month": "2025-09",
+              "gross": 9200.0
+            },
+            {
+              "month": "2025-10",
+              "gross": 9370.0
+            },
+            {
+              "month": "2025-11",
+              "gross": 9030.0
+            },
+            {
+              "month": "2025-12",
+              "gross": 9200.0
+            },
+            {
+              "month": "2026-01",
+              "gross": 9370.0
+            },
+            {
+              "month": "2026-02",
+              "gross": 9030.0
+            },
+            {
+              "month": "2026-03",
+              "gross": 9200.0
+            },
+            {
+              "month": "2026-04",
+              "gross": 9370.0
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 26,
+            "usedDays": 0
+          },
+          "maternityLeave": {
+            "startDate": "2026-05-19",
+            "endDate": "2026-10-05",
+            "weeks": 20
+          }
+        }
+      },
+      "children": [
+        {
+          "id": "P10-C1",
+          "name": "Emilka",
+          "status": "born",
+          "sex": "female",
+          "premature": false,
+          "disability": true,
+          "colorKey": "coral",
+          "birthDate": "2026-05-19",
+          "insured": true
+        }
+      ],
+      "household": {
+        "city": "Rzeszów",
+        "size": 3,
+        "incomePerPersonNet": 5100.0,
+        "singleParent": false
+      },
+      "createdAt": "2026-11-21T12:00:00.000Z",
+      "updatedAt": "2026-11-21T12:00:00.000Z",
+      "partner": {
+        "id": "P10-P",
+        "firstName": "Dawid",
+        "gender": "male",
+        "employment": "employment_contract",
+        "work": {
+          "employedSince": "2023-01-01",
+          "fte": 1.0,
+          "employerInsuredCount": 9,
+          "benefitPayer": "zus",
+          "monthlyGross": 6600.0,
+          "monthlyNet": 4700.0,
+          "earnings": [
+            {
+              "month": "2025-11",
+              "gross": 6600.0
+            },
+            {
+              "month": "2025-12",
+              "gross": 6600.0
+            },
+            {
+              "month": "2026-01",
+              "gross": 6600.0
+            },
+            {
+              "month": "2026-02",
+              "gross": 6600.0
+            },
+            {
+              "month": "2026-03",
+              "gross": 6600.0
+            },
+            {
+              "month": "2026-04",
+              "gross": 6600.0
+            },
+            {
+              "month": "2026-05",
+              "gross": 6600.0
+            },
+            {
+              "month": "2026-06",
+              "gross": 6600.0
+            },
+            {
+              "month": "2026-07",
+              "gross": 6600.0
+            },
+            {
+              "month": "2026-08",
+              "gross": 6600.0
+            },
+            {
+              "month": "2026-09",
+              "gross": 6600.0
+            },
+            {
+              "month": "2026-10",
+              "gross": 6600.0
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 26,
+            "usedDays": 0
+          }
+        }
+      }
+    }
+  }
+]

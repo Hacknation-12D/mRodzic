@@ -4,25 +4,25 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Uniwind, useUniwind } from 'uniwind';
 
 import { useAppBootstrap } from '@/core/bootstrap/useAppBootstrap';
-import { getToday } from '@/core/clock/clock';
-import { env } from '@/core/config/env';
+import { registerLocalDemoProfiles } from '@/core/demo/localDemoProfiles';
 import { useProfileStore } from '@/core/profile/profile.store';
 import { useSettingsStore } from '@/core/settings/settings.store';
 import { pl } from '@/shared/i18n/pl';
 import { darkColors, lightColors } from '@/shared/theme';
-import { PreviewControls } from '@/shared/ui';
-import { buildPersona } from '@/dev/personas';
+import { AppText, PreviewControls } from '@/shared/ui';
+import demoProfiles from '@/dev/dummyData/mrodzic_compat_profiles_v1.json';
 
 void SplashScreen.preventAutoHideAsync();
-
-const initialProfile = () => (env.seedPersona ? buildPersona(env.seedPersona, getToday()) : null);
+// Baza profili DEMO do logowania, gdy nie ustawiono EXPO_PUBLIC_DEMO_API_URL (README_INTEGRACJA.md).
+registerLocalDemoProfiles(demoProfiles);
 
 /** Root providers, app bootstrap, persisted-store hydration, and global preview controls. */
 export default function RootLayout() {
-  const ready = useAppBootstrap({ initialProfile });
+  const ready = useAppBootstrap();
   const hasProfile = useProfileStore((s) => s.profile !== null);
   const { theme } = useUniwind();
   const scheme = theme === 'dark' ? 'dark' : 'light';
@@ -63,6 +63,11 @@ export default function RootLayout() {
         </Stack>
         <PreviewControls hasProfile={hasProfile} isDark={scheme === 'dark'} onToggleTheme={toggleTheme} />
       </View>
+        <SafeAreaView edges={['bottom']} style={{ backgroundColor: c.warningSoft }}>
+          <AppText variant="caption" tone="warning" className="px-4 py-1 text-center">
+            {pl.demo.simulationBanner}
+          </AppText>
+        </SafeAreaView>
     </ThemeProvider>
   );
 }

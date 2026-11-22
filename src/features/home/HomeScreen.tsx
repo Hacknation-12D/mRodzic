@@ -63,6 +63,11 @@ export function HomeScreen() {
                       <AppText variant="small" tone="muted">
                         {child.stageLabel}
                       </AppText>
+                      {child.insured !== undefined ? (
+                        <AppText variant="small" tone="muted">
+                          {child.insured ? pl.profile.insured : pl.profile.notInsured}
+                        </AppText>
+                      ) : null}
                     </View>
                     <Ionicons name="chevron-forward" size={20} color={colors.baseContentMuted} />
                   </Pressable>

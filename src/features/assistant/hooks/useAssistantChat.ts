@@ -14,6 +14,7 @@ import {
 import { getDocumentById } from '@/core/content/selectors';
 import { useContentData } from '@/core/content/useContentData';
 import { deanonymize } from '@/core/profile/anonymize';
+import { useProfileStore } from '@/core/profile/profile.store';
 import { pl } from '@/shared/i18n/pl';
 import { createId } from '@/shared/lib/id';
 
@@ -39,7 +40,8 @@ function timingWindow(t: { showFrom: number; showTo?: number; deadline?: number 
 /** `handoffEmail` ustawiony → rozmowa przekazana człowiekowi: AI nie odpowiada, wiadomości trafiają do zespołu. */
 export function useAssistantChat(childId: string | null, docId: string | null, handoffEmail: string | null = null) {
   const { bundle, profile, statuses, today } = useContentData();
-  const threadKey = childId ?? 'all';
+  const demoProfileId = useProfileStore((s) => s.demoProfileId);
+  const threadKey = demoProfileId ? `demo:${demoProfileId}:${childId ?? 'all'}` : childId ?? 'all';
   const stored = useChatStore((s) => s.threads[threadKey]) ?? EMPTY;
   const append = useChatStore((s) => s.append);
   const clearThread = useChatStore((s) => s.clearThread);

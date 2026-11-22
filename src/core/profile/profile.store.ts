@@ -19,7 +19,9 @@ export type MarkBornInput = {
 
 type State = {
   profile: Profile | null;
+  demoProfileId: string | null;
   setProfile: (profile: Profile) => void;
+  setDemoProfile: (profileId: string, profile: Profile) => void;
   updateMe: (patch: Partial<Omit<Parent, 'id'>>) => void;
   setPartner: (partner: Parent) => void;
   removePartner: () => void;
@@ -42,12 +44,26 @@ function touch(profile: Profile, patch: Partial<Profile>): Profile {
   return { ...profile, ...patch, updatedAt: nowIso() };
 }
 
+function clearHouseholdContext() {
+  useDocumentStatusStore.getState().clearAll();
+  useChildFilterStore.getState().setFilter('all');
+}
+
 export const useProfileStore = create<State>()(
   persist(
     (set, get) => ({
       profile: null,
+      demoProfileId: null,
 
-      setProfile: (profile) => set({ profile: { ...profile, updatedAt: nowIso() } }),
+      setProfile: (profile) => {
+        if (get().demoProfileId !== null) clearHouseholdContext();
+        set({ profile: { ...profile, updatedAt: nowIso() }, demoProfileId: null });
+      },
+
+      setDemoProfile: (profileId, profile) => {
+        if (get().demoProfileId !== profileId) clearHouseholdContext();
+        set({ profile, demoProfileId: profileId });
+      },
 
       updateMe: (patch) => {
         const p = get().profile;
@@ -119,24 +135,27 @@ export const useProfileStore = create<State>()(
       },
 
       resetAll: () => {
-        set({ profile: null });
-        useDocumentStatusStore.getState().clearAll();
-        useChildFilterStore.getState().setFilter('all');
+        set({ profile: null, demoProfileId: null });
+        clearHouseholdContext();
       },
     }),
     {
       name: `${STORAGE_PREFIX}profile`,
       storage: persistStorage,
       version: 1,
-      partialize: (s) => ({ profile: s.profile }),
+      partialize: (s) => ({ profile: s.profile, demoProfileId: s.demoProfileId }),
       migrate: (persisted) => persisted as State,
       // Odporność: uszkodzony profil w storage → traktujemy jak brak profilu (onboarding).
       merge: (persisted, current) => {
-        const raw = (persisted as { profile?: unknown } | undefined)?.profile;
-        if (raw == null) return { ...current, profile: null };
-        const parsed = ProfileSchema.safeParse(raw);
+        const saved = persisted as { profile?: unknown; demoProfileId?: unknown } | undefined;
+        if (saved?.profile == null) return { ...current, profile: null, demoProfileId: null };
+        const parsed = ProfileSchema.safeParse(saved.profile);
         if (!parsed.success) console.warn('Niepoprawny profil w pamięci – pomijam', parsed.error.issues.slice(0, 3));
-        return { ...current, profile: parsed.success ? parsed.data : null };
+        return {
+          ...current,
+          profile: parsed.success ? parsed.data : null,
+          demoProfileId: parsed.success && typeof saved.demoProfileId === 'string' ? saved.demoProfileId : null,
+        };
       },
     },
   ),
