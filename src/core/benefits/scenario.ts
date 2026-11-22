@@ -154,6 +154,7 @@ function ageLimitYears(input: BenefitScenarioInput): number {
 
 /** Główny kalkulator. Błędne dane → BenefitInputError z nazwą pola (UI pokazuje go przy polu). */
 export function calculateBenefitScenario(input: BenefitScenarioInput): BenefitScenarioResult {
+  if (!input.eventDate) throw new BenefitInputError('Wybierz datę z kalendarza.', 'eventDate');
   const eligibility = assessEligibility(input);
   const notes: string[] = [];
   const adopting = input.kind === 'adoption' || input.kind === 'foster';

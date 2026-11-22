@@ -31,7 +31,7 @@ export function InputsCard({ input, grossText, profileGross, errorField, errorMe
 
   return (
     <Card className="gap-4 p-5">
-      <DateField label={t.eventDate[input.kind]} value={input.eventDate} onChange={(v) => v && onChange({ eventDate: v })} error={err('eventDate') ?? err('startDate')} />
+      <DateField label={t.eventDate[input.kind]} value={input.eventDate} onChange={(v) => onChange({ eventDate: v ?? '' })} error={err('eventDate') ?? err('startDate')} />
       {adopting ? (
         <DateField
           label={t.childBirthDate}
