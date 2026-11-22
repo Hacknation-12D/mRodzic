@@ -15,7 +15,7 @@ import type { ChatMessage } from "@/core/assistant";
 import { useChatStore } from "./chat.store";
 import { ChildContextPicker } from "./components/ChildContextPicker";
 import { Composer } from "./components/Composer";
-import { HoverPressable } from "./components/Motion";
+import { NewChatButton } from "./components/NewChatButton";
 import { Disclaimer } from "./components/Disclaimer";
 import { HandoffSheet } from "./components/HandoffSheet";
 import { MessageList, type ListItem } from "./components/MessageList";
@@ -62,12 +62,13 @@ export function AssistantScreen() {
   // Po wysłaniu wiadomości input zostaje aktywny, ale propozycje wracają dopiero po kliknięciu w input lub wpisaniu tekstu.
   const [suggestionsHidden, setSuggestionsHidden] = useState(false);
 
-  // Historia czatu AI żyje tylko, dopóki użytkownik jest w czacie: wyjście z ekranu resetuje rozmowy.
+  // Historia czatu AI przetrwa wyjście z ekranu na CHAT_HISTORY_TTL_MS; po dłuższej nieobecności jest usuwana.
   useFocusEffect(
     useCallback(() => {
+      useChatStore.getState().markEntered();
       setSession((k) => k + 1);
       return () => {
-        useChatStore.getState().clearAll();
+        useChatStore.getState().markLeft();
         setHandoff(null);
         setDraft("");
       };
@@ -108,18 +109,8 @@ export function AssistantScreen() {
   );
   const items = useMemo<ListItem[]>(() => {
     const toItem = (m: ChatMessage): ListItem => ({ id: m.id, message: m });
-    const plus = (
-      <HoverPressable
-        onPress={newChat}
-        accessibilityRole="button"
-        accessibilityLabel={pl.assistant.newChat}
-        hitSlop={8}
-        hoverClassName="border-primary bg-primary/10"
-        className="size-10 items-center justify-center rounded-full border border-base-300 bg-base-100 active:opacity-70"
-      >
-        <Ionicons name="add" size={24} color={c.primary} />
-      </HoverPressable>
-    );
+    // Miejsce pod przyklejony przycisk „+” (rysowany osobno, nad listą).
+    const plus = <View className="size-10" />;
     const list: ListItem[] = [
       { ...toItem(greeting), trailing: plus, animateKey: session },
     ];
@@ -216,6 +207,7 @@ export function AssistantScreen() {
             {banner}
           </View>
 
+          <View className="min-h-0 flex-1">
           <MessageList
             messages={items}
             pending={chat.pending}
@@ -242,6 +234,11 @@ export function AssistantScreen() {
               </View>
             }
           />
+          {/* Przyklejony do pozycji – nie przewija się razem z rozmową. */}
+          <View className="absolute right-4 top-4">
+            <NewChatButton onPress={newChat} />
+          </View>
+          </View>
           <Disclaimer />
           {handoff ? (
             <View className="px-3 pb-2 pt-1">

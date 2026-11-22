@@ -19,6 +19,7 @@ import { pl } from '@/shared/i18n/pl';
 import { createId } from '@/shared/lib/id';
 
 import { useChatStore } from '../chat.store';
+import { MAX_INPUT_CHARS } from '../limits';
 import { askLlm, isLlmConfigured } from '../llm/llmAssistant';
 import { getCachedAnswer } from '../suggestions/answerCache';
 
@@ -66,13 +67,30 @@ export function useAssistantChat(childId: string | null, docId: string | null, h
   /** Wiedza dla modelu: dokumenty najbliższe terminem (+ ten, od którego użytkownik wszedł). */
   const knowledge = useMemo(() => {
     if (!context) return '';
-    const ids = [...new Set([context.focusDocumentId, ...context.relevantDocumentIds].filter((x): x is string => Boolean(x)))];
+    // Dokument, od którego użytkownik wszedł, opisujemy osobno (pełniej) w `focusKnowledge`.
+    const ids = [...new Set(context.relevantDocumentIds)].filter((id) => id !== focusDoc?.id);
     return ids
       .map((id) => getDocumentById(bundle, id))
       .filter((d) => d !== undefined)
       .map((d) => `- ${d.title}: ${d.summary}${d.amountLabel ? ` (${d.amountLabel})` : ''}${d.timing.deadlineNote ? ` Termin: ${d.timing.deadlineNote}.` : ''} Okno: ${timingWindow(d.timing)}.`)
       .join('\n');
-  }, [bundle, context]);
+  }, [bundle, context, focusDoc?.id]);
+
+  /** Pełny opis dokumentu, o który pyta użytkownik („Pytasz o: …”). */
+  const focusKnowledge = useMemo(() => {
+    if (!focusDoc) return '';
+    return [
+      `Tytuł: ${focusDoc.title}`,
+      `Streszczenie: ${focusDoc.summary}`,
+      focusDoc.amountLabel ? `Kwota: ${focusDoc.amountLabel}` : '',
+      focusDoc.timing.deadlineNote ? `Termin: ${focusDoc.timing.deadlineNote}` : '',
+      `Okno: ${timingWindow(focusDoc.timing)}`,
+      focusDoc.checklist?.length ? `Lista kroków:\n${focusDoc.checklist.map((x) => `- ${x}`).join('\n')}` : '',
+      `Opis:\n${focusDoc.bodyMd.slice(0, 4000)}`,
+    ]
+      .filter(Boolean)
+      .join('\n');
+  }, [focusDoc]);
 
   const ask = async (history: ChatMessage[]) => {
     if (!context) return;
@@ -85,7 +103,7 @@ export function useAssistantChat(childId: string | null, docId: string | null, h
       let reply;
       const useLlm = isLlmConfigured();
       try {
-        reply = useLlm ? await askLlm(history, context, knowledge, controller.signal) : await service.ask(history, context, controller.signal);
+        reply = useLlm ? await askLlm(history, context, knowledge, controller.signal, focusKnowledge) : await service.ask(history, context, controller.signal);
       } catch (e) {
         // Fallback: model/remote nie odpowiada → mock (z informacją w bańce).
         if ((useLlm || mode === 'remote') && !isAbortError(e)) {
@@ -113,7 +131,7 @@ export function useAssistantChat(childId: string | null, docId: string | null, h
   const send = (text: string) => {
     const trimmed = text.trim();
     if (!trimmed || pending) return;
-    const message: ChatMessage = { id: createId('m_'), role: 'user', text: trimmed.slice(0, 2000), createdAt: nowIso() };
+    const message: ChatMessage = { id: createId('m_'), role: 'user', text: trimmed.slice(0, MAX_INPUT_CHARS), createdAt: nowIso() };
     append(threadKey, message);
     if (handoffEmail) {
       if (context) void humanSupport.submit({ question: message.text, contact: handoffEmail, context });
@@ -125,7 +143,7 @@ export function useAssistantChat(childId: string | null, docId: string | null, h
   /** Podpowiedź z cache: odpowiedź jest gotowa, więc pokazujemy ją od razu (bez wywołania modelu). */
   const sendCached = async (question: string) => {
     if (!context || pending || handoffEmail) return;
-    append(threadKey, { id: createId('m_'), role: 'user', text: question.slice(0, 2000), createdAt: nowIso() });
+    append(threadKey, { id: createId('m_'), role: 'user', text: question.slice(0, MAX_INPUT_CHARS), createdAt: nowIso() });
     setError(null);
     setPending(true);
     try {

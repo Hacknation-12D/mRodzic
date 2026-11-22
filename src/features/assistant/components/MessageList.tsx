@@ -1,12 +1,12 @@
-import { useEffect, useRef, type ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
 
 import type { ChatMessage } from "@/core/assistant";
-import { pl } from "@/shared/i18n/pl";
 import { useThemeColors } from "@/shared/theme";
 import { AppText } from "@/shared/ui";
 
 import { MessageBubble } from "./MessageBubble";
+import { t } from "../strings";
 import { FadeIn } from "./Motion";
 
 export type ListItem =
@@ -85,12 +85,9 @@ export function MessageList({
             <View
               className="flex-row items-center gap-2"
               accessibilityLiveRegion="polite"
-              accessibilityLabel={pl.assistant.typing}
             >
               <ActivityIndicator color={c.primary} />
-              <AppText variant="small" tone="muted">
-                {pl.assistant.typing}
-              </AppText>
+              <ThinkingLabel />
             </View>
           ) : null}
           {footer}
@@ -105,4 +102,22 @@ export function MessageList({
 
 function FadeKey({ k, children }: { k?: number; children: ReactElement }) {
   return k === undefined ? children : <FadeIn key={k}>{children}</FadeIn>;
+}
+
+/** Komunikat oczekiwania, który zmienia się co `t.thinking.intervalMs`. Montowany tylko podczas oczekiwania, więc licznik startuje od zera. */
+function ThinkingLabel() {
+  const { steps, intervalMs } = t.thinking;
+  const [step, setStep] = useState(0);
+  useEffect(() => {
+    const id = setInterval(
+      () => setStep((s) => (s + 1) % steps.length),
+      intervalMs,
+    );
+    return () => clearInterval(id);
+  }, [steps.length, intervalMs]);
+  return (
+    <AppText variant="small" tone="muted">
+      {steps[step]}
+    </AppText>
+  );
 }

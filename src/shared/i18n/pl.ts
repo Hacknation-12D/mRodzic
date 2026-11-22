@@ -503,6 +503,7 @@ export const pl = {
     send: 'Wyślij',
     stop: 'Stop',
     newChat: 'Nowa rozmowa',
+    charsLeft: (n: number) => `Pozostało znaków: ${n}`,
     typing: 'Asystent pisze…',
     sources: 'Źródła',
     disclaimer: 'Informacje ogólne, nie porada prawna. Sprawdź w źródle.',

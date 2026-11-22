@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { env } from '../config/env';
 import { AssistantError, type AssistantContext, type AssistantReply, type AssistantService, type ChatMessage } from './AssistantService';
 
-const TIMEOUT_MS = 30_000;
+const TIMEOUT_MS = 40_000;
 const MAX_MESSAGES = 12;
 
 const ReplySchema = z.object({

@@ -1,9 +1,10 @@
 import { AssistantError, type AssistantContext, type AssistantReply, type ChatMessage } from '@/core/assistant';
 
 import { getLlmConfig } from './config';
+import { MAX_HISTORY_MESSAGE_CHARS, MAX_OUTPUT_TOKENS } from '../limits';
 import { buildSystemPrompt } from './systemPrompt';
 
-const TIMEOUT_MS = 40_000;
+const TIMEOUT_MS = 50_000;
 /** Pamięć: 2 poprzednie pary pytanie–odpowiedź + bieżące pytanie. */
 const MAX_HISTORY = 2 * 2 + 1;
 
@@ -11,7 +12,7 @@ const MAX_HISTORY = 2 * 2 + 1;
 export const isLlmConfigured = (): boolean => getLlmConfig() !== null;
 
 /** Wywołanie czatu zgodnego z OpenAI (OpenAI i DeepSeek używają tego samego formatu). */
-export async function askLlm(history: ChatMessage[], ctx: AssistantContext, knowledge: string, signal?: AbortSignal): Promise<AssistantReply> {
+export async function askLlm(history: ChatMessage[], ctx: AssistantContext, knowledge: string, signal?: AbortSignal, focusKnowledge = ''): Promise<AssistantReply> {
   const cfg = getLlmConfig();
   if (!cfg) throw new AssistantError('config', 'AI provider not configured');
 
@@ -32,9 +33,10 @@ export async function askLlm(history: ChatMessage[], ctx: AssistantContext, know
         model: cfg.model,
         temperature: 0.3,
         stream: false,
+        max_tokens: MAX_OUTPUT_TOKENS,
         messages: [
-          { role: 'system', content: buildSystemPrompt(ctx, knowledge) },
-          ...history.slice(-MAX_HISTORY).map((m) => ({ role: m.role, content: m.text.slice(0, 2000) })),
+          { role: 'system', content: buildSystemPrompt(ctx, knowledge, focusKnowledge) },
+          ...history.slice(-MAX_HISTORY).map((m) => ({ role: m.role, content: m.text.slice(0, MAX_HISTORY_MESSAGE_CHARS) })),
         ],
       }),
       signal: controller.signal,

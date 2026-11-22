@@ -2,6 +2,11 @@
 export const t = {
   greeting:
     'Cześć! 👋 \nJestem asystentem AI i chętnie pomogę Ci w sprawach urzędowych oraz dokumentach dla Twojego dziecka.\nOd becikowego i 800+, przez urlopy i zasiłki, po rejestracje i szczepienia.\n\n**Zadaj dowolne pytanie** , a podpowiem, o co rodzice pytają najczęściej.\nJeśli wolisz porozmawiać z naszym ludzkim zespołem, kliknij przycisk poniżej.',
+  /** Komunikaty w trakcie oczekiwania na AI – zmieniają się co `intervalMs`, po ostatnim wracają od pierwszego. */
+  thinking: {
+    intervalMs: 8000,
+    steps: ['Asystent myśli…', 'Jeszcze sekunda…', 'Asystent pisze…', 'Już kończymy…'],
+  },
   suggestionsTitle: 'Proponowane pytania',
   askHuman: 'Porozmawiaj z człowiekiem',
   backToAi: 'Wróć do asystenta AI',
