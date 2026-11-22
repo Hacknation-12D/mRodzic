@@ -47,3 +47,7 @@ example
 
 .claude
 .vscode
+
+# Python
+__pycache__/
+*.pyc
