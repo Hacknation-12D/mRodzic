@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import demoProfiles from '../../dev/dummyData/mrodzic_compat_profiles_v1.json';
+import { peselMatches } from '../profile/pesel';
 import { loginDemoProfile } from './demoApi';
 import { localDemoProfiles, pickLocalDemoProfile, registerLocalDemoProfiles } from './localDemoProfiles';
 
@@ -14,6 +15,55 @@ describe('local demo profiles', () => {
     expect(all).toHaveLength(10);
     expect(all.filter((p) => p.sensitive).map((p) => p.profileId)).toEqual(['P08']);
     expect(all[0].label).toBe('Anna – Etat, zasiłek wypłaca pracodawca');
+  });
+
+  it('every parent has surname, date of birth, matching PESEL and a full home address', () => {
+    for (const { profileId, profile } of localDemoProfiles()) {
+      for (const parent of [profile.me, profile.partner].filter((p) => p !== undefined)) {
+        const who = `${profileId} ${parent.firstName}`;
+        for (const key of ['lastName', 'birthDate', 'pesel', 'street', 'houseNumber', 'postalCode', 'city'] as const) {
+          expect(parent[key], `${who}: ${key}`).toBeTruthy();
+        }
+        expect(peselMatches(parent.pesel ?? '', parent.birthDate ?? '', parent.gender), who).toBe(true);
+      }
+      expect(profile.household.city, `${profileId}: city comes from the address`).toBeUndefined();
+      expect(profile.partner?.city ?? profile.me.city).toBe(profile.me.city);
+    }
+  });
+
+  it('children follow the registry rules (raw database export)', () => {
+    for (const { profileId, profile } of demoProfiles) {
+      for (const c of profile.children as Record<string, unknown>[]) {
+        const who = `${profileId} ${String(c.id)}`;
+        if (c.status === 'expected') {
+          // An unborn child cannot be insured yet and has no PESEL / birth certificate.
+          expect(c.insured, `${who}: insured`).toBeUndefined();
+          expect(c.pesel, `${who}: pesel`).toBeUndefined();
+          expect(c.birthRegistry, `${who}: birthRegistry`).toBeUndefined();
+        } else if (c.loss) {
+          expect(c.insured, `${who}: a lost child is not insured`).toBeUndefined();
+        } else {
+          expect(c.pesel, `${who}: pesel`).toBeTruthy();
+          expect(c.birthRegistry, `${who}: birthRegistry`).toBeTruthy();
+        }
+      }
+    }
+  });
+
+  it('rejects a born child without a matching PESEL', () => {
+    const broken = structuredClone(demoProfiles);
+    (broken[0].profile.children[0] as { pesel?: string }).pesel = '26290331130';
+    registerLocalDemoProfiles(broken);
+    expect(() => localDemoProfiles()).toThrow(/PESEL/);
+    registerLocalDemoProfiles(demoProfiles);
+  });
+
+  it('rejects a parent without the mandatory data', () => {
+    const broken = structuredClone(demoProfiles);
+    delete (broken[0].profile.me as { pesel?: string }).pesel;
+    registerLocalDemoProfiles(broken);
+    expect(() => localDemoProfiles()).toThrow(/pesel/);
+    registerLocalDemoProfiles(demoProfiles);
   });
 
   it('picks randomly among the 9 non-sensitive profiles', () => {

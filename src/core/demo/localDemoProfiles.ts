@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { peselMatches } from '../profile/pesel';
 import { ProfileSchema } from '../schemas/profile';
 import type { Profile } from '../types';
 
@@ -24,16 +25,44 @@ const SCENARIOS: Record<string, string> = {
 /** Scenariusz wrażliwy – nie bierze udziału w losowaniu, można go wybrać tylko ręcznie. */
 const SENSITIVE = new Set(['P08']);
 
-const RecordSchema = z.object({
-  profileId: z.string().regex(/^P\d{2}$/),
-  slug: z.string().min(1),
-  /** Dane „z mObywatela” pokazywane tylko przy logowaniu – nie trafiają do profilu (nazwiska i daty urodzenia rodzica nie zapisujemy). */
-  mobywatel: z.object({
-    lastName: z.string().min(1),
-    birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  }),
-  profile: ProfileSchema,
-});
+/** Pola obowiązkowe dla każdego rodzica w bazie DEMO: nazwisko, data urodzenia, PESEL i pełny adres zamieszkania. */
+const REQUIRED_IDENTITY = ['lastName', 'birthDate', 'pesel', 'street', 'houseNumber', 'postalCode', 'city'] as const;
+
+function checkParent(parent: Profile['me'] | undefined, path: string, ctx: z.RefinementCtx) {
+  if (!parent) return;
+  for (const key of REQUIRED_IDENTITY) {
+    if (!parent[key]) ctx.addIssue({ code: 'custom', path: [path, key], message: `Brak pola ${key}` });
+  }
+  if (parent.pesel && parent.birthDate && !peselMatches(parent.pesel, parent.birthDate, parent.gender)) {
+    ctx.addIssue({ code: 'custom', path: [path, 'pesel'], message: 'PESEL niezgodny z datą urodzenia lub płcią' });
+  }
+}
+
+const RecordSchema = z
+  .object({
+    profileId: z.string().regex(/^P\d{2}$/),
+    slug: z.string().min(1),
+    profile: ProfileSchema,
+  })
+  .superRefine((r, ctx) => {
+    checkParent(r.profile.me, 'me', ctx);
+    checkParent(r.profile.partner, 'partner', ctx);
+    r.profile.children.forEach((c, i) => {
+      const path = ['children', i];
+      // Urodzone, żyjące dziecko pochodzi z rejestru USC: ma PESEL zgodny z datą urodzenia (i płcią) oraz akt urodzenia.
+      if (c.status === 'born' && !c.loss) {
+        const sex = c.sex === 'female' || c.sex === 'male' ? c.sex : undefined;
+        if (!c.pesel || !c.birthDate || !peselMatches(c.pesel, c.birthDate, sex)) {
+          ctx.addIssue({ code: 'custom', path: [...path, 'pesel'], message: `Dziecko ${c.id}: brak PESEL lub PESEL niezgodny z datą urodzenia` });
+        }
+        if (!c.birthRegistry) ctx.addIssue({ code: 'custom', path: [...path, 'birthRegistry'], message: `Dziecko ${c.id}: brak aktu urodzenia` });
+      }
+      // Dziecko martwo urodzone nie otrzymuje numeru PESEL.
+      if (c.loss?.kind === 'stillbirth' && c.pesel) {
+        ctx.addIssue({ code: 'custom', path: [...path, 'pesel'], message: `Dziecko ${c.id}: martwo urodzone dziecko nie ma PESEL` });
+      }
+    });
+  });
 
 export type LocalDemoProfile = {
   profileId: string;
@@ -65,9 +94,9 @@ export function localDemoProfiles(): LocalDemoProfile[] {
     sensitive: SENSITIVE.has(r.profileId),
     identity: {
       firstName: r.profile.me.firstName,
-      lastName: r.mobywatel.lastName,
-      birthDate: r.mobywatel.birthDate,
-      city: r.profile.household.city ?? '',
+      lastName: r.profile.me.lastName ?? '',
+      birthDate: r.profile.me.birthDate ?? '',
+      city: r.profile.me.city ?? '',
     },
     profile: r.profile,
   }));

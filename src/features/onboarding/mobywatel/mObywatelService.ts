@@ -53,7 +53,7 @@ export type MObywatelService = {
 /** Przykładowa, wymyślona osoba. */
 export const MOCK_IDENTITY: MObywatelIdentity = {
   firstName: 'Anna',
-  lastName: 'Kowalska',
+  lastName: 'Łącka',
   birthDate: '1992-04-17',
   gender: 'female',
   city: 'Warszawa',

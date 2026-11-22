@@ -30,6 +30,11 @@ export const ZusRecordSchema = z.object({
     since: IsoDateSchema,
     /** Brak = ubezpieczenie trwa. */
     until: IsoDateSchema.optional(),
+    /**
+     * Przyczyna ustania ubezpieczenia. Gdy ustało w ciąży wskutek śmierci pracodawcy, jego upadłości lub likwidacji
+     * albo z naruszeniem prawa (prawomocny wyrok), zasiłek macierzyński przysługuje mimo to (art. 30 ustawy zasiłkowej).
+     */
+    endReason: z.enum(['liquidation', 'bankruptcy', 'employer_death', 'unlawful_termination', 'other']).optional(),
     /** Kod tytułu ubezpieczenia, np. „0110 11 0”. */
     titleCode: z.string(),
   }),
@@ -79,6 +84,14 @@ export const WorkSchema = z.object({
 export const ParentSchema = z.object({
   id: z.string().min(1),
   firstName: z.string().trim().min(1).max(60),
+  lastName: z.string().trim().min(1).max(80).optional(),
+  birthDate: IsoDateSchema.refine((value) => Number.isFinite(parseISO(value).getTime())).optional(),
+  street: z.string().trim().min(1).max(100).optional(),
+  houseNumber: z.string().trim().min(1).max(15).optional(),
+  apartmentNumber: z.string().trim().min(1).max(15).optional(),
+  city: z.string().trim().min(1).max(80).optional(),
+  postalCode: z.string().regex(/^\d{2}-\d{3}$/).optional(),
+  pesel: z.string().regex(/^\d{11}$/).optional(),
   gender: GenderSchema,
   employment: EmploymentSchema.optional(),
   work: WorkSchema.optional(),
@@ -102,6 +115,11 @@ const ChildBaseSchema = z.object({
   birthRegistry: z.object({ actNumber: z.string().min(1), office: z.string().min(1) }).optional(),
   /** Nadchodzące szczepienia (z rejestru). */
   vaccinations: z.array(z.object({ name: z.string().min(1), dueDate: IsoDateSchema })).optional(),
+  /**
+   * Utrata dziecka: martwe urodzenie albo zgon (z rejestru USC). Dokumenty, wskazówki i terminy
+   * dotyczące wychowania dziecka przestają się pokazywać; zostaje urlop macierzyński (art. 180 § 4–5 KP).
+   */
+  loss: z.object({ kind: z.enum(['stillbirth', 'death']), date: IsoDateSchema }).optional(),
   colorKey: ChildColorKeySchema,
 });
 
@@ -113,6 +131,21 @@ export const ChildSchema = ChildBaseSchema.superRefine((child, ctx) => {
   if (child.status === 'born' && !child.birthDate) {
     ctx.addIssue({ code: 'custom', path: ['birthDate'], message: 'Urodzone dziecko wymaga birthDate' });
   }
+  if (child.loss && child.status !== 'born') {
+    ctx.addIssue({ code: 'custom', path: ['loss'], message: 'Utrata dotyczy dziecka urodzonego (także martwo urodzonego)' });
+  }
+}).transform((child): z.infer<typeof ChildBaseSchema> => {
+  // Dziecko w drodze nie może być jeszcze zgłoszone do ubezpieczenia zdrowotnego ani mieć PESEL / aktu urodzenia,
+  // a dziecko utracone nie jest już ubezpieczone. Starsze zapisy z takimi polami czytamy bez nich (zamiast odrzucać profil).
+  if (child.status === 'expected') {
+    const { insured: _i, pesel: _p, birthRegistry: _b, vaccinations: _v, ...rest } = child;
+    return rest;
+  }
+  if (child.loss) {
+    const { insured: _i, vaccinations: _v, ...rest } = child;
+    return rest;
+  }
+  return child;
 });
 
 export const HouseholdSchema = z.object({

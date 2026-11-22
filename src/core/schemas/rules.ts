@@ -11,6 +11,7 @@ export const FACT_KEYS = [
   'child.premature',
   'child.disability',
   'child.isMultipleBirth',
+  'child.loss',
   'me.gender',
   'me.employment',
   'partner.exists',

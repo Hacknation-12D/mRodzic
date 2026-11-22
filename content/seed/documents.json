@@ -16,8 +16,11 @@
       }
     ],
     "links": [
-      { "label": "Złóż wniosek w ZUS (PUE ZUS)", "url": "https://www.zus.pl", "kind": "apply" },
-      { "label": "Program na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" }
+      { "label": "Złóż wniosek w eZUS", "url": "https://www.zus.pl/ezus/logowanie", "kind": "apply" },
+      { "label": "Program na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" },
+      { "label": "Aktywni rodzice w pracy – instrukcja ZUS (PDF)", "url": "https://www.zus.pl/documents/10182/12225863/Wniosek%2Bo%2B%C5%9Bwiadczenie%2Baktywni%2Brodzice%2Bw%2Bpracy%2B-%2Binstrukcja.pdf/9da74d97-f81a-de61-7894-bb2aff68e28e", "kind": "guide", "pdfFile": "AWP.pdf" },
+      { "label": "Aktywnie w żłobku – instrukcja ZUS (PDF)", "url": "https://www.zus.pl/documents/10182/12225863/Wniosek%2Bo%2B%C5%9Bwiadczenie%2Baktywnie%2Bw%2B%C5%BC%C5%82obku%2B%28AwZ%29%2B-%2Binstrukcja.pdf/6f42dc3b-4166-1d2e-5e89-9b416316b9a3?t=1727765056307", "kind": "guide", "pdfFile": "AWZ.pdf" },
+      { "label": "Aktywnie w domu – instrukcja ZUS (PDF)", "url": "https://www.zus.pl/documents/10182/12225863/Wniosek%2Bo%2B%C5%9Bwiadczenie%2Baktywnie%2Bw%2Bdomu%2B%28AwD%29-%2Binstrukcja.pdf/bd08c41b-5f31-042f-c4c7-8317fdfa6891?t=1727765055999", "kind": "guide", "pdfFile": "AWD.pdf" }
     ],
     "checklist": [
       "Numer PESEL dziecka i rodziców",
@@ -63,7 +66,9 @@
     ],
     "links": [
       { "label": "Złóż wniosek przez Emp@tię", "url": "https://empatia.mrips.gov.pl", "kind": "apply" },
-      { "label": "Informacje na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" }
+      { "label": "Informacje na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" },
+      { "label": "SR-2 – wniosek o becikowe (PDF)", "url": "https://www.gov.pl/attachment/20ec64a0-3df1-49dc-9884-369596f3818e", "kind": "guide", "pdfFile": "SR-2.pdf" },
+      { "label": "SR-2Z – załącznik do wniosku o becikowe (PDF)", "url": "https://www.gov.pl/attachment/9735eb79-f017-4773-b18e-cf48c0c54581", "kind": "guide", "pdfFile": "SR-2Z.pdf" }
     ],
     "checklist": [
       "Zaświadczenie o opiece medycznej od 10. tygodnia ciąży",
@@ -99,7 +104,9 @@
     ],
     "links": [
       { "label": "Złóż wniosek przez Emp@tię", "url": "https://empatia.mrips.gov.pl", "kind": "apply" },
-      { "label": "Świadczenia rodzinne na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" }
+      { "label": "Świadczenia rodzinne na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" },
+      { "label": "SR-1 – wniosek o zasiłek rodzinny i dodatki (PDF)", "url": "https://www.gov.pl/attachment/49f70c4e-ca14-44a1-9c2f-35e0216e4a2d", "kind": "guide", "pdfFile": "SR-1.pdf" },
+      { "label": "SR-1Z – załącznik do wniosku o zasiłek rodzinny (PDF)", "url": "https://www.gov.pl/attachment/81a43349-feab-4128-97b7-b5e487345926", "kind": "guide", "pdfFile": "SR-1Z.pdf" }
     ],
     "checklist": ["Wniosek o zasiłek rodzinny (lub decyzja o jego przyznaniu)", "Akt urodzenia / PESEL dziecka"],
     "assistantPrompts": [
@@ -136,7 +143,8 @@
     ],
     "links": [
       { "label": "Informacje w ZUS", "url": "https://www.zus.pl", "kind": "info" },
-      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" }
+      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" },
+      { "label": "ZAM – wniosek o zasiłek macierzyński (PDF)", "url": "https://www.zus.pl/documents/10182/4223950/ZAM_wypelnij_i_wydrukuj.pdf/4e4534c6-e7cd-b934-9c5e-aab4d64f3f20?t=1793008198611", "kind": "guide", "pdfFile": "ZAM.pdf" }
     ],
     "checklist": ["Karta informacyjna / zaświadczenie ze szpitala", "Wniosek do pracodawcy lub ZUS"],
     "assistantPrompts": [
@@ -169,7 +177,8 @@
     "links": [
       { "label": "Złóż wniosek przez Emp@tię", "url": "https://empatia.mrips.gov.pl", "kind": "apply" },
       { "label": "Karta Dużej Rodziny na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" },
-      { "label": "mObywatel", "url": "https://www.gov.pl/web/mobywatel", "kind": "guide" }
+      { "label": "mObywatel", "url": "https://www.gov.pl/web/mobywatel", "kind": "guide" },
+      { "label": "KDR – wniosek o przyznanie karty lub wydanie duplikatu (PDF)", "url": "https://www.gov.pl/attachment/805fc40b-75bf-412a-a840-e3377f7d22ef", "kind": "guide", "pdfFile": "KDR.pdf" }
     ],
     "checklist": ["Numery PESEL członków rodziny", "Dokument tożsamości", "Zdjęcia do kart tradycyjnych (jeśli chcesz plastikowe)"],
     "assistantPrompts": [
@@ -198,7 +207,7 @@
       }
     ],
     "links": [
-      { "label": "Edukacja na gov.pl", "url": "https://www.gov.pl/web/edukacja", "kind": "info" }
+      { "label": "Zasady rekrutacji i formularze lokalne na Gov.pl", "url": "https://www.gov.pl/web/gov/zapisz-dziecko-do-przedszkola", "kind": "info" }
     ],
     "checklist": ["Lista wybranych przedszkoli (zwykle kilka preferencji)", "Oświadczenia o spełnianiu kryteriów", "Numer PESEL dziecka"],
     "assistantPrompts": [
@@ -231,9 +240,11 @@
       }
     ],
     "links": [
-      { "label": "Złóż wniosek w PUE ZUS", "url": "https://www.zus.pl", "kind": "apply" },
+      { "label": "Złóż wniosek w eZUS", "url": "https://www.zus.pl/ezus/logowanie", "kind": "apply" },
       { "label": "Złóż wniosek w mObywatelu", "url": "https://www.gov.pl/web/mobywatel", "kind": "apply" },
-      { "label": "Emp@tia – informacje", "url": "https://empatia.mrips.gov.pl", "kind": "info" }
+      { "label": "Emp@tia – informacje", "url": "https://empatia.mrips.gov.pl", "kind": "info" },
+      { "label": "SW-R – instrukcja kreatora w eZUS", "url": "https://www.zus.pl/portal/pomoc/kub0024.html", "kind": "guide" },
+      { "label": "Podręcznik mZUS – wnioski 800+ (PDF)", "url": "https://www.zus.pl/documents/10182/10099173/mZUS%2B-%2BPodr%C4%99cznik%2Bu%C5%BCytkownika.pdf/b24a8c6d-86b5-b980-5742-1188c9fada8c", "kind": "guide", "pdfFile": "MZUS-INSTRUKCJA.pdf" }
     ],
     "checklist": ["PESEL dziecka", "Numer rachunku bankowego", "Dostęp do PUE ZUS / mObywatela / banku"],
     "assistantPrompts": [
@@ -277,7 +288,9 @@
     ],
     "links": [
       { "label": "Złóż wniosek przez Emp@tię", "url": "https://empatia.mrips.gov.pl", "kind": "apply" },
-      { "label": "Świadczenia rodzinne na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" }
+      { "label": "Świadczenia rodzinne na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" },
+      { "label": "SR-7 – wniosek o świadczenie rodzicielskie (PDF)", "url": "https://www.gov.pl/attachment/e0953398-43da-49f9-b8f5-a766bb93be81", "kind": "guide", "pdfFile": "SR-7.pdf" },
+      { "label": "SR-7Z – załącznik do wniosku (PDF)", "url": "https://www.gov.pl/attachment/2fc5e99d-3654-4d1d-80b0-37289f5a9766", "kind": "guide", "pdfFile": "SR-7Z.pdf" }
     ],
     "checklist": ["Akt urodzenia / PESEL dziecka", "Dokument tożsamości", "Numer rachunku bankowego"],
     "assistantPrompts": [
@@ -314,7 +327,8 @@
     ],
     "links": [
       { "label": "PUE ZUS", "url": "https://www.zus.pl", "kind": "apply" },
-      { "label": "Ubezpieczenie zdrowotne – NFZ", "url": "https://www.nfz.gov.pl", "kind": "info" }
+      { "label": "Ubezpieczenie zdrowotne – NFZ", "url": "https://www.nfz.gov.pl", "kind": "info" },
+      { "label": "ZCNA – zgłoszenie członka rodziny (PDF)", "url": "https://bip.zus.pl/documents/10182/18428/2384_20%2BZCNA__WCAG_do%2Bzapisu.pdf/aaae2bde-9065-d64d-01cf-250841193f28?t=1779184759043", "kind": "guide", "pdfFile": "ZCNA.pdf" }
     ],
     "checklist": ["PESEL dziecka", "Dane rodzica ubezpieczonego"],
     "assistantPrompts": ["Jak zgłosić dziecko do ubezpieczenia, jeśli prowadzę JDG?", "Kto zgłasza dziecko do NFZ, gdy oboje pracujemy?"],
@@ -347,7 +361,8 @@
     ],
     "links": [
       { "label": "Zasiłek macierzyński – ZUS", "url": "https://www.zus.pl", "kind": "info" },
-      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" }
+      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" },
+      { "label": "ZAM – wniosek o zasiłek macierzyński (PDF)", "url": "https://www.zus.pl/documents/10182/4223950/ZAM_wypelnij_i_wydrukuj.pdf/4e4534c6-e7cd-b934-9c5e-aab4d64f3f20?t=1793008198611", "kind": "guide", "pdfFile": "ZAM.pdf" }
     ],
     "checklist": ["Akt urodzenia dziecka (odpis)", "Wniosek o urlop do pracodawcy / ZUS", "Zaświadczenie lekarskie (jeśli urlop od daty przed porodem)"],
     "assistantPrompts": [
@@ -389,7 +404,8 @@
     ],
     "links": [
       { "label": "Zasiłek za urlop ojcowski – ZUS", "url": "https://www.zus.pl", "kind": "info" },
-      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" }
+      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" },
+      { "label": "ZAM – wniosek o zasiłek macierzyński (PDF)", "url": "https://www.zus.pl/documents/10182/4223950/ZAM_wypelnij_i_wydrukuj.pdf/4e4534c6-e7cd-b934-9c5e-aab4d64f3f20?t=1793008198611", "kind": "guide", "pdfFile": "ZAM.pdf" }
     ],
     "checklist": ["Akt urodzenia dziecka (odpis)", "Wniosek o urlop ojcowski"],
     "assistantPrompts": ["Kiedy najlepiej wziąć urlop ojcowski?", "Czy urlop ojcowski można podzielić na części?"],
@@ -421,7 +437,8 @@
     ],
     "links": [
       { "label": "Zasiłek macierzyński – ZUS", "url": "https://www.zus.pl", "kind": "info" },
-      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" }
+      { "label": "Prawa rodziców na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "guide" },
+      { "label": "ZAM – wniosek o zasiłek macierzyński (PDF)", "url": "https://www.zus.pl/documents/10182/4223950/ZAM_wypelnij_i_wydrukuj.pdf/4e4534c6-e7cd-b934-9c5e-aab4d64f3f20?t=1793008198611", "kind": "guide", "pdfFile": "ZAM.pdf" }
     ],
     "checklist": ["Odpis aktu urodzenia", "Ustalony podział urlopu między rodzicami", "Wniosek do pracodawcy / ZUS"],
     "assistantPrompts": [
@@ -450,7 +467,8 @@
     "requirements": [],
     "links": [
       { "label": "Becikowe – informacje na gov.pl", "url": "https://www.gov.pl/web/rodzina", "kind": "info" },
-      { "label": "Opieka w ciąży – NFZ", "url": "https://www.nfz.gov.pl", "kind": "guide" }
+      { "label": "Opieka w ciąży – NFZ", "url": "https://www.nfz.gov.pl", "kind": "guide" },
+      { "label": "Wzór zaświadczenia w załączniku do rozporządzenia (PDF)", "url": "https://eli.gov.pl/api/acts/DU/2021/199/text.pdf", "kind": "guide", "pdfFile": "OPIEKA-MEDYCZNA.pdf" }
     ],
     "checklist": ["Karta ciąży / dokumentacja wizyt", "Dane lekarza lub położnej prowadzącej"],
     "assistantPrompts": ["Skąd wziąć zaświadczenie o opiece od 10. tygodnia ciąży?", "Co jeśli pierwsza wizyta była po 10. tygodniu?"],
@@ -481,8 +499,7 @@
       }
     ],
     "links": [
-      { "label": "Zgłoś w mObywatelu", "url": "https://www.gov.pl/web/mobywatel", "kind": "apply" },
-      { "label": "Usługi dla rodziców na gov.pl", "url": "https://www.gov.pl", "kind": "info" }
+      { "label": "Zgłoś urodzenie dziecka – instrukcja i usługa Gov.pl", "url": "https://www.gov.pl/web/gov/zglos-urodzenie-dziecka", "kind": "apply" }
     ],
     "checklist": ["Profil Zaufany / mObywatel", "Dowody osobiste rodziców", "Wybrane imię (imiona) dziecka"],
     "assistantPrompts": [

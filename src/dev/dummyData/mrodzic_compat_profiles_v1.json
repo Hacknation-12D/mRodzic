@@ -2,15 +2,19 @@
   {
     "profileId": "P01",
     "slug": "etat-duzy-platnik",
-    "mobywatel": {
-      "lastName": "Wiśniewska",
-      "birthDate": "1992-04-17"
-    },
     "profile": {
       "schemaVersion": 1,
       "me": {
         "id": "P01-M",
         "firstName": "Anna",
+        "lastName": "Wiśniewska",
+        "birthDate": "1992-04-17",
+        "pesel": "92041710123",
+        "street": "Słoneczna",
+        "houseNumber": "14",
+        "apartmentNumber": "7",
+        "postalCode": "02-495",
+        "city": "Warszawa",
         "gender": "female",
         "employment": "employment_contract",
         "work": {
@@ -85,6 +89,11 @@
         {
           "id": "P01-C1",
           "name": "Zosia",
+          "pesel": "26290331129",
+          "birthRegistry": {
+            "actNumber": "1312/2026/DEMO",
+            "office": "Urząd Stanu Cywilnego w Warszawa (DEMO)"
+          },
           "status": "born",
           "sex": "female",
           "premature": false,
@@ -95,7 +104,6 @@
         }
       ],
       "household": {
-        "city": "Warszawa",
         "size": 3,
         "incomePerPersonNet": 4200.0,
         "singleParent": false
@@ -105,25 +113,190 @@
       "partner": {
         "id": "P01-P",
         "firstName": "Tomasz",
+        "lastName": "Wiśniewski",
+        "birthDate": "1990-02-11",
+        "pesel": "90021110255",
+        "street": "Słoneczna",
+        "houseNumber": "14",
+        "apartmentNumber": "7",
+        "postalCode": "02-495",
+        "city": "Warszawa",
         "gender": "male",
-        "employment": "self_employed"
+        "employment": "self_employed",
+        "work": {
+          "employedSince": "2019-04-01",
+          "fte": 1,
+          "employerInsuredCount": 1,
+          "benefitPayer": "zus",
+          "monthlyGross": 9500,
+          "monthlyNet": 7550,
+          "earnings": [
+            {
+              "month": "2025-12",
+              "gross": 9500
+            },
+            {
+              "month": "2026-01",
+              "gross": 9500
+            },
+            {
+              "month": "2026-02",
+              "gross": 9500
+            },
+            {
+              "month": "2026-03",
+              "gross": 9500
+            },
+            {
+              "month": "2026-04",
+              "gross": 9500
+            },
+            {
+              "month": "2026-05",
+              "gross": 9500
+            },
+            {
+              "month": "2026-06",
+              "gross": 9500
+            },
+            {
+              "month": "2026-07",
+              "gross": 9500
+            },
+            {
+              "month": "2026-08",
+              "gross": 9500
+            },
+            {
+              "month": "2026-09",
+              "gross": 9500
+            },
+            {
+              "month": "2026-10",
+              "gross": 9500
+            },
+            {
+              "month": "2026-11",
+              "gross": 9500
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 0,
+            "usedDays": 0
+          }
+        }
       }
     }
   },
   {
     "profileId": "P02",
     "slug": "jdg-zadluzenie",
-    "mobywatel": {
-      "lastName": "Zielińska",
-      "birthDate": "1990-08-09"
-    },
     "profile": {
       "schemaVersion": 1,
       "me": {
         "id": "P02-M",
         "firstName": "Marta",
+        "lastName": "Zielińska",
+        "birthDate": "1990-08-09",
+        "pesel": "90080910364",
+        "street": "Lipowa",
+        "houseNumber": "3",
+        "postalCode": "30-702",
+        "city": "Kraków",
         "gender": "female",
-        "employment": "self_employed"
+        "employment": "self_employed",
+        "work": {
+          "employedSince": "2021-02-01",
+          "fte": 1,
+          "employerInsuredCount": 1,
+          "benefitPayer": "zus",
+          "monthlyGross": 5652,
+          "monthlyNet": 4300,
+          "earnings": [
+            {
+              "month": "2025-11",
+              "gross": 5652
+            },
+            {
+              "month": "2025-12",
+              "gross": 5652
+            },
+            {
+              "month": "2026-01",
+              "gross": 5652
+            },
+            {
+              "month": "2026-02",
+              "gross": 5652
+            },
+            {
+              "month": "2026-03",
+              "gross": 5652
+            },
+            {
+              "month": "2026-04",
+              "gross": 5652
+            },
+            {
+              "month": "2026-05",
+              "gross": 5652
+            },
+            {
+              "month": "2026-06",
+              "gross": 5652
+            },
+            {
+              "month": "2026-07",
+              "gross": 5652
+            },
+            {
+              "month": "2026-08",
+              "gross": 5652
+            },
+            {
+              "month": "2026-09",
+              "gross": 5652
+            },
+            {
+              "month": "2026-10",
+              "gross": 5652
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 0,
+            "usedDays": 0
+          },
+          "zus": {
+            "sickness": {
+              "insured": true,
+              "kind": "voluntary",
+              "since": "2021-02-01",
+              "titleCode": "0570 00 0"
+            },
+            "gaps": [],
+            "periods": [
+              {
+                "kind": "self_employed",
+                "from": "2021-02-01",
+                "fixedTerm": false
+              }
+            ],
+            "contributionBase": 5652,
+            "payer": {
+              "name": "Marta Zielińska – działalność gospodarcza (DEMO)",
+              "nip": "6771203454",
+              "regon": "771203453",
+              "city": "Kraków",
+              "paysBenefits": false
+            },
+            "arrears": {
+              "amount": 725,
+              "checkedAt": "2026-11-21"
+            },
+            "benefitHistory": [],
+            "leaveHistory": []
+          }
+        }
       },
       "children": [
         {
@@ -134,12 +307,10 @@
           "premature": false,
           "disability": false,
           "colorKey": "coral",
-          "dueDate": "2027-02-18",
-          "insured": true
+          "dueDate": "2027-02-18"
         }
       ],
       "household": {
-        "city": "Kraków",
         "size": 2,
         "incomePerPersonNet": 3500.0,
         "singleParent": false
@@ -149,6 +320,13 @@
       "partner": {
         "id": "P02-P",
         "firstName": "Karol",
+        "lastName": "Zieliński",
+        "birthDate": "1988-12-03",
+        "pesel": "88120310496",
+        "street": "Lipowa",
+        "houseNumber": "3",
+        "postalCode": "30-702",
+        "city": "Kraków",
         "gender": "male",
         "employment": "employment_contract",
         "work": {
@@ -219,17 +397,73 @@
   {
     "profileId": "P03",
     "slug": "zlecenie-wyczekiwanie",
-    "mobywatel": {
-      "lastName": "Kamińska",
-      "birthDate": "1997-01-23"
-    },
     "profile": {
       "schemaVersion": 1,
       "me": {
         "id": "P03-M",
         "firstName": "Julia",
+        "lastName": "Kamińska",
+        "birthDate": "1997-01-23",
+        "pesel": "97012310508",
+        "street": "Morska",
+        "houseNumber": "21",
+        "apartmentNumber": "12",
+        "postalCode": "80-288",
+        "city": "Gdańsk",
         "gender": "female",
-        "employment": "civil_contract"
+        "employment": "civil_contract",
+        "work": {
+          "employedSince": "2026-10-01",
+          "fte": 1,
+          "employerInsuredCount": 34,
+          "benefitPayer": "employer",
+          "monthlyGross": 4200,
+          "monthlyNet": 3290,
+          "earnings": [
+            {
+              "month": "2026-10",
+              "gross": 4200
+            },
+            {
+              "month": "2026-11",
+              "gross": 4200
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 0,
+            "usedDays": 0
+          },
+          "zus": {
+            "sickness": {
+              "insured": true,
+              "kind": "voluntary",
+              "since": "2026-10-01",
+              "titleCode": "0411 00 0"
+            },
+            "gaps": [],
+            "periods": [
+              {
+                "kind": "civil_contract",
+                "from": "2026-10-01",
+                "fixedTerm": true
+              }
+            ],
+            "contributionBase": 4200,
+            "payer": {
+              "name": "Pomorska Agencja Usługowa sp. z o.o. (DEMO)",
+              "nip": "5842001178",
+              "regon": "842001170",
+              "city": "Gdańsk",
+              "paysBenefits": true
+            },
+            "arrears": {
+              "amount": 0,
+              "checkedAt": "2026-11-21"
+            },
+            "benefitHistory": [],
+            "leaveHistory": []
+          }
+        }
       },
       "children": [
         {
@@ -240,12 +474,10 @@
           "premature": false,
           "disability": false,
           "colorKey": "coral",
-          "dueDate": "2027-04-15",
-          "insured": true
+          "dueDate": "2027-04-15"
         }
       ],
       "household": {
-        "city": "Gdańsk",
         "size": 1,
         "incomePerPersonNet": 3100.0,
         "singleParent": true
@@ -257,15 +489,19 @@
   {
     "profileId": "P04",
     "slug": "studentka-bez-chorobowego",
-    "mobywatel": {
-      "lastName": "Lewandowska",
-      "birthDate": "2003-05-30"
-    },
     "profile": {
       "schemaVersion": 1,
       "me": {
         "id": "P04-M",
         "firstName": "Alicja",
+        "lastName": "Lewandowska",
+        "birthDate": "2003-05-30",
+        "pesel": "03253010620",
+        "street": "Ogrodowa",
+        "houseNumber": "8",
+        "apartmentNumber": "4",
+        "postalCode": "60-337",
+        "city": "Poznań",
         "gender": "female",
         "employment": "student"
       },
@@ -278,12 +514,10 @@
           "premature": false,
           "disability": false,
           "colorKey": "coral",
-          "dueDate": "2027-03-20",
-          "insured": true
+          "dueDate": "2027-03-20"
         }
       ],
       "household": {
-        "city": "Poznań",
         "size": 2,
         "incomePerPersonNet": 2400.0,
         "singleParent": false
@@ -293,6 +527,14 @@
       "partner": {
         "id": "P04-P",
         "firstName": "Michał",
+        "lastName": "Nowicki",
+        "birthDate": "2001-09-17",
+        "pesel": "01291710751",
+        "street": "Ogrodowa",
+        "houseNumber": "8",
+        "apartmentNumber": "4",
+        "postalCode": "60-337",
+        "city": "Poznań",
         "gender": "male",
         "employment": "employment_contract",
         "work": {
@@ -363,15 +605,19 @@
   {
     "profileId": "P05",
     "slug": "bliznieta-wczesniaki",
-    "mobywatel": {
-      "lastName": "Dąbrowska",
-      "birthDate": "1994-11-02"
-    },
     "profile": {
       "schemaVersion": 1,
       "me": {
         "id": "P05-M",
         "firstName": "Iga",
+        "lastName": "Dąbrowska",
+        "birthDate": "1994-11-02",
+        "pesel": "94110210864",
+        "street": "Kwiatowa",
+        "houseNumber": "27",
+        "apartmentNumber": "15",
+        "postalCode": "50-529",
+        "city": "Wrocław",
         "gender": "female",
         "employment": "employment_contract",
         "work": {
@@ -446,6 +692,11 @@
         {
           "id": "P05-C1",
           "name": "Lena",
+          "pesel": "26301531249",
+          "birthRegistry": {
+            "actNumber": "1313/2026/DEMO",
+            "office": "Urząd Stanu Cywilnego w Wrocław (DEMO)"
+          },
           "status": "born",
           "sex": "female",
           "premature": true,
@@ -459,6 +710,11 @@
         {
           "id": "P05-C2",
           "name": "Olek",
+          "pesel": "26301531379",
+          "birthRegistry": {
+            "actNumber": "1314/2026/DEMO",
+            "office": "Urząd Stanu Cywilnego w Wrocław (DEMO)"
+          },
           "status": "born",
           "sex": "male",
           "premature": true,
@@ -471,7 +727,6 @@
         }
       ],
       "household": {
-        "city": "Wrocław",
         "size": 4,
         "incomePerPersonNet": 4500.0,
         "singleParent": false
@@ -481,6 +736,14 @@
       "partner": {
         "id": "P05-P",
         "firstName": "Adam",
+        "lastName": "Dąbrowski",
+        "birthDate": "1992-07-24",
+        "pesel": "92072410995",
+        "street": "Kwiatowa",
+        "houseNumber": "27",
+        "apartmentNumber": "15",
+        "postalCode": "50-529",
+        "city": "Wrocław",
         "gender": "male",
         "employment": "employment_contract",
         "work": {
@@ -551,15 +814,18 @@
   {
     "profileId": "P06",
     "slug": "adopcja-wniosek",
-    "mobywatel": {
-      "lastName": "Kozłowska",
-      "birthDate": "1985-03-14"
-    },
     "profile": {
       "schemaVersion": 1,
       "me": {
         "id": "P06-M",
         "firstName": "Elżbieta",
+        "lastName": "Kozłowska",
+        "birthDate": "1985-03-14",
+        "pesel": "85031411001",
+        "street": "Klonowa",
+        "houseNumber": "5",
+        "postalCode": "90-541",
+        "city": "Łódź",
         "gender": "female",
         "employment": "employment_contract",
         "work": {
@@ -629,6 +895,11 @@
         {
           "id": "P06-C1",
           "name": "Kuba",
+          "pesel": "20262031497",
+          "birthRegistry": {
+            "actNumber": "1315/2020/DEMO",
+            "office": "Urząd Stanu Cywilnego w Łodzi (DEMO)"
+          },
           "status": "born",
           "sex": "male",
           "premature": false,
@@ -639,7 +910,6 @@
         }
       ],
       "household": {
-        "city": "Łódź",
         "size": 3,
         "incomePerPersonNet": 4700.0,
         "singleParent": false
@@ -649,6 +919,13 @@
       "partner": {
         "id": "P06-P",
         "firstName": "Rafał",
+        "lastName": "Kozłowski",
+        "birthDate": "1983-01-30",
+        "pesel": "83013011135",
+        "street": "Klonowa",
+        "houseNumber": "5",
+        "postalCode": "90-541",
+        "city": "Łódź",
         "gender": "male",
         "employment": "employment_contract",
         "work": {
@@ -719,15 +996,19 @@
   {
     "profileId": "P07",
     "slug": "rodzina-zastepcza",
-    "mobywatel": {
-      "lastName": "Jankowski",
-      "birthDate": "1981-07-08"
-    },
     "profile": {
       "schemaVersion": 1,
       "me": {
         "id": "P07-M",
         "firstName": "Piotr",
+        "lastName": "Jankowski",
+        "birthDate": "1981-07-08",
+        "pesel": "81070811259",
+        "street": "Brzozowa",
+        "houseNumber": "11",
+        "apartmentNumber": "2",
+        "postalCode": "40-158",
+        "city": "Katowice",
         "gender": "male",
         "employment": "employment_contract",
         "work": {
@@ -797,6 +1078,11 @@
         {
           "id": "P07-C1",
           "name": "Filip",
+          "pesel": "17251131517",
+          "birthRegistry": {
+            "actNumber": "1316/2017/DEMO",
+            "office": "Urząd Stanu Cywilnego w Katowice (DEMO)"
+          },
           "status": "born",
           "sex": "male",
           "premature": false,
@@ -807,7 +1093,6 @@
         }
       ],
       "household": {
-        "city": "Katowice",
         "size": 3,
         "incomePerPersonNet": 4100.0,
         "singleParent": false
@@ -817,6 +1102,14 @@
       "partner": {
         "id": "P07-P",
         "firstName": "Zofia",
+        "lastName": "Jankowska",
+        "birthDate": "1983-05-19",
+        "pesel": "83051911363",
+        "street": "Brzozowa",
+        "houseNumber": "11",
+        "apartmentNumber": "2",
+        "postalCode": "40-158",
+        "city": "Katowice",
         "gender": "female",
         "employment": "employment_contract",
         "work": {
@@ -887,15 +1180,19 @@
   {
     "profileId": "P08",
     "slug": "martwe-urodzenie",
-    "mobywatel": {
-      "lastName": "Mazur",
-      "birthDate": "1993-02-26"
-    },
     "profile": {
       "schemaVersion": 1,
       "me": {
         "id": "P08-M",
         "firstName": "Monika",
+        "lastName": "Mazur",
+        "birthDate": "1993-02-26",
+        "pesel": "93022611480",
+        "street": "Polna",
+        "houseNumber": "19",
+        "apartmentNumber": "6",
+        "postalCode": "20-412",
+        "city": "Lublin",
         "gender": "female",
         "employment": "employment_contract",
         "work": {
@@ -976,11 +1273,13 @@
           "disability": false,
           "colorKey": "coral",
           "birthDate": "2026-10-30",
-          "insured": true
+          "loss": {
+            "kind": "stillbirth",
+            "date": "2026-10-30"
+          }
         }
       ],
       "household": {
-        "city": "Lublin",
         "size": 1,
         "incomePerPersonNet": 3900.0,
         "singleParent": true
@@ -992,17 +1291,116 @@
   {
     "profileId": "P09",
     "slug": "likwidacja-pracodawcy",
-    "mobywatel": {
-      "lastName": "Krawczyk",
-      "birthDate": "1996-10-11"
-    },
     "profile": {
       "schemaVersion": 1,
       "me": {
         "id": "P09-M",
         "firstName": "Weronika",
+        "lastName": "Krawczyk",
+        "birthDate": "1996-10-11",
+        "pesel": "96101111501",
+        "street": "Wiśniowa",
+        "houseNumber": "2",
+        "apartmentNumber": "9",
+        "postalCode": "70-781",
+        "city": "Szczecin",
         "gender": "female",
-        "employment": "unemployed"
+        "employment": "unemployed",
+        "work": {
+          "employedSince": "2022-03-01",
+          "fte": 1,
+          "employerInsuredCount": 15,
+          "benefitPayer": "zus",
+          "monthlyGross": 5200,
+          "monthlyNet": 3790,
+          "earnings": [
+            {
+              "month": "2025-11",
+              "gross": 5200
+            },
+            {
+              "month": "2025-12",
+              "gross": 5200
+            },
+            {
+              "month": "2026-01",
+              "gross": 5200
+            },
+            {
+              "month": "2026-02",
+              "gross": 5200
+            },
+            {
+              "month": "2026-03",
+              "gross": 5200
+            },
+            {
+              "month": "2026-04",
+              "gross": 5200
+            },
+            {
+              "month": "2026-05",
+              "gross": 5200
+            },
+            {
+              "month": "2026-06",
+              "gross": 5200
+            },
+            {
+              "month": "2026-07",
+              "gross": 5200
+            },
+            {
+              "month": "2026-08",
+              "gross": 5200
+            },
+            {
+              "month": "2026-09",
+              "gross": 5200
+            },
+            {
+              "month": "2026-10",
+              "gross": 5200
+            }
+          ],
+          "vacation": {
+            "entitlementDays": 26,
+            "usedDays": 26
+          },
+          "zus": {
+            "sickness": {
+              "insured": false,
+              "kind": "mandatory",
+              "since": "2022-03-01",
+              "until": "2026-10-31",
+              "endReason": "liquidation",
+              "titleCode": "0110 00 0"
+            },
+            "gaps": [],
+            "periods": [
+              {
+                "kind": "employment_contract",
+                "from": "2022-03-01",
+                "to": "2026-10-31",
+                "fixedTerm": false
+              }
+            ],
+            "contributionBase": 5200,
+            "payer": {
+              "name": "Zachodniopomorska Hurtownia sp. z o.o. w likwidacji (DEMO)",
+              "nip": "8513004421",
+              "regon": "513004423",
+              "city": "Szczecin",
+              "paysBenefits": false
+            },
+            "arrears": {
+              "amount": 0,
+              "checkedAt": "2026-11-21"
+            },
+            "benefitHistory": [],
+            "leaveHistory": []
+          }
+        }
       },
       "children": [
         {
@@ -1013,12 +1411,10 @@
           "premature": false,
           "disability": false,
           "colorKey": "coral",
-          "dueDate": "2027-01-10",
-          "insured": true
+          "dueDate": "2027-01-10"
         }
       ],
       "household": {
-        "city": "Szczecin",
         "size": 1,
         "incomePerPersonNet": 2600.0,
         "singleParent": true
@@ -1030,15 +1426,18 @@
   {
     "profileId": "P10",
     "slug": "za-zyciem-praca",
-    "mobywatel": {
-      "lastName": "Piotrowska",
-      "birthDate": "1991-06-05"
-    },
     "profile": {
       "schemaVersion": 1,
       "me": {
         "id": "P10-M",
         "firstName": "Natalia",
+        "lastName": "Piotrowska",
+        "birthDate": "1991-06-05",
+        "pesel": "91060511621",
+        "street": "Leśna",
+        "houseNumber": "33",
+        "postalCode": "35-318",
+        "city": "Rzeszów",
         "gender": "female",
         "employment": "employment_contract",
         "work": {
@@ -1113,6 +1512,11 @@
         {
           "id": "P10-C1",
           "name": "Emilka",
+          "pesel": "26251931621",
+          "birthRegistry": {
+            "actNumber": "1317/2026/DEMO",
+            "office": "Urząd Stanu Cywilnego w Rzeszów (DEMO)"
+          },
           "status": "born",
           "sex": "female",
           "premature": false,
@@ -1123,7 +1527,6 @@
         }
       ],
       "household": {
-        "city": "Rzeszów",
         "size": 3,
         "incomePerPersonNet": 5100.0,
         "singleParent": false
@@ -1133,6 +1536,13 @@
       "partner": {
         "id": "P10-P",
         "firstName": "Dawid",
+        "lastName": "Piotrowski",
+        "birthDate": "1989-03-08",
+        "pesel": "89030811756",
+        "street": "Leśna",
+        "houseNumber": "33",
+        "postalCode": "35-318",
+        "city": "Rzeszów",
         "gender": "male",
         "employment": "employment_contract",
         "work": {

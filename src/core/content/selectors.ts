@@ -26,6 +26,18 @@ export const DEFAULT_TODO_WINDOW_DAYS = 30;
 
 const URGENCY_RANK: Record<Urgency, number> = { overdue: 0, urgent: 1, soon: 2, later: 3, none: 4 };
 
+/**
+ * Po utracie dziecka (martwe urodzenie / zgon) zostają tylko dokumenty, które nadal przysługują rodzicowi.
+ * Urlop macierzyński: 8 tygodni po porodzie, nie krócej niż 7 dni od zgonu (art. 180 § 4–5 KP).
+ */
+const LOSS_DOCUMENTS = new Set(['urlop-macierzynski']);
+const LOSS_AMOUNT_LABEL: Record<string, string> = { 'urlop-macierzynski': '8 tygodni po porodzie (nie krócej niż 7 dni od zgonu)' };
+
+/** Dzieci, którymi rodzic się opiekuje (bez utraconych) – do wskazówek, zadań i podpowiedzi. */
+function caredForChildren(profile: Profile, filter: ChildFilter): Child[] {
+  return filterChildren(profile, filter).filter((c) => !c.loss);
+}
+
 export function filterChildren(profile: Profile, filter: ChildFilter): Child[] {
   if (filter === 'all') return profile.children;
   const child = profile.children.find((c) => c.id === filter);
@@ -65,7 +77,9 @@ function documentCandidates(bundle: ContentBundle, profile: Profile, today: Date
   for (const doc of bundle.documents) {
     if (doc.scope === 'child') {
       for (const child of children) {
-        out.push({ doc, child, childId: child.id, visibility: evaluateOptional(doc.visibleWhen, buildFacts(profile, child, today)) });
+        const visibility =
+          child.loss && !LOSS_DOCUMENTS.has(doc.id) ? 'unmet' : evaluateOptional(doc.visibleWhen, buildFacts(profile, child, today));
+        out.push({ doc, child, childId: child.id, visibility });
       }
     } else {
       // Dokumenty rodzinne pokazujemy niezależnie od filtra dziecka.
@@ -93,6 +107,7 @@ function buildInstance(
   const entry = statuses[key];
   return {
     ...doc,
+    ...(child?.loss && LOSS_AMOUNT_LABEL[doc.id] ? { amountLabel: LOSS_AMOUNT_LABEL[doc.id] } : null),
     key,
     childId,
     status: entry?.status ?? 'todo',
@@ -192,7 +207,7 @@ export function getMonthItems(
     });
   }
 
-  for (const child of filterChildren(profile, filter)) {
+  for (const child of caredForChildren(profile, filter)) {
     const facts = buildFacts(profile, child, today);
     for (const todo of bundle.todos) {
       if (evaluateOptional(todo.visibleWhen, facts) === 'unmet') continue;
@@ -253,7 +268,7 @@ export function getDeadlineMarks(
 
 /** Poradniki na dany dzień: round-robin między dziećmi, bez duplikatów, wg priorytetu. */
 export function getTipsFor(bundle: ContentBundle, profile: Profile, date: Date, filter: ChildFilter, count = 3): TipForChild[] {
-  const perChild = filterChildren(profile, filter).map((child) => {
+  const perChild = caredForChildren(profile, filter).map((child) => {
     const facts = buildFacts(profile, child, date);
     const offset = dayOffset(child, date);
     const tips = bundle.tips
@@ -306,7 +321,7 @@ export function getSuggestedPrompts(
     push(inst.assistantPrompts[0]);
   }
 
-  for (const child of filterChildren(profile, filter)) {
+  for (const child of caredForChildren(profile, filter)) {
     const facts = buildFacts(profile, child, today);
     const offset = dayOffset(child, today);
     for (const p of bundle.prompts) {

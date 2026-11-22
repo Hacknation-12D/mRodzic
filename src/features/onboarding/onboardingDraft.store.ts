@@ -1,19 +1,14 @@
 import { create } from 'zustand';
 
 import { CHILD_COLOR_KEYS } from '@/core/profile/childColors';
-import type { Child, ChildColorKey, Employment, Gender, Profile, Work } from '@/core/types';
+import type { Child, ChildColorKey, Employment, Gender, Parent, Profile } from '@/core/types';
 import { pl } from '@/shared/i18n/pl';
 import { createId } from '@/shared/lib/id';
 
 import type { MObywatelData } from './mobywatel/mObywatelService';
 
-export type DraftParent = {
-  firstName: string;
-  gender: Gender;
-  employment?: Employment;
-  /** Dane z PUE/eZUS (symulacja). */
-  work?: Work;
-};
+/** Dane rodzica w szkicu – te same pola co w profilu (w tym nazwisko, adres i PESEL do wniosków oraz dane z PUE/eZUS). */
+export type DraftParent = Omit<Parent, 'id'>;
 
 export type DraftChild = {
   key: string;
@@ -58,7 +53,7 @@ type State = {
   setMe: (me: DraftParent) => void;
   /**
    * Uzupełnia dane rodzica, miejscowość i dzieci z (symulowanego) mObywatela.
-   * Nazwisko i data urodzenia rodzica NIE trafiają do szkicu. Brak dzieci = ręczne wpisywanie.
+   * Nazwisko trafia do szkicu (potrzebne do wniosków), data urodzenia rodzica – nie. Brak dzieci = ręczne wpisywanie.
    */
   applyMObywatelData: (data: MObywatelData) => void;
   setChildrenCount: (n: number) => void;
@@ -76,11 +71,11 @@ export const MAX_CHILDREN = 10;
 export const colorForIndex = (index: number): ChildColorKey => CHILD_COLOR_KEYS[index % CHILD_COLOR_KEYS.length];
 
 function blankChild(index: number, count: number): DraftChild {
-  // Ostatnie dziecko domyślnie „w drodze” – najczęstszy przypadek przy pierwszym uruchomieniu.
+  // Ręcznie dodaje się tylko dzieci w drodze – urodzone pochodzą z rejestru (mObywatel / ZUS / USC).
   return {
     key: createId('draft_'),
     name: '',
-    status: index === count - 1 ? 'expected' : 'born',
+    status: 'expected',
     touched: false,
   };
 }
@@ -107,7 +102,11 @@ const initial = () => ({
 /** Szkic onboardingu – NIE persistowany. Zapisywany do profilu dopiero po kroku 4. */
 export const useOnboardingDraft = create<State>()((set) => ({
   ...initial(),
-  setMe: (me) => set({ me }),
+  setMe: (me) =>
+    set((state) => ({
+      me,
+      household: { ...state.household, city: me.city ?? state.household.city },
+    })),
   applyMObywatelData: ({ identity, children, pue }) =>
     set((s) => {
       const base = {
@@ -115,6 +114,7 @@ export const useOnboardingDraft = create<State>()((set) => ({
         me: {
           ...s.me,
           firstName: identity.firstName,
+          lastName: s.me.lastName ?? identity.lastName,
           gender: identity.gender,
           ...(pue ? { work: pue.work, employment: 'employment_contract' as Employment } : {}),
         },
@@ -241,20 +241,9 @@ export function buildProfileFromDraft(draft: State, nowIso: string): Profile {
   const income = derivedIncomePerPerson(draft);
   return {
     schemaVersion: 1,
-    me: {
-      id: createId('parent_'),
-      firstName: draft.me.firstName.trim(),
-      gender: draft.me.gender,
-      employment: draft.me.employment,
-      work: draft.me.work,
-    },
+    me: { ...draft.me, id: createId('parent_'), firstName: draft.me.firstName.trim() },
     partner: draft.partnerEnabled
-      ? {
-          id: createId('parent_'),
-          firstName: draft.partner.firstName.trim(),
-          gender: draft.partner.gender,
-          employment: draft.partner.employment,
-        }
+      ? { ...draft.partner, id: createId('parent_'), firstName: draft.partner.firstName.trim() }
       : undefined,
     children,
     household: {

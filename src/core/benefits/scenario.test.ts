@@ -47,10 +47,52 @@ describe('kalkulator świadczeń – ocena prawa', () => {
     expect(r.amounts).toBeUndefined();
   });
 
-  it('zaległość przy dobrowolnym ubezpieczeniu daje ostrzeżenie', () => {
+  it('JDG: zadłużenie > 1% minimalnego wynagrodzenia w dniu porodu – brak prawa do czasu spłaty (art. 2a)', () => {
     const r = calculateBenefitScenario({ ...base, employment: 'self_employed', sicknessInsurance: 'yes', arrearsAmount: 1200 });
+    expect(r.eligibility.status).toBe('not_eligible');
+    expect(r.eligibility.reasons.join(' ')).toMatch(/art\. 2a/);
+    expect(r.eligibility.warnings.join(' ')).toMatch(/6 miesięcy/);
+    expect(r.amounts).toBeUndefined();
+  });
+
+  it('JDG: zadłużenie do 48,06 zł nie odbiera prawa; w ciąży tylko ostrzeżenie', () => {
+    expect(calculateBenefitScenario({ ...base, employment: 'self_employed', sicknessInsurance: 'yes', arrearsAmount: 48.06 }).eligibility.status).toBe('eligible');
+    const pregnant = calculateBenefitScenario({ ...base, kind: 'pregnancy', employment: 'self_employed', sicknessInsurance: 'yes', arrearsAmount: 725 });
+    expect(pregnant.eligibility.status).toBe('eligible');
+    expect(pregnant.eligibility.warnings.join(' ')).toMatch(/Spłać ją przed porodem/);
+  });
+
+  it('zlecenie: zaległość nie dotyczy (składki opłaca zleceniodawca)', () => {
+    expect(calculateBenefitScenario({ ...base, employment: 'civil_contract', sicknessInsurance: 'yes', arrearsAmount: 900 }).eligibility.status).toBe('eligible');
+  });
+
+  it('art. 30: ubezpieczenie ustało w ciąży przez likwidację pracodawcy – zasiłek przysługuje, wypłaca ZUS', () => {
+    const r = calculateBenefitScenario({
+      ...base, kind: 'pregnancy', employment: 'unemployed', sicknessInsurance: 'no', eventDate: '2027-01-10', averageMonthlyGross: 5200,
+      insuranceEnded: { until: '2026-10-31', reason: 'liquidation' },
+    });
     expect(r.eligibility.status).toBe('eligible');
-    expect(r.eligibility.warnings.join(' ')).toMatch(/Zaległość/);
+    expect(r.eligibility.reasons.join(' ')).toMatch(/art\. 30 ust\. 1/);
+    expect(r.eligibility.reasons.join(' ')).toMatch(/do dnia porodu/i);
+    expect(r.payer).toBe('zus');
+    expect(r.base?.base).toBeCloseTo(5200 * (1 - 0.1371), 2);
+  });
+
+  it('art. 30: zwykłe ustanie umowy przed porodem – brak prawa, z alternatywą', () => {
+    const r = calculateBenefitScenario({
+      ...base, kind: 'pregnancy', employment: 'unemployed', sicknessInsurance: 'no', eventDate: '2027-01-10',
+      insuranceEnded: { until: '2026-10-31', reason: 'other' },
+    });
+    expect(r.eligibility.status).toBe('not_eligible');
+    expect(r.eligibility.alternatives).toHaveLength(1);
+  });
+
+  it('wariant 81,5%: termin 21 dni po porodzie', () => {
+    const inTime = calculateBenefitScenario({ ...base, asOf: '2026-09-24' });
+    expect(inTime).toMatchObject({ upfrontDeadline: '2026-09-24', upfrontDeadlinePassed: false });
+    const late = calculateBenefitScenario({ ...base, asOf: '2026-11-21' });
+    expect(late.upfrontDeadlinePassed).toBe(true);
+    expect(late.notes.join(' ')).toMatch(/minął 24\.09\.2026/);
   });
 
   it('brak wynagrodzenia przy ustalonym prawie → błąd pola', () => {
@@ -106,5 +148,27 @@ describe('kalkulator świadczeń – dane z profilu DEMO', () => {
 
   it('P05 (bliźnięta): dwoje dzieci z jednego porodu', () => {
     expect(scenarioDefaultsFromProfile(profile('P05'), today).childrenCount).toBe(2);
+  });
+
+  it('P01: poród 3.09, termin na 81,5% minął 24.09 – domyślnie 100% + 70%', () => {
+    const input = scenarioDefaultsFromProfile(profile('P01'), today);
+    expect(input.upfrontApplication).toBe(false);
+    expect(calculateBenefitScenario(input).upfrontDeadlinePassed).toBe(true);
+  });
+
+  it('P02 (JDG w ciąży, 725 zł zaległości): prawo jest, ale ostrzeżenie o spłacie przed porodem', () => {
+    const r = calculateBenefitScenario(scenarioDefaultsFromProfile(profile('P02'), today));
+    expect(r.eligibility.status).toBe('eligible');
+    expect(r.eligibility.warnings.join(' ')).toMatch(/725,00 zł/);
+  });
+
+  it('P03 (zlecenie z dobrowolnym chorobowym): zasiłek macierzyński bez okresu wyczekiwania', () => {
+    expect(calculateBenefitScenario(scenarioDefaultsFromProfile(profile('P03'), today)).eligibility.status).toBe('eligible');
+  });
+
+  it('P09 (likwidacja pracodawcy w ciąży): zasiłek przysługuje z art. 30, wypłaca ZUS', () => {
+    const r = calculateBenefitScenario(scenarioDefaultsFromProfile(profile('P09'), today));
+    expect(r.eligibility.status).toBe('eligible');
+    expect(r.payer).toBe('zus');
   });
 });

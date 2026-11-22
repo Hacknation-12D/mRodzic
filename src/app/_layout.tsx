@@ -8,22 +8,30 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Uniwind, useUniwind } from 'uniwind';
 
 import { useAppBootstrap } from '@/core/bootstrap/useAppBootstrap';
+import { getToday } from '@/core/clock/clock';
 import { registerLocalDemoProfiles } from '@/core/demo/localDemoProfiles';
+import { logOut } from '@/core/navigation/session';
 import { useProfileStore } from '@/core/profile/profile.store';
 import { useSettingsStore } from '@/core/settings/settings.store';
 import { pl } from '@/shared/i18n/pl';
 import { darkColors, lightColors } from '@/shared/theme';
+import type { Profile } from '@/core/types';
 import { AppText, appHeaderOptions, PreviewControls } from '@/shared/ui';
-import demoProfiles from '@/dev/dummyData/mrodzic_compat_profiles_v1.json';
+import { offlineProfiles as demoProfiles } from '@/core/demo/DemoDataProvider';
+import { prepareDemoProfile } from '@/dev/personas';
 
 void SplashScreen.preventAutoHideAsync();
 // Baza profili DEMO do logowania, gdy nie ustawiono EXPO_PUBLIC_DEMO_API_URL (README_INTEGRACJA.md).
 registerLocalDemoProfiles(demoProfiles);
 
+// Uzupełnia dane identyfikacyjne (nazwisko, adres, PESEL) w starszych zapisach persony Anny – potrzebne do wniosku ZAM.
+const prepareProfile = (profile: Profile | null) => prepareDemoProfile(profile, undefined, getToday());
+
 /** Root providers, app bootstrap, persisted-store hydration, and global preview controls. */
 export default function RootLayout() {
-  const ready = useAppBootstrap();
+  const ready = useAppBootstrap({ prepareProfile });
   const hasProfile = useProfileStore((s) => s.profile !== null);
+  const profileName = useProfileStore((s) => s.profile?.me.firstName);
   // Bez profilu strona główna jest pusta – logo prowadzi wtedy do logowania.
   const homeHref = hasProfile ? '/' : '/onboarding';
   const { theme } = useUniwind();
@@ -53,18 +61,20 @@ export default function RootLayout() {
       value={{ ...base, colors: { ...base.colors, primary: c.primary, background: c.base200, card: c.base100, text: c.baseContent, border: c.base300 } }}>
       <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
       <View style={{ flex: 1 }}>
-        <Stack screenOptions={{ headerBackTitle: pl.common.back, ...appHeaderOptions(c, { homeHref, showProfile: hasProfile }) }}>
+        <Stack screenOptions={{ headerBackTitle: pl.common.back, ...appHeaderOptions(c, { homeHref, showProfile: hasProfile, profileName, onLogout: logOut }) }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false, title: pl.appName }} />
           <Stack.Screen name="document/[docId]" options={{ title: pl.documents.details }} />
           <Stack.Screen name="calculator" options={{ title: pl.pageSwitcher.calculator }} />
-          <Stack.Screen name="profile/index" options={{ title: pl.profile.title, ...appHeaderOptions(c, { homeHref }) }} />
+          <Stack.Screen name="applications" options={{ title: pl.pageSwitcher.applications }} />
+          <Stack.Screen name="family-plan" options={{ title: pl.pageSwitcher.familyPlan }} />
+          <Stack.Screen name="profile/index" options={{ title: pl.profile.title, ...appHeaderOptions(c, { homeHref, showProfile: hasProfile, profileName, onLogout: logOut }) }} />
           <Stack.Screen
             name="profile/child/[childId]"
-            options={{ title: pl.profile.editChild, ...appHeaderOptions(c, { homeHref, backFallback: '/profile' }) }}
+            options={{ title: pl.profile.editChild, ...appHeaderOptions(c, { homeHref, backFallback: '/profile', showProfile: hasProfile, profileName, onLogout: logOut }) }}
           />
           <Stack.Screen
             name="profile/child/new"
-            options={{ title: pl.profile.newChild, ...appHeaderOptions(c, { homeHref, backFallback: '/profile' }) }}
+            options={{ title: pl.profile.newChild, ...appHeaderOptions(c, { homeHref, backFallback: '/profile', showProfile: hasProfile, profileName, onLogout: logOut }) }}
           />
           <Stack.Screen name="onboarding" options={{ headerShown: false }} />
           <Stack.Screen name="dev" options={{ title: pl.dev.title }} />

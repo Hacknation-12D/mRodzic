@@ -78,6 +78,8 @@ export function InputsCard({ input, grossText, profileGross, errorField, errorMe
 
       <View className="h-px bg-base-300" />
 
+      {input.loss ? null : (
+        <>
       <ToggleRow label={t.zaZyciem} hint={t.zaZyciemHint} value={input.zaZyciem} onChange={(v) => onChange({ zaZyciem: v })} />
       <Stepper
         label={t.partnerWeeks}
@@ -87,6 +89,8 @@ export function InputsCard({ input, grossText, profileGross, errorField, errorMe
         max={maxPartnerWeeks}
         onChange={(n) => onChange({ partnerParentalWeeks: n })}
       />
+        </>
+      )}
       <Button label={t.resetFromProfile} icon="refresh" variant="ghost" compact onPress={onReset} />
     </Card>
   );

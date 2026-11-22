@@ -2,6 +2,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router/js-tabs';
 import type { ComponentProps } from 'react';
 
+import { logOut } from '@/core/navigation/session';
+import { useProfileStore } from '@/core/profile/profile.store';
 import { pl } from '@/shared/i18n/pl';
 import { useThemeColors } from '@/shared/theme';
 import { appHeaderOptions } from '@/shared/ui';
@@ -16,10 +18,11 @@ function tabIcon(name: IconName) {
 /** Home | Assistant | Documents – wspólny nagłówek (Wstecz, logo → strona główna, profil). */
 export default function TabsLayout() {
   const c = useThemeColors();
+  const profileName = useProfileStore((s) => s.profile?.me.firstName);
   return (
     <Tabs
       screenOptions={{
-        ...appHeaderOptions(c, { homeHref: '/', showProfile: true }),
+        ...appHeaderOptions(c, { homeHref: '/', showProfile: true, profileName, onLogout: logOut }),
         tabBarActiveTintColor: c.primary,
         tabBarInactiveTintColor: c.baseContentMuted,
         tabBarStyle: { display: 'none' },
@@ -27,7 +30,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          ...appHeaderOptions(c, { homeHref: '/', showBack: false, showProfile: true }),
+          ...appHeaderOptions(c, { homeHref: '/', showBack: false, showProfile: true, profileName, onLogout: logOut }),
           title: pl.tabs.home,
           headerTitle: '',
           tabBarAccessibilityLabel: pl.tabs.home,

@@ -26,8 +26,8 @@ export function describeChildAnonymously(profile: Profile, child: Child, today: 
 }
 
 /**
- * Podsumowanie profilu bez imion, dat i miejscowości – jedyna forma profilu,
- * która może opuścić urządzenie (kontekst dla AI / zgłoszenia do człowieka).
+ * Podsumowanie profilu bez danych identyfikujących, używane przez asystenta
+ * i zgłoszenia do człowieka.
  */
 export function toAnonymousSummary(profile: Profile, today: Date): string {
   const parts: string[] = [];

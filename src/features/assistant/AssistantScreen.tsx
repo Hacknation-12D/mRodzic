@@ -187,8 +187,8 @@ export function AssistantScreen() {
 
   return (
     <SafeAreaView edges={[]} className="flex-1 bg-base-200">
-      {/* Ta sama szerokość treści co na pozostałych ekranach (Screen → PAGE_WIDTH). */}
-      <View className="w-full flex-1 self-center md:max-w-4xl">
+      {/* Szerokość treści jak w Screen (PAGE_WIDTH = 56rem) + 2 × 1rem wewnętrznego odstępu tego ekranu. */}
+      <View className="w-full flex-1 self-center md:max-w-[58rem]">
         <KeyboardAvoidingView
           className="flex-1"
           behavior={Platform.OS === "ios" ? "padding" : undefined}

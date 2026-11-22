@@ -43,6 +43,12 @@ export function goToCalculator() {
   router.push('/calculator');
 }
 
+export function goToApplications() {
+  router.push('/applications');
+}
+
+export function goToFamilyPlan() { router.push('/family-plan'); }
+
 export function goToChildNew() {
   router.push('/profile/child/new');
 }

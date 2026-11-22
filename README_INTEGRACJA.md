@@ -108,7 +108,9 @@ Tabele mają klucze obce i indeksy, a wygenerowana baza przeszła `PRAGMA integr
 ## Granice rozwiązania i bezpieczeństwo
 
 - Żadna z historii składek, płatności, sald ani decyzji nie pochodzi od prawdziwych osób ani instytucji.
-- Nie generujemy rzeczywistych numerów PESEL/NIP. W zwracanym `mobywatel` przykładowe identyfikatory dzieci są ewidentnie fikcyjne (`000...`) i służą tylko zachowaniu obecnego kontraktu TypeScript.
+- Każdy rodzic w bazie ma obowiązkowo: nazwisko, datę urodzenia, PESEL i pełny adres zamieszkania (ulica, numer domu, opcjonalnie lokalu, kod pocztowy, miejscowość). `build_db.py` i aplikacja odrzucają profil bez tych danych.
+- Numery PESEL są wygenerowane: mają poprawną sumę kontrolną i są zgodne z datą urodzenia i płcią (wymaga tego walidacja formularzy, np. ZAM), ale nie należą do żadnych znanych osób – nie używaj ich poza demonstracją. Adresy i nazwiska są fikcyjne.
+- Miejscowość gospodarstwa wynika z adresu zamieszkania; dochód na osobę pochodzi z danych o zarobkach rodziców i nie jest edytowalny w aplikacji.
 - Dane źródłowe są kompletne **na potrzeby zdefiniowanych 10 scenariuszy**, nie stanowią rzeczywistej repliki wszystkich rejestrów ZUS ani podstawy do automatycznego wydania decyzji.
 - Po wygaśnięciu snapshotu (21.11.2026) przy prezentacji w innym terminie zmień daty w generatorze i zweryfikuj spójność okresów – sama zmiana stałej `AS_OF` tego nie robi.
 - Nie podłączaj wprost tej bazy i serwera jako autoryzacji w produkcji.

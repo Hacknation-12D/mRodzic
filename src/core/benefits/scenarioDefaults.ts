@@ -33,6 +33,12 @@ export function scenarioDefaultsFromProfile(profile: Profile | null, today: Date
     ? Math.min(5, kids.filter((c) => c.multipleBirthGroupId === child.multipleBirthGroupId).length)
     : 1;
 
+  const asOf = toIsoDate(today);
+  // Wariant 81,5% wymaga wniosku najpóźniej 21 dni po porodzie – po tym terminie domyślnie 100% + 70%.
+  const upfrontApplication = kind === 'birth' ? differenceInCalendarDays(today, parseISO(eventDate)) <= 21 : true;
+  const z = work?.zus?.sickness;
+  const insuranceEnded = z && !z.insured && z.until ? { until: z.until, reason: z.endReason ?? 'other' } : undefined;
+
   return {
     kind,
     employment,
@@ -42,9 +48,12 @@ export function scenarioDefaultsFromProfile(profile: Profile | null, today: Date
     childrenCount: Math.max(1, childrenCount),
     zaZyciem: false,
     partnerParentalWeeks: profile?.partner ? PARENTAL_NON_TRANSFERABLE_WEEKS : 0,
-    upfrontApplication: true,
+    upfrontApplication,
     benefitPayer: work?.benefitPayer,
     arrearsAmount: work?.zus?.arrears.amount,
+    loss: child?.loss,
+    insuranceEnded,
+    asOf,
   };
 }
 

@@ -1,6 +1,7 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { View } from 'react-native';
 
+import { getSeedBundle } from '@/core/content/seedRepository';
 import { goToAssistant } from '@/core/navigation/routes';
 import { getChildColor } from '@/core/profile/childColors';
 import { pl } from '@/shared/i18n/pl';
@@ -12,13 +13,15 @@ import { DocumentActions } from './components/DocumentActions';
 import { EligibilityBadge } from './components/EligibilityBadge';
 import { LinksList } from './components/LinksList';
 import { RequirementList } from './components/RequirementList';
+import { ZamApplication } from './components/ZamApplication';
+import { ZcnaApplication } from './components/ZcnaApplication';
 import { useDocumentDetail } from './hooks/useDocumentDetail';
 
 /** /document/[docId]?childId= */
 export function DocumentDetailScreen() {
   const { docId, childId } = useLocalSearchParams<{ docId: string; childId?: string }>();
   const isDark = useIsDark();
-  const { instance, child, changeStatus } = useDocumentDetail(docId, childId);
+  const { instance, child, profile, profileChild, changeStatus } = useDocumentDetail(docId, childId);
 
   if (!instance) {
     return (
@@ -30,9 +33,15 @@ export function DocumentDetailScreen() {
 
   const who = child?.name ?? pl.common.wholeFamily;
   const color = child?.color ?? getChildColor('family', isDark);
+  const bundledPdfs = getSeedBundle().documents.find((document) => document.id === instance.id)?.links
+    .filter((link) => link.pdfFile) ?? [];
+  const links = [
+    ...instance.links.filter((link) => !bundledPdfs.some((pdf) => pdf.pdfFile === link.pdfFile || pdf.url === link.url)),
+    ...bundledPdfs,
+  ];
 
   return (
-    <Screen>
+    <Screen keyboard>
       <Stack.Screen options={{ title: instance.title }} />
 
       <View className="gap-2">
@@ -61,10 +70,14 @@ export function DocumentDetailScreen() {
 
       <DocumentActions status={instance.status} onChangeStatus={changeStatus} onAskAssistant={() => goToAssistant({ docId: instance.id, childId: instance.childId })} />
 
+      {profile ? <ZamApplication key={instance.key} docId={instance.id} profile={profile} child={profileChild} /> : null}
+      {profile ? <ZcnaApplication key={`zcna:${instance.key}`} docId={instance.id} profile={profile} child={profileChild} /> : null}
+
       <Card>
         <AppText variant="subheading" accessibilityRole="header">
           {pl.documents.requirements}
         </AppText>
+        <AppText variant="small" tone="muted">{pl.documents.eligibilityHint}</AppText>
         <RequirementList results={instance.requirementResults} />
       </Card>
 
@@ -81,12 +94,12 @@ export function DocumentDetailScreen() {
 
       <Markdown>{instance.bodyMd}</Markdown>
 
-      {instance.links.length > 0 ? (
+      {links.length > 0 ? (
         <View className="gap-2">
           <AppText variant="subheading" accessibilityRole="header">
             {pl.documents.links}
           </AppText>
-          <LinksList links={instance.links} />
+          <LinksList links={links} />
         </View>
       ) : null}
 

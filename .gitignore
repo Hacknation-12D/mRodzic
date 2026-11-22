@@ -51,3 +51,16 @@ example
 # Python
 __pycache__/
 *.pyc
+
+# Poufne materiały konkursowe i lokalne wyniki OCR/QA
+/Sprawy/
+/Spraw*.zip
+/*.pdf
+/*.docx
+/Spraw_manifest*.csv
+/private/
+/tmp/
+/output/
+/public/ocr/
+*.sqlite3
+*.sqlite3-*
