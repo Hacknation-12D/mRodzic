@@ -4,6 +4,8 @@ import { Pressable, View } from 'react-native';
 
 import { estimateBenefitFromProfile } from '@/core/benefits';
 import { useToday } from '@/core/clock/useToday';
+import { overdueCountByChild } from '@/core/content/selectors';
+import { useContentData } from '@/core/content/useContentData';
 import {
   goToAssistant,
   goToCalculator,
@@ -33,6 +35,9 @@ export function HomeScreen() {
   const children = useChildViews(today);
   const colors = useThemeColors();
   const estimate = useMemo(() => (profile ? estimateBenefitFromProfile(profile, today) : null), [profile, today]);
+  const { bundle, statuses } = useContentData();
+  // Zaległe terminy dokumentów dziecka (jak „Najbliższe terminy” na ekranie dziecka) → czerwony wykrzyknik.
+  const overdue = useMemo(() => (profile ? overdueCountByChild(bundle, profile, statuses, today) : {}), [bundle, profile, statuses, today]);
 
   return (
     <Screen>
@@ -99,25 +104,36 @@ export function HomeScreen() {
       />
       <Card className="gap-1 p-2">
         {children.length > 0 ? (
-          children.map((child, i) => (
+          children.map((child, i) => {
+            const late = overdue[child.id] ?? 0;
+            return (
             <Pressable
               key={child.id}
               onPress={() => goToChildEdit(child.id)}
               accessibilityRole="button"
-              accessibilityLabel={`${child.name}, ${child.stageLabel}`}
+              accessibilityLabel={`${child.name}, ${child.stageLabel}${late ? `, ${t.overdue(late)}` : ''}`}
               accessibilityHint={t.openChildHint}
               className={`min-h-16 flex-row items-center gap-3 rounded-field px-3 py-2 active:bg-base-200 ${i > 0 ? 'border-t border-base-300' : ''}`}>
               <ChildDot name={child.name} color={child.color} size={42} />
               <View className="flex-1 gap-0.5">
-                <AppText variant="bodyStrong">{child.name}</AppText>
+                <View className="flex-row items-center gap-1.5">
+                  <AppText variant="bodyStrong">{child.name}</AppText>
+                  {late ? <Ionicons name="alert-circle" size={18} color={colors.error} /> : null}
+                </View>
                 <AppText variant="small" tone="muted">
                   {child.stageLabel}
                   {child.insured !== undefined ? ` · ${child.insured ? pl.profile.insured : pl.profile.notInsured}` : ''}
                 </AppText>
+                {late ? (
+                  <AppText variant="small" tone="danger">
+                    {t.overdue(late)}
+                  </AppText>
+                ) : null}
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.baseContentMuted} />
             </Pressable>
-          ))
+            );
+          })
         ) : (
           <View className="items-start gap-3 p-3">
             <IconBadge icon="people-outline" tone="neutral" />

@@ -333,3 +333,18 @@ export function getRelevantDocumentIds(
   }
   return ids;
 }
+
+/**
+ * Liczba zaległych terminów (dokument „do zrobienia” po terminie) dla każdego dziecka.
+ * Ta sama logika co lista „Najbliższe terminy” na ekranie dziecka – strona główna pokazuje na tej podstawie ostrzeżenie.
+ */
+export function overdueCountByChild(bundle: ContentBundle, profile: Profile, statuses: StatusMap, today: Date): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const child of profile.children) {
+    const count = getDocumentInstances(bundle, profile, statuses, today, child.id).filter(
+      (d) => d.childId === child.id && d.status === 'todo' && d.urgency === 'overdue',
+    ).length;
+    if (count > 0) out[child.id] = count;
+  }
+  return out;
+}
