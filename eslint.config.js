@@ -2,7 +2,7 @@
 const { defineConfig } = require('eslint/config');
 const expoConfig = require('eslint-config-expo/flat');
 
-const FEATURES = ['onboarding', 'profile', 'calendar', 'assistant', 'documents', 'home', 'calculator'];
+const FEATURES = ['onboarding', 'profile', 'calendar', 'assistant', 'documents', 'home', 'calculator', 'settings'];
 
 /**
  * Architektura (README → „Reguły granic”):

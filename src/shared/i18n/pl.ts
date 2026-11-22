@@ -84,6 +84,28 @@ export const pl = {
   header: {
     home: 'Strona główna',
   },
+  accountMenu: {
+    open: 'Menu konta',
+    profile: 'Profil rodziny',
+    settings: 'Ustawienia',
+    logout: 'Wyloguj się',
+    logoutTitle: 'Wylogować się?',
+    logoutBody: 'Profil, statusy dokumentów i historia czatu zostaną usunięte z tego urządzenia.',
+  },
+  settings: {
+    title: 'Ustawienia',
+    appearance: 'Wygląd',
+    appearanceHint: 'Motyw systemowy dopasowuje się do ustawień telefonu lub komputera.',
+    theme: { system: 'Systemowy', light: 'Jasny', dark: 'Ciemny' },
+    account: 'Konto',
+    profileBody: 'Dane rodziców, dzieci i z PUE/eZUS.',
+    data: 'Dane',
+    dataBody: 'Wszystko jest zapisane tylko na tym urządzeniu.',
+    deleteAll: 'Usuń wszystkie dane',
+    deleteAllConfirm: 'Usunąć wszystkie dane?',
+    deleteAllBody: 'Usuniemy profil, statusy dokumentów, historię czatu i ustawienia. Tej operacji nie można cofnąć.',
+    about: 'O aplikacji',
+  },
   tabs: {
     home: 'Główna',
     assistant: 'Asystent',

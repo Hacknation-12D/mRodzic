@@ -1,12 +1,14 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
 import { router, type Href } from 'expo-router';
-import { Pressable, useWindowDimensions, View } from 'react-native';
+import { useRef, useState, type ComponentProps, type ComponentRef } from 'react';
+import { Modal, Pressable, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { pl } from '../i18n/pl';
 import { useElevation, useThemeColors, type ThemeColors } from '../theme';
 import { AppText } from './AppText';
+import { Button } from './Button';
 import { PAGE_WIDTH } from './Screen';
 
 const LOGO = require('../../../assets/images/logo.png');
@@ -24,6 +26,8 @@ type Options = {
   showProfile?: boolean;
   /** Imię właściciela profilu – inicjał w awatarze. */
   profileName?: string;
+  /** Wylogowanie (pozycja w menu awatara). Brak = pozycja ukryta. */
+  onLogout?: () => void;
 };
 
 /** Opcje ekranu, z których nagłówek czyta tytuł. `headerTitle: ''` ukrywa tytuł (np. strona główna, onboarding). */
@@ -34,7 +38,10 @@ type HeaderProps = { options: { title?: string; headerTitle?: unknown } };
  * [‹] [logo → strona główna] | tytuł ··········· [awatar → profil]
  * Zwraca opcje ekranu – używaj w `screenOptions` / `options` nawigatorów w src/app.
  */
-export function appHeaderOptions(_c: ThemeColors, { homeHref, showBack = true, backFallback = homeHref, showProfile = false, profileName }: Options) {
+export function appHeaderOptions(
+  _c: ThemeColors,
+  { homeHref, showBack = true, backFallback = homeHref, showProfile = false, profileName, onLogout }: Options,
+) {
   return {
     headerShown: true,
     header: ({ options }: HeaderProps) => {
@@ -45,13 +52,16 @@ export function appHeaderOptions(_c: ThemeColors, { homeHref, showBack = true, b
           homeHref={homeHref}
           backFallback={showBack ? backFallback : undefined}
           profileName={showProfile ? (profileName ?? '') : undefined}
+          onLogout={onLogout}
         />
       );
     },
   };
 }
 
-function AppHeaderBar({ title, homeHref, backFallback, profileName }: { title?: string; homeHref: Href; backFallback?: Href; profileName?: string }) {
+type BarProps = { title?: string; homeHref: Href; backFallback?: Href; profileName?: string; onLogout?: () => void };
+
+function AppHeaderBar({ title, homeHref, backFallback, profileName, onLogout }: BarProps) {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const compact = width < COMPACT_WIDTH;
@@ -78,7 +88,7 @@ function AppHeaderBar({ title, homeHref, backFallback, profileName }: { title?: 
         ) : (
           <View className="flex-1" />
         )}
-        {profileName !== undefined ? <ProfileAvatar name={profileName} /> : null}
+        {profileName !== undefined ? <AccountMenu name={profileName} onLogout={onLogout} /> : null}
       </View>
     </View>
   );
@@ -101,26 +111,122 @@ function BackButton({ fallback }: { fallback: Href }) {
   );
 }
 
-/** Awatar z inicjałem (zamiast ogólnej ikony) – prowadzi do profilu rodziny. */
-function ProfileAvatar({ name }: { name: string }) {
+type MenuItemProps = { icon: ComponentProps<typeof Ionicons>['name']; label: string; onPress: () => void; danger?: boolean };
+
+function MenuItem({ icon, label, onPress, danger }: MenuItemProps) {
   const c = useThemeColors();
-  const shadow = useElevation(1);
-  const initial = name.trim().charAt(0).toUpperCase();
   return (
     <Pressable
-      onPress={() => router.push('/profile')}
-      accessibilityRole="button"
-      accessibilityLabel={pl.tabs.openProfile}
-      hitSlop={6}
-      className="size-10 items-center justify-center rounded-full border-2 border-base-100 bg-primary active:opacity-80"
-      style={shadow}>
-      {initial ? (
-        <AppText variant="bodyStrong" tone="inverse" className="text-base">
-          {initial}
-        </AppText>
-      ) : (
-        <Ionicons name="person" size={18} color={c.primaryContent} />
-      )}
+      onPress={onPress}
+      accessibilityRole="menuitem"
+      className="min-h-12 flex-row items-center gap-3 rounded-field px-3 active:bg-base-200">
+      <Ionicons name={icon} size={20} color={danger ? c.error : c.baseContentMuted} />
+      <AppText variant="bodyStrong" tone={danger ? 'danger' : 'default'}>
+        {label}
+      </AppText>
     </Pressable>
+  );
+}
+
+/**
+ * Awatar z inicjałem → menu konta: profil, ustawienia, wylogowanie (z potwierdzeniem w samym menu).
+ * Menu to Modal zakotwiczony pod awatarem – nie przycina go nagłówek, zamyka je dotknięcie poza nim.
+ */
+function AccountMenu({ name, onLogout }: { name: string; onLogout?: () => void }) {
+  const c = useThemeColors();
+  const avatarShadow = useElevation(1);
+  const menuShadow = useElevation(2);
+  const { width } = useWindowDimensions();
+  const anchor = useRef<ComponentRef<typeof Pressable>>(null);
+  const [open, setOpen] = useState(false);
+  const [confirmLogout, setConfirmLogout] = useState(false);
+  const [pos, setPos] = useState({ top: 0, right: 0 });
+  const initial = name.trim().charAt(0).toUpperCase();
+
+  const show = () => {
+    anchor.current?.measureInWindow((x, y, w, h) => {
+      setPos({ top: y + h + 8, right: Math.max(8, width - (x + w)) });
+      setConfirmLogout(false);
+      setOpen(true);
+    });
+  };
+  const close = () => setOpen(false);
+  const go = (href: Href) => {
+    close();
+    router.push(href);
+  };
+
+  return (
+    <>
+      <Pressable
+        ref={anchor}
+        onPress={show}
+        accessibilityRole="button"
+        accessibilityLabel={pl.accountMenu.open}
+        accessibilityState={{ expanded: open }}
+        hitSlop={6}
+        className="size-10 items-center justify-center rounded-full border-2 border-base-100 bg-primary active:opacity-80"
+        style={avatarShadow}>
+        {initial ? (
+          <AppText variant="bodyStrong" tone="inverse" className="text-base">
+            {initial}
+          </AppText>
+        ) : (
+          <Ionicons name="person" size={18} color={c.primaryContent} />
+        )}
+      </Pressable>
+      <Modal visible={open} transparent animationType="fade" onRequestClose={close}>
+        <Pressable className="flex-1" onPress={close} accessibilityLabel={pl.common.close} accessibilityRole="button" />
+        <View
+          accessibilityRole="menu"
+          className="absolute w-64 gap-1 rounded-box border border-base-300 bg-base-100 p-2"
+          style={[menuShadow, { top: pos.top, right: pos.right }]}>
+          {confirmLogout ? (
+            <View className="gap-3 p-2">
+              <AppText variant="subheading">{pl.accountMenu.logoutTitle}</AppText>
+              <AppText variant="small" tone="muted">
+                {pl.accountMenu.logoutBody}
+              </AppText>
+              <View className="flex-row gap-2">
+                <Button compact variant="ghost" label={pl.common.cancel} onPress={() => setConfirmLogout(false)} className="flex-1" />
+                <Button
+                  compact
+                  variant="danger"
+                  label={pl.accountMenu.logout}
+                  onPress={() => {
+                    close();
+                    onLogout?.();
+                  }}
+                  className="flex-1"
+                />
+              </View>
+            </View>
+          ) : (
+            <>
+              {name ? (
+                <View className="flex-row items-center gap-3 border-b border-base-300 px-3 pb-3 pt-2">
+                  <View className="size-9 items-center justify-center rounded-full bg-primary-soft">
+                    <AppText variant="bodyStrong" tone="primary">
+                      {initial}
+                    </AppText>
+                  </View>
+                  <AppText variant="subheading" numberOfLines={1} className="flex-1">
+                    {name}
+                  </AppText>
+                </View>
+              ) : null}
+              <MenuItem icon="person-circle-outline" label={pl.accountMenu.profile} onPress={() => go('/profile')} />
+              <MenuItem icon="settings-outline" label={pl.accountMenu.settings} onPress={() => go('/settings')} />
+              {onLogout ? (
+                <>
+                  <View className="mx-2 h-px bg-base-300" />
+                  <MenuItem icon="log-out-outline" label={pl.accountMenu.logout} danger onPress={() => setConfirmLogout(true)} />
+                </>
+              ) : null}
+            </>
+          )}
+        </View>
+      </Modal>
+    </>
   );
 }
