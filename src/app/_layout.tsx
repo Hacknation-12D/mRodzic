@@ -30,6 +30,7 @@ const prepareProfile = (profile: Profile | null) => prepareDemoProfile(profile, 
 export default function RootLayout() {
   const ready = useAppBootstrap({ prepareProfile });
   const hasProfile = useProfileStore((s) => s.profile !== null);
+  const profileName = useProfileStore((s) => s.profile?.me.firstName);
   // Bez profilu strona główna jest pusta – logo prowadzi wtedy do logowania.
   const homeHref = hasProfile ? '/' : '/onboarding';
   const { theme } = useUniwind();
@@ -59,18 +60,18 @@ export default function RootLayout() {
       value={{ ...base, colors: { ...base.colors, primary: c.primary, background: c.base200, card: c.base100, text: c.baseContent, border: c.base300 } }}>
       <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
       <View style={{ flex: 1 }}>
-        <Stack screenOptions={{ headerBackTitle: pl.common.back, ...appHeaderOptions(c, { homeHref, showProfile: hasProfile }) }}>
+        <Stack screenOptions={{ headerBackTitle: pl.common.back, ...appHeaderOptions(c, { homeHref, showProfile: hasProfile, profileName }) }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false, title: pl.appName }} />
           <Stack.Screen name="document/[docId]" options={{ title: pl.documents.details }} />
           <Stack.Screen name="calculator" options={{ title: pl.pageSwitcher.calculator }} />
           <Stack.Screen name="profile/index" options={{ title: pl.profile.title, ...appHeaderOptions(c, { homeHref }) }} />
           <Stack.Screen
             name="profile/child/[childId]"
-            options={{ title: pl.profile.editChild, ...appHeaderOptions(c, { homeHref, backFallback: '/profile' }) }}
+            options={{ title: pl.profile.editChild, ...appHeaderOptions(c, { homeHref, backFallback: '/profile', showProfile: hasProfile, profileName }) }}
           />
           <Stack.Screen
             name="profile/child/new"
-            options={{ title: pl.profile.newChild, ...appHeaderOptions(c, { homeHref, backFallback: '/profile' }) }}
+            options={{ title: pl.profile.newChild, ...appHeaderOptions(c, { homeHref, backFallback: '/profile', showProfile: hasProfile, profileName }) }}
           />
           <Stack.Screen name="onboarding" options={{ headerShown: false }} />
           <Stack.Screen name="dev" options={{ title: pl.dev.title }} />

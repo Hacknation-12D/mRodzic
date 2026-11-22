@@ -25,8 +25,8 @@ export function DocumentsScreen() {
 
   return (
     <SafeAreaView edges={[]} className="flex-1 bg-base-200">
-      {/* Ta sama szerokość treści co na pozostałych ekranach (Screen → PAGE_WIDTH). */}
-      <View className="w-full flex-1 self-center md:max-w-4xl">
+      {/* Szerokość treści jak w Screen (PAGE_WIDTH = 56rem) + 2 × 1rem wewnętrznego odstępu tego ekranu. */}
+      <View className="w-full flex-1 self-center md:max-w-[58rem]">
         <ChildFilterBar items={children} value={filter} onChange={setFilter} />
         <View className="gap-2 px-4 pt-2">
           {showHidden ? null : <DocumentTabs value={tab} onChange={setTab} counts={counts} />}
