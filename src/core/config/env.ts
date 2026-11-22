@@ -16,14 +16,12 @@ function clean(value: string | undefined): string | undefined {
 const supabaseUrl = clean(process.env.EXPO_PUBLIC_SUPABASE_URL);
 const supabaseAnonKey = clean(process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY);
 const assistantModeRaw = clean(process.env.EXPO_PUBLIC_ASSISTANT_MODE);
-const seedPersonaRaw = clean(process.env.EXPO_PUBLIC_SEED_PERSONA);
-
-const PERSONAS: readonly PersonaId[] = ['ania', 'magda', 'kasia'];
+const demoApiUrl = clean(process.env.EXPO_PUBLIC_DEMO_API_URL)?.replace(/\/+$/, '');
 
 export const env = {
   supabaseUrl,
   supabaseAnonKey,
   isSupabaseConfigured: Boolean(supabaseUrl && supabaseAnonKey),
   assistantMode: (assistantModeRaw === 'remote' ? 'remote' : 'mock') as AssistantMode,
-  seedPersona: PERSONAS.find((p) => p === seedPersonaRaw),
+  demoApiUrl,
 } as const;

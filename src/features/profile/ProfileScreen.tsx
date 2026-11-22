@@ -16,6 +16,7 @@ import { FamilyAccountCard } from './components/FamilyAccountCard';
 import { HouseholdCard } from './components/HouseholdCard';
 import { MarkBornSheet } from './components/MarkBornSheet';
 import { ParentCard } from './components/ParentCard';
+import { ZusSection } from './components/ZusSection';
 
 export function ProfileScreen() {
   const today = useToday();
@@ -49,6 +50,7 @@ export function ProfileScreen() {
   return (
     <Screen keyboard>
       <ParentCard title={pl.profile.me} parent={profile.me} showIdentity onSave={({ id: _id, ...rest }) => updateMe(rest)} />
+      {profile.me.work ? <ZusSection work={profile.me.work} today={today} /> : null}
       <ParentCard
         title={pl.profile.partner}
         parent={profile.partner}

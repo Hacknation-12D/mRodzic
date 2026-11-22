@@ -1,11 +1,10 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router/js-tabs';
 import type { ComponentProps } from 'react';
-import { Pressable } from 'react-native';
 
-import { goToProfile } from '@/core/navigation/routes';
 import { pl } from '@/shared/i18n/pl';
 import { useThemeColors } from '@/shared/theme';
+import { appHeaderOptions } from '@/shared/ui';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 function tabIcon(name: IconName) {
@@ -14,17 +13,27 @@ function tabIcon(name: IconName) {
   };
 }
 
-/** Kalendarz | Asystent | Dokumenty; w nagłówku ikona profilu. */
+/** Home | Assistant | Documents – wspólny nagłówek (Wstecz, logo → strona główna, profil). */
 export default function TabsLayout() {
   const c = useThemeColors();
-  const profileButton = () => (
-    <Pressable onPress={goToProfile} accessibilityRole="button" accessibilityLabel={pl.tabs.openProfile} hitSlop={10} style={{ paddingHorizontal: 16, minHeight: 44, justifyContent: 'center' }}>
-      <Ionicons name="person-circle-outline" size={28} color={c.primary} />
-    </Pressable>
-  );
   return (
-    <Tabs screenOptions={{ headerRight: profileButton, tabBarActiveTintColor: c.primary, tabBarInactiveTintColor: c.baseContentMuted }}>
-      <Tabs.Screen name="index" options={{ title: pl.tabs.calendar, tabBarIcon: tabIcon('calendar-outline') }} />
+    <Tabs
+      screenOptions={{
+        ...appHeaderOptions(c, { homeHref: '/', showProfile: true }),
+        tabBarActiveTintColor: c.primary,
+        tabBarInactiveTintColor: c.baseContentMuted,
+        tabBarStyle: { display: 'none' },
+      }}>
+      <Tabs.Screen
+        name="index"
+        options={{
+          ...appHeaderOptions(c, { homeHref: '/', showBack: false, showProfile: true }),
+          title: pl.tabs.home,
+          headerTitle: '',
+          tabBarAccessibilityLabel: pl.tabs.home,
+          tabBarIcon: tabIcon('home-outline'),
+        }}
+      />
       <Tabs.Screen name="assistant" options={{ title: pl.tabs.assistant, tabBarIcon: tabIcon('chatbubbles-outline') }} />
       <Tabs.Screen name="documents" options={{ title: pl.tabs.documents, tabBarIcon: tabIcon('document-text-outline') }} />
     </Tabs>

@@ -1,37 +1,63 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useRef, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useRef, useState } from 'react';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 
-import { goToOnboardingStep } from '@/core/navigation/routes';
+import { listDemoProfiles, loginDemoProfile } from '@/core/demo/demoApi';
+import { useProfileStore } from '@/core/profile/profile.store';
 import { pl } from '@/shared/i18n/pl';
 import { isoToPolishDate } from '@/shared/lib/date';
 import { useThemeColors } from '@/shared/theme';
-import { Alert, AppText, Button, Card, Screen, Sheet } from '@/shared/ui';
+import { Alert, AppText, Button, Card, Screen, Select, Sheet } from '@/shared/ui';
 
-import { mockMObywatelService, type MObywatelIdentity } from '../mobywatel/mObywatelService';
-import { useOnboardingDraft } from '../onboardingDraft.store';
-
+type Catalog = Awaited<ReturnType<typeof listDemoProfiles>>;
+type LoginResult = Awaited<ReturnType<typeof loginDemoProfile>>;
 type Phase = 'idle' | 'signing' | 'confirm' | 'error';
+type Row = [label: string, value: string];
 
 const t = pl.onboarding.login;
+const RANDOM = 'random';
 
-/** Krok 0: (symulowane) logowanie przez mObywatel → pobranie danych rodzica → „czy się zgadza?”. */
+/**
+ * Krok 0: (symulowane) logowanie przez mObywatel → profil z bazy (API SQLite albo wbudowany eksport JSON,
+ * patrz README_INTEGRACJA.md) → „czy się zgadza?” → zapis całego profilu i przejście do aplikacji.
+ */
 export function StepLogin() {
   const c = useThemeColors();
-  const apply = useOnboardingDraft((s) => s.applyMObywatelIdentity);
+  const hasProfile = useProfileStore((s) => s.profile !== null);
   const [phase, setPhase] = useState<Phase>('idle');
-  const [identity, setIdentity] = useState<MObywatelIdentity | null>(null);
-  const abort = useRef<AbortController | null>(null);
+  const [result, setResult] = useState<LoginResult | null>(null);
+  const [profiles, setProfiles] = useState<Catalog | null>(null);
+  const [selected, setSelected] = useState(RANDOM);
+  const pendingList = useRef<AbortController | null>(null);
+  const pendingLogin = useRef<AbortController | null>(null);
+
+  // Przy każdym wejściu na ekran: świeża lista i znów „losowy profil”.
+  useFocusEffect(
+    useCallback(() => {
+      const ctrl = new AbortController();
+      pendingList.current = ctrl;
+      setSelected(RANDOM);
+      setPhase('idle');
+      listDemoProfiles(ctrl.signal)
+        .then((list) => !ctrl.signal.aborted && setProfiles(list))
+        .catch(() => !ctrl.signal.aborted && setProfiles([]));
+      return () => {
+        pendingList.current?.abort();
+        pendingLogin.current?.abort();
+      };
+    }, []),
+  );
 
   const signIn = async () => {
-    abort.current?.abort();
+    pendingLogin.current?.abort();
     const ctrl = new AbortController();
-    abort.current = ctrl;
+    pendingLogin.current = ctrl;
     setPhase('signing');
     try {
-      const result = await mockMObywatelService.signIn(ctrl.signal);
+      const res = await loginDemoProfile(selected === RANDOM ? undefined : selected, ctrl.signal);
       if (ctrl.signal.aborted) return;
-      setIdentity(result);
+      setResult(res);
       setPhase('confirm');
     } catch {
       if (!ctrl.signal.aborted) setPhase('error');
@@ -39,55 +65,74 @@ export function StepLogin() {
   };
 
   const cancel = () => {
-    abort.current?.abort();
+    pendingLogin.current?.abort();
     setPhase('idle');
   };
 
   const confirm = () => {
-    if (identity) apply(identity);
+    if (!result) return;
+    useProfileStore.getState().setDemoProfile(result.profileId, result.appProfileV1);
     setPhase('idle');
-    goToOnboardingStep('me');
+    router.replace('/');
   };
-
-  const manual = () => {
-    setPhase('idle');
-    goToOnboardingStep('me');
-  };
-
-  const rows: [string, string][] = identity
-    ? [
-        [t.firstName, identity.firstName],
-        [t.lastName, identity.lastName],
-        [t.birthDate, isoToPolishDate(identity.birthDate)],
-        [t.gender, pl.gender[identity.gender]],
-        [t.city, identity.city],
-      ]
-    : [];
 
   return (
     <Screen>
-      <View className="items-center gap-3 py-4">
-        <View className="size-16 items-center justify-center rounded-full bg-primary-soft">
-          <Ionicons name="shield-checkmark-outline" size={32} color={c.primary} />
+      <Card className="w-full gap-5 self-center p-5 md:max-w-4xl md:p-6">
+        <View className="gap-2">
+          <AppText variant="title" accessibilityRole="header">
+            {t.title}
+          </AppText>
+          <AppText tone="muted">{t.intro}</AppText>
         </View>
-        <AppText variant="title" accessibilityRole="header" className="text-center">
-          {t.title}
-        </AppText>
-        <AppText tone="muted" className="text-center">
-          {t.intro}
-        </AppText>
-      </View>
 
-      <Button label={t.signIn} icon="log-in-outline" onPress={() => void signIn()} loading={phase === 'signing'} />
-      <Button label={t.manual} variant="ghost" onPress={manual} />
+        <Pressable
+          onPress={() => void signIn()}
+          disabled={phase === 'signing'}
+          accessibilityRole="button"
+          accessibilityLabel={t.signIn}
+          accessibilityHint={t.scanHint}
+          accessibilityState={{ disabled: phase === 'signing', busy: phase === 'signing' }}
+          className="min-h-24 flex-row items-center gap-4 rounded-box border border-base-300 bg-base-200 p-4 active:opacity-80">
+          <View className="size-12 shrink-0 items-center justify-center rounded-field bg-primary-soft">
+            <Ionicons name="phone-portrait-outline" size={26} color={c.primary} />
+          </View>
+          <View className="min-w-0 flex-1 gap-1">
+            <View className="flex-row flex-wrap items-center gap-2">
+              <AppText variant="subheading">{t.appTitle}</AppText>
+              <View className="rounded-selector bg-primary-soft px-2 py-1">
+                <AppText variant="caption" tone="primary">
+                  {t.recommended}
+                </AppText>
+              </View>
+            </View>
+            <AppText tone="muted">{t.scanHint}</AppText>
+          </View>
+          <Ionicons name="chevron-forward" size={22} color={c.primary} />
+        </Pressable>
 
-      {phase === 'error' ? <Alert tone="error">{t.signInError}</Alert> : null}
-      <Alert tone="warning" title={t.simulationTitle} icon="flask-outline">
-        {t.simulationBody}
-      </Alert>
+        {profiles && profiles.length > 0 ? (
+          <Select
+            label={pl.demo.profile}
+            hint={pl.demo.profileHint}
+            value={selected}
+            options={[
+              { value: RANDOM, label: pl.demo.random },
+              ...profiles.map((p) => ({ value: p.profileId, label: p.label })),
+            ]}
+            onChange={(v) => setSelected(v ?? RANDOM)}
+          />
+        ) : null}
+
+        {phase === 'error' ? <Alert tone="error">{t.signInError}</Alert> : null}
+      </Card>
 
       {/* Pasek ładowania i pytanie o zgodność danych – jako „modal” DaisyUI. */}
-      <Sheet visible={phase === 'signing'} onClose={cancel} title={t.signingIn} footer={<Button label={pl.common.cancel} variant="ghost" onPress={cancel} />}>
+      <Sheet
+        visible={phase === 'signing'}
+        onClose={cancel}
+        title={t.signingIn}
+        footer={<Button label={pl.common.cancel} variant="ghost" onPress={cancel} />}>
         <View className="items-center py-6" accessibilityLiveRegion="polite">
           <ActivityIndicator size="large" color={c.primary} />
         </View>
@@ -95,22 +140,42 @@ export function StepLogin() {
 
       <Sheet visible={phase === 'confirm'} onClose={() => setPhase('idle')} title={t.confirmTitle} footer={<></>}>
         <AppText tone="muted">{t.confirmIntro}</AppText>
-        <Card>
-          {rows.map(([label, value]) => (
-            <View key={label} className="flex-row items-baseline justify-between gap-3 border-b border-base-300 py-1.5" accessible accessibilityLabel={`${label}: ${value}`}>
-              <AppText variant="small" tone="muted">
-                {label}
-              </AppText>
-              <AppText variant="bodyStrong" className="shrink">
-                {value}
-              </AppText>
-            </View>
-          ))}
-        </Card>
-        <Alert tone="info">{t.storageNote}</Alert>
+        {result ? <RowsCard rows={identityRows(result)} /> : null}
+        <Alert tone="info">{pl.demo.storageNote}</Alert>
+        {hasProfile ? <Alert tone="warning">{pl.demo.replaceProfile}</Alert> : null}
         <Button label={t.confirmYes} icon="checkmark" onPress={confirm} />
-        <Button label={t.confirmNo} variant="ghost" onPress={manual} />
+        <Button label={t.confirmNo} variant="ghost" onPress={() => setPhase('idle')} />
       </Sheet>
     </Screen>
+  );
+}
+
+function identityRows({ mobywatel }: LoginResult): Row[] {
+  return [
+    [t.firstName, mobywatel.firstName],
+    [t.lastName, mobywatel.lastName],
+    [t.city, mobywatel.city],
+    [t.birthDate, isoToPolishDate(mobywatel.birthDate)],
+  ];
+}
+
+function RowsCard({ rows }: { rows: Row[] }) {
+  return (
+    <Card>
+      {rows.map(([label, value]) => (
+        <View
+          key={label}
+          className="flex-row items-baseline justify-between gap-3 border-b border-base-300 py-1.5"
+          accessible
+          accessibilityLabel={`${label}: ${value}`}>
+          <AppText variant="small" tone="muted">
+            {label}
+          </AppText>
+          <AppText variant="bodyStrong" className="shrink text-right">
+            {value}
+          </AppText>
+        </View>
+      ))}
+    </Card>
   );
 }

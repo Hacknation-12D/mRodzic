@@ -22,12 +22,13 @@ export function goToAssistant(params: AssistantRouteParams = {}) {
   router.navigate({ pathname: '/assistant', params: clean(params) });
 }
 
-export function goToDocuments() {
-  router.navigate('/documents');
+/** Wraca do istniejących zakładek (onboarding leży nad nimi w głównym stosie). */
+export function goToHome() {
+  router.navigate('/');
 }
 
-export function goToCalendar() {
-  router.navigate('/');
+export function goToDocuments() {
+  router.navigate('/documents');
 }
 
 export function goToProfile() {
@@ -46,8 +47,8 @@ export function goToDevPanel() {
   router.push('/dev');
 }
 
-export type OnboardingStep = 'login' | 'me' | 'partner' | 'children' | 'household';
-export const ONBOARDING_STEPS: OnboardingStep[] = ['login', 'me', 'partner', 'children', 'household'];
+export type OnboardingStep = 'login' | 'partner' | 'children' | 'household';
+export const ONBOARDING_STEPS: OnboardingStep[] = ['login', 'partner', 'children', 'household'];
 
 export function goToOnboardingStep(step: OnboardingStep) {
   router.push(step === 'login' ? '/onboarding' : `/onboarding/${step}`);

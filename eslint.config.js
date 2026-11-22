@@ -42,6 +42,8 @@ module.exports = defineConfig([
   ...featureBoundaries,
   {
     files: ['src/core/**/*.{ts,tsx}'],
+    // Testy mogą korzystać z danych testowych z src/dev (np. dummyData).
+    ignores: ['src/core/**/*.test.{ts,tsx}'],
     rules: {
       'no-restricted-imports': [
         'error',

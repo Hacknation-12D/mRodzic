@@ -15,6 +15,7 @@ export type ChildView = {
   color: string;
   stage: Stage;
   stageLabel: string;
+  insured?: boolean;
 };
 
 export function toChildViews(profile: Profile | null, date: Date, isDark: boolean): ChildView[] {
@@ -29,6 +30,7 @@ export function toChildViews(profile: Profile | null, date: Date, isDark: boolea
       color: getChildColor(c.colorKey, isDark),
       stage,
       stageLabel: stageLabel(stage),
+      insured: c.insured,
     };
   });
 }

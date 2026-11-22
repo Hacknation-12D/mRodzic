@@ -1,38 +1,92 @@
-import { useRef, type ReactElement } from 'react';
-import { ActivityIndicator, FlatList, View } from 'react-native';
+import { useEffect, useRef, type ReactElement } from "react";
+import { ActivityIndicator, FlatList, View } from "react-native";
 
-import type { ChatMessage } from '@/core/assistant';
-import { pl } from '@/shared/i18n/pl';
-import { useThemeColors } from '@/shared/theme';
-import { AppText } from '@/shared/ui';
+import type { ChatMessage } from "@/core/assistant";
+import { pl } from "@/shared/i18n/pl";
+import { useThemeColors } from "@/shared/theme";
+import { AppText } from "@/shared/ui";
 
-import { MessageBubble } from './MessageBubble';
+import { MessageBubble } from "./MessageBubble";
+import { FadeIn } from "./Motion";
+
+export type ListItem =
+  | {
+      id: string;
+      message: ChatMessage;
+      /** Element po prawej stronie bańki (np. przycisk „+”). */ trailing?: ReactElement;
+      /** Zmiana klucza ponownie odtwarza animację pojawienia się. */ animateKey?: number;
+    }
+  | { id: string; node: ReactElement };
 
 type Props = {
-  messages: ChatMessage[];
+  messages: ListItem[];
   pending: boolean;
   onAskHuman: () => void;
+  /** Id wiadomości asystenta, pod którą ma być przycisk kontaktu z zespołem. */
+  humanButtonId?: string;
   header?: ReactElement;
   footer?: ReactElement;
   empty?: ReactElement;
 };
 
-export function MessageList({ messages, pending, onAskHuman, header, footer, empty }: Props) {
+export function MessageList({
+  messages,
+  pending,
+  onAskHuman,
+  humanButtonId,
+  header,
+  footer,
+  empty,
+}: Props) {
   const c = useThemeColors();
-  const ref = useRef<FlatList<ChatMessage>>(null);
+  const ref = useRef<FlatList<ListItem>>(null);
+  const scrollDown = () => ref.current?.scrollToEnd({ animated: true });
+  // Po nowej wiadomości (też odpowiedzi AI) i po zniknięciu wskaźnika pisania przewiń na dół – z opóźnieniem, aż układ się ustabilizuje.
+  useEffect(() => {
+    const timers = [60, 250].map((ms) =>
+      setTimeout(() => ref.current?.scrollToEnd({ animated: true }), ms),
+    );
+    return () => timers.forEach(clearTimeout);
+  }, [messages.length, pending]);
   return (
     <FlatList
       ref={ref}
       data={messages}
       keyExtractor={(m) => m.id}
-      renderItem={({ item }) => <MessageBubble message={item} onAskHuman={onAskHuman} />}
+      renderItem={({ item }) =>
+        "node" in item ? (
+          item.node
+        ) : (
+          <FadeKey k={item.animateKey}>
+            <View
+              className={
+                item.message.role === "user"
+                  ? "flex-row justify-end"
+                  : "flex-row items-start gap-2"
+              }
+            >
+              <MessageBubble
+                message={item.message}
+                onAskHuman={item.id === humanButtonId ? onAskHuman : undefined}
+              />
+              {item.trailing ? (
+                <View className="ml-auto">{item.trailing}</View>
+              ) : null}
+            </View>
+          </FadeKey>
+        )
+      }
       contentContainerClassName="grow gap-3 p-4"
       ListHeaderComponent={header}
       ListEmptyComponent={empty}
       ListFooterComponent={
         <View className="gap-3">
           {pending ? (
-            <View className="flex-row items-center gap-2" accessibilityLiveRegion="polite" accessibilityLabel={pl.assistant.typing}>
+            <View
+              className="flex-row items-center gap-2"
+              accessibilityLiveRegion="polite"
+              accessibilityLabel={pl.assistant.typing}
+            >
               <ActivityIndicator color={c.primary} />
               <AppText variant="small" tone="muted">
                 {pl.assistant.typing}
@@ -42,9 +96,13 @@ export function MessageList({ messages, pending, onAskHuman, header, footer, emp
           {footer}
         </View>
       }
-      onContentSizeChange={() => ref.current?.scrollToEnd({ animated: true })}
+      onContentSizeChange={scrollDown}
+      onLayout={scrollDown}
       keyboardShouldPersistTaps="handled"
     />
   );
 }
 
+function FadeKey({ k, children }: { k?: number; children: ReactElement }) {
+  return k === undefined ? children : <FadeIn key={k}>{children}</FadeIn>;
+}

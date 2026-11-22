@@ -1,1 +1,1 @@
-export { CalendarScreen as default } from '@/features/calendar';
+export { HomeScreen as default } from '@/features/home';

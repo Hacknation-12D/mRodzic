@@ -1,14 +1,14 @@
-import { useColorScheme } from 'react-native';
+import { useUniwind } from 'uniwind';
 
 import { darkColors, lightColors, type ThemeColors } from './palette';
 
 export { darkColors, lightColors, type ThemeColors };
 
 export function useThemeColors(): ThemeColors {
-  const scheme = useColorScheme();
-  return scheme === 'dark' ? darkColors : lightColors;
+  const { theme } = useUniwind();
+  return theme === 'dark' ? darkColors : lightColors;
 }
 
 export function useIsDark(): boolean {
-  return useColorScheme() === 'dark';
+  return useUniwind().theme === 'dark';
 }
