@@ -13,7 +13,7 @@ import { useProfileStore } from '@/core/profile/profile.store';
 import { useSettingsStore } from '@/core/settings/settings.store';
 import { pl } from '@/shared/i18n/pl';
 import { darkColors, lightColors } from '@/shared/theme';
-import { AppText, PreviewControls } from '@/shared/ui';
+import { AppText, appHeaderOptions, PreviewControls } from '@/shared/ui';
 import demoProfiles from '@/dev/dummyData/mrodzic_compat_profiles_v1.json';
 
 void SplashScreen.preventAutoHideAsync();
@@ -24,6 +24,8 @@ registerLocalDemoProfiles(demoProfiles);
 export default function RootLayout() {
   const ready = useAppBootstrap();
   const hasProfile = useProfileStore((s) => s.profile !== null);
+  // Bez profilu strona główna jest pusta – logo prowadzi wtedy do logowania.
+  const homeHref = hasProfile ? '/' : '/onboarding';
   const { theme } = useUniwind();
   const scheme = theme === 'dark' ? 'dark' : 'light';
   const themeOverride = useSettingsStore((s) => s.themeOverride);
@@ -51,12 +53,18 @@ export default function RootLayout() {
       value={{ ...base, colors: { ...base.colors, primary: c.primary, background: c.base200, card: c.base100, text: c.baseContent, border: c.base300 } }}>
       <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
       <View style={{ flex: 1 }}>
-        <Stack screenOptions={{ headerBackTitle: pl.common.back }}>
+        <Stack screenOptions={{ headerBackTitle: pl.common.back, ...appHeaderOptions(c, { homeHref, showProfile: hasProfile }) }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false, title: pl.appName }} />
           <Stack.Screen name="document/[docId]" options={{ title: pl.documents.details }} />
-          <Stack.Screen name="profile/index" options={{ title: pl.profile.title }} />
-          <Stack.Screen name="profile/child/[childId]" options={{ title: pl.profile.editChild }} />
-          <Stack.Screen name="profile/child/new" options={{ title: pl.profile.newChild }} />
+          <Stack.Screen name="profile/index" options={{ title: pl.profile.title, ...appHeaderOptions(c, { homeHref }) }} />
+          <Stack.Screen
+            name="profile/child/[childId]"
+            options={{ title: pl.profile.editChild, ...appHeaderOptions(c, { homeHref, backFallback: '/profile' }) }}
+          />
+          <Stack.Screen
+            name="profile/child/new"
+            options={{ title: pl.profile.newChild, ...appHeaderOptions(c, { homeHref, backFallback: '/profile' }) }}
+          />
           <Stack.Screen name="onboarding" options={{ headerShown: false }} />
           <Stack.Screen name="dev" options={{ title: pl.dev.title }} />
           <Stack.Screen name="+not-found" options={{ title: pl.common.notFoundTitle }} />

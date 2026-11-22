@@ -76,6 +76,9 @@ export const pl = {
   plural: { days, weeks, months, years, persons },
   ageExact: (parts: string[]) => parts.join(' i '),
 
+  header: {
+    home: 'Strona główna',
+  },
   tabs: {
     home: 'Główna',
     assistant: 'Asystent',

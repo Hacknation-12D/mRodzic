@@ -1,4 +1,5 @@
 export * from './Alert';
+export * from './AppHeader';
 export * from './AppText';
 export * from './Badge';
 export * from './Button';
